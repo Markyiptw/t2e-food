@@ -1,0 +1,2 @@
+#!/bin/bash -e
+kamal app exec -p -q -d $KAMAL_DESTINATION --version $KAMAL_VERSION "frankenphp php-cli artisan migrate --force"
