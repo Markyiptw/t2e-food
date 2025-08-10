@@ -1,2 +1,2 @@
 #!/bin/bash -e
-sudo kamal app exec -p -q -d $KAMAL_DESTINATION --version $KAMAL_VERSION "echo 'test'"
+echo "Running pre-deploy hook..."
