@@ -14,7 +14,10 @@ ENV SERVER_NAME=:80
 # Can keep, see https://frankenphp.dev/docs/config/#static-binary
 RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 
+
 # Copy the PHP files of your project in the public directory
 # COPY . /app/public
 # If you use Symfony or Laravel, you need to copy the whole project instead:
 COPY . /app
+    
+RUN "composer install --no-dev --optimize-autoloader"
