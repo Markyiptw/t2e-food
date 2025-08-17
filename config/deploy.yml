@@ -7,7 +7,7 @@ image: markyip/laravel-getting-started
 # Deploy to these servers.
 servers:
   web:
-    - 43.198.25.19
+    - 16.162.108.69
   # job:
   #   hosts:
   #     - 192.168.0.1
