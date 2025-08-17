@@ -1,7 +1,7 @@
 FROM node:20 AS build-assets
 WORKDIR /app
 # Copy the whole project for Tailwind scanning
-COPY . ./
+COPY . /app
 RUN npm install
 RUN npm run build
 
