@@ -11,7 +11,8 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        $middleware
+            ->trustProxies(['kamal-proxy']);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
