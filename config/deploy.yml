@@ -43,8 +43,8 @@ builder:
 #
 env:
   clear:
-    DB_HOST: db
     DB_CONNECTION: pgsql
+    DB_HOST: laravel-getting-started-db
     DB_USERNAME: postgres
     DB_DATABASE: postgres
     AUTORUN_ENABLED: true
