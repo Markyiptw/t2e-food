@@ -84,7 +84,7 @@ ssh:
 accessories:
   db:
     image: postgres:17
-    host: 43.198.25.19
+    host: 16.162.108.69
     port: 5432
     env:
       clear:
