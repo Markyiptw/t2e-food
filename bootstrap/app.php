@@ -14,8 +14,8 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware
             ->trustProxies(
-                ['kamal-proxy'],
-                Request::HEADER_X_FORWARDED_PROTO
+                ['*'],
+                Request::HEADER_X_FORWARDED_TRAEFIK
             );
     })
     ->withExceptions(function (Exceptions $exceptions): void {
