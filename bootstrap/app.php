@@ -14,7 +14,7 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware
-            ->trustProxies(['kamal-proxy'], Request::HEADER_X_FORWARDED_PROTO | Request::HEADER_X_FORWARDED_HOST | Request::HEADER_X_FORWARDED_FOR)
+            ->trustProxies(['172.18.0.0/16'], Request::HEADER_X_FORWARDED_PROTO | Request::HEADER_X_FORWARDED_HOST | Request::HEADER_X_FORWARDED_FOR)
             ->append(LogRequestHeaders::class);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
