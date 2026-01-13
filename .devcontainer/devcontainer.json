@@ -1,32 +1,37 @@
 // https://aka.ms/devcontainer.json
 {
-	"name": "Existing Docker Compose (Extend)",
-	"dockerComposeFile": [
-		"../docker-compose.yml"
-	],
-	"service": "laravel.test",
-	"workspaceFolder": "/var/www/html",
-	"customizations": {
-		"vscode": {
-			"extensions": [
-				"bradlc.vscode-tailwindcss",
-				"esbenp.prettier-vscode",
-				"open-southeners.laravel-pint",
-				"laravel.vscode-laravel",
-				"mikestead.dotenv",
-				"amiralizadeh9480.laravel-extra-intellisense",
-				"ryannaddy.laravel-artisan",
-				"onecentlin.laravel5-snippets",
-				"onecentlin.laravel-blade",
-				"bmewburn.vscode-intelephense-client",
-				"GitHub.copilot"
-			],
-			"settings": {}
-		}
-	},
-	"remoteUser": "sail",
-	"postCreateCommand": "chown -R 1000:1000 /var/www/html 2>/dev/null || true"
-	// "forwardPorts": [],
-	// "runServices": [],
-	// "shutdownAction": "none",
+    "name": "Existing Docker Compose (Extend)",
+    "dockerComposeFile": ["../docker-compose.yml"],
+    "service": "laravel.test",
+    "workspaceFolder": "/var/www/html",
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "bradlc.vscode-tailwindcss",
+                "esbenp.prettier-vscode",
+                "open-southeners.laravel-pint",
+                "laravel.vscode-laravel",
+                "mikestead.dotenv",
+                "amiralizadeh9480.laravel-extra-intellisense",
+                "ryannaddy.laravel-artisan",
+                "onecentlin.laravel5-snippets",
+                "onecentlin.laravel-blade",
+                "bmewburn.vscode-intelephense-client",
+                "GitHub.copilot"
+            ],
+            "settings": {}
+        }
+    },
+    "remoteUser": "sail",
+    "postCreateCommand": {
+        "chown": "chown -R 1000:1000 /var/www/html",
+        "update-alternatives": "sudo update-alternatives --set iptables /usr/sbin/iptables-nft"
+    },
+    "features": {
+        // fedora users need to see https://github.com/devcontainers/features/issues/1235
+        "ghcr.io/devcontainers/features/docker-in-docker:2": {}
+    }
+    // "forwardPorts": [],
+    // "runServices": [],
+    // "shutdownAction": "none",
 }
