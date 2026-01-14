@@ -71,6 +71,8 @@ RUN apt-get update && apt-get upgrade -y \
     && apt-get install -y yarn \
     && apt-get install -y $MYSQL_CLIENT \
     && apt-get install -y postgresql-client-$POSTGRES_VERSION \
+    && apt-get install -y ruby-full \
+    && gem install kamal \
     && apt-get install -y sudo \
     && apt-get -y autoremove \
     && apt-get clean \
