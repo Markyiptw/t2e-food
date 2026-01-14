@@ -88,6 +88,8 @@ RUN git config --global --add safe.directory /var/www/html
 RUN adduser sail sudo
 RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
+RUN echo 'alias kamal="dotenv -f .env.production kamal"' >> /home/sail/.bashrc
+
 COPY start-container /usr/local/bin/start-container
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 COPY php.ini /etc/php/8.5/cli/conf.d/99-sail.ini
