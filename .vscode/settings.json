@@ -2,7 +2,9 @@
     "[blade]": {
         "editor.defaultFormatter": "esbenp.prettier-vscode"
     },
-    "prettier.documentSelectors": [
-        "**/*.blade.php"
-    ]
+    "[php]": {
+        "editor.defaultFormatter": "open-southeners.laravel-pint"
+    },
+    "prettier.documentSelectors": ["**/*.blade.php"],
+    "Laravel.phpEnvironment": "local"
 }
