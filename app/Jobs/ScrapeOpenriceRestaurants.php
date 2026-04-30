@@ -42,8 +42,23 @@ class ScrapeOpenriceRestaurants implements ShouldQueue
      */
     public function handle(): void
     {
-        foreach ($this->districtIds() as $districtId) {
-            $this->scrapeDistrict($districtId);
+        $districts = $this->districts();
+        $resumeCheckpoint = $this->resumeCheckpoint($districts);
+        $shouldSkipUntilCheckpoint = $resumeCheckpoint !== null;
+
+        foreach ($districts as $district) {
+            if ($shouldSkipUntilCheckpoint) {
+                if ($district['id'] !== $resumeCheckpoint['districtId']) {
+                    continue;
+                }
+
+                $shouldSkipUntilCheckpoint = false;
+                $this->scrapeDistrict($district['id'], $resumeCheckpoint['startAt']);
+
+                continue;
+            }
+
+            $this->scrapeDistrict($district['id']);
         }
     }
 
@@ -60,9 +75,9 @@ class ScrapeOpenriceRestaurants implements ShouldQueue
     }
 
     /**
-     * @return array<int, int>
+     * @return array<int, array{id: int, count: int}>
      */
-    private function districtIds(): array
+    private function districts(): array
     {
         $payload = $this->requestPage([
             'regionId' => self::REGION_ID,
@@ -72,19 +87,18 @@ class ScrapeOpenriceRestaurants implements ShouldQueue
         // https://www.openrice.com/api/v2/metadata/region/all?uiLang=zh&uiCity=hongkong
         // status = 10
 
-        $districtIds = collect(data_get($payload, 'refineSearchFilter.districts', []))
+        $districts = collect(data_get($payload, 'refineSearchFilter.districts', []))
             ->filter(fn (array $district): bool => $this->shouldScrapeDistrict($district))
-            ->pluck('id')
-            ->map(fn (mixed $districtId): int => (int) $districtId)
-            ->unique()
+            ->map(fn (array $district): array => $this->districtFromMetadata($district))
+            ->unique('id')
             ->values()
             ->all();
 
-        if ($districtIds === []) {
+        if ($districts === []) {
             throw new RuntimeException('Unable to determine OpenRice district filters.');
         }
 
-        return $districtIds;
+        return $districts;
     }
 
     private function shouldScrapeDistrict(array $district): bool
@@ -94,17 +108,112 @@ class ScrapeOpenriceRestaurants implements ShouldQueue
         return $districtId > 0 && ! in_array($districtId, self::REGION_BUCKET_IDS, true);
     }
 
-    private function scrapeDistrict(int $districtId): void
+    /**
+     * @param  array{id: int, count: int}  $district
+     */
+    private function districtFromMetadata(array $district): array
     {
-        $startAt = 0;
+        $districtId = (int) ($district['id'] ?? 0);
+        $count = $district['count'] ?? null;
+
+        if (! is_numeric($count)) {
+            throw new RuntimeException("OpenRice did not return a total count for district [{$districtId}].");
+        }
+
+        return [
+            'id' => $districtId,
+            'count' => (int) $count,
+        ];
+    }
+
+    /**
+     * @param  array<int, array{id: int, count: int}>  $districts
+     * @return array{districtId: int, startAt: int}|null
+     */
+    private function resumeCheckpoint(array $districts): ?array
+    {
+        $latestRestaurant = DB::table('restaurants')
+            ->select(['id', 'openrice_poi_id', 'query_params'])
+            ->orderByDesc('updated_at')
+            ->orderByDesc('id')
+            ->first();
+
+        if ($latestRestaurant === null) {
+            return null;
+        }
+
+        $queryParameters = $this->decodedQueryParameters($latestRestaurant->query_params ?? null);
+
+        if ($queryParameters === null) {
+            Log::warning('Unable to resume OpenRice scraping because the latest restaurant has invalid query parameters.', [
+                'restaurant_id' => $latestRestaurant->id,
+                'openrice_poi_id' => $latestRestaurant->openrice_poi_id,
+            ]);
+
+            return null;
+        }
+
+        $districtId = $queryParameters['districtId'] ?? null;
+        $startAt = $queryParameters['startAt'] ?? null;
+        $rows = $queryParameters['rows'] ?? self::ROWS_PER_PAGE;
+
+        if (! is_numeric($districtId) || ! is_numeric($startAt) || ! is_numeric($rows)) {
+            Log::warning('Unable to resume OpenRice scraping because the latest restaurant query parameters are missing pagination data.', [
+                'restaurant_id' => $latestRestaurant->id,
+                'openrice_poi_id' => $latestRestaurant->openrice_poi_id,
+                'query_params' => $queryParameters,
+            ]);
+
+            return null;
+        }
+
+        $districtIndex = collect($districts)->search(
+            fn (array $district): bool => $district['id'] === (int) $districtId,
+        );
+
+        if ($districtIndex === false) {
+            Log::warning('Unable to resume OpenRice scraping because the saved district no longer exists.', [
+                'restaurant_id' => $latestRestaurant->id,
+                'openrice_poi_id' => $latestRestaurant->openrice_poi_id,
+                'district_id' => (int) $districtId,
+            ]);
+
+            return null;
+        }
+
+        $nextStartAt = (int) $startAt + (int) $rows;
+        $currentDistrict = $districts[$districtIndex];
+
+        if ($nextStartAt < $currentDistrict['count']) {
+            return [
+                'districtId' => $currentDistrict['id'],
+                'startAt' => $nextStartAt,
+            ];
+        }
+
+        $nextDistrict = $districts[$districtIndex + 1] ?? null;
+
+        if ($nextDistrict === null) {
+            return null;
+        }
+
+        return [
+            'districtId' => $nextDistrict['id'],
+            'startAt' => 0,
+        ];
+    }
+
+    private function scrapeDistrict(int $districtId, int $startAt = 0): void
+    {
         $totalCount = null;
 
         do {
-            $payload = $this->requestPage([
+            $queryParameters = [
                 'regionId' => self::REGION_ID,
                 'districtId' => $districtId,
                 'startAt' => $startAt,
-            ]);
+            ];
+            $payload = $this->requestPage($queryParameters);
 
             $restaurants = $this->restaurantsFromPayload($payload, $districtId, $startAt);
 
@@ -113,7 +222,7 @@ class ScrapeOpenriceRestaurants implements ShouldQueue
             }
 
             $totalCount = $this->countFromPayload($payload, $districtId);
-            $this->persistRestaurants($restaurants);
+            $this->persistRestaurants($restaurants, $this->requestParameters($queryParameters));
 
             $startAt += $restaurants->count();
         } while ($startAt < $totalCount);
@@ -129,13 +238,7 @@ class ScrapeOpenriceRestaurants implements ShouldQueue
             ->connectTimeout(5)
             ->timeout(15)
             ->retry([100, 500, 1000])
-            ->get(self::ENDPOINT, [
-                ...$parameters,
-                'rows' => self::ROWS_PER_PAGE,
-                'pageToken' => self::PAGE_TOKEN,
-                'uiLang' => 'zh',
-                'uiCity' => 'hongkong',
-            ])
+            ->get(self::ENDPOINT, $this->requestParameters($parameters))
             ->throw()
             ->json();
 
@@ -144,6 +247,21 @@ class ScrapeOpenriceRestaurants implements ShouldQueue
         }
 
         return $payload;
+    }
+
+    /**
+     * @param  array<string, int|string>  $parameters
+     * @return array<string, int|string>
+     */
+    private function requestParameters(array $parameters): array
+    {
+        return [
+            ...$parameters,
+            'rows' => self::ROWS_PER_PAGE,
+            'pageToken' => self::PAGE_TOKEN,
+            'uiLang' => 'zh',
+            'uiCity' => 'hongkong',
+        ];
     }
 
     private function countFromPayload(array $payload, int $districtId): int
@@ -173,13 +291,14 @@ class ScrapeOpenriceRestaurants implements ShouldQueue
 
     /**
      * @param  Collection<int, array<string, mixed>>  $restaurants
+     * @param  array<string, int|string>  $queryParameters
      */
-    private function persistRestaurants(Collection $restaurants): void
+    private function persistRestaurants(Collection $restaurants, array $queryParameters): void
     {
         $timestamp = now();
 
         $records = $restaurants
-            ->map(function (array $restaurant) use ($timestamp): array {
+            ->map(function (array $restaurant) use ($queryParameters, $timestamp): array {
                 if (! isset($restaurant['poiId'])) {
                     throw new RuntimeException('OpenRice returned a restaurant without a poiId.');
                 }
@@ -187,6 +306,7 @@ class ScrapeOpenriceRestaurants implements ShouldQueue
                 return [
                     'openrice_poi_id' => (string) $restaurant['poiId'],
                     'data' => json_encode($restaurant, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
+                    'query_params' => json_encode($queryParameters, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
                     'created_at' => $timestamp,
                     'updated_at' => $timestamp,
                 ];
@@ -196,7 +316,25 @@ class ScrapeOpenriceRestaurants implements ShouldQueue
         DB::table('restaurants')->upsert(
             $records,
             ['openrice_poi_id'],
-            ['data', 'updated_at'],
+            ['data', 'query_params', 'updated_at'],
         );
+    }
+
+    /**
+     * @return array<string, mixed>|null
+     */
+    private function decodedQueryParameters(mixed $queryParameters): ?array
+    {
+        if (is_array($queryParameters)) {
+            return $queryParameters;
+        }
+
+        if (! is_string($queryParameters) || $queryParameters === '') {
+            return null;
+        }
+
+        $decoded = json_decode($queryParameters, true);
+
+        return is_array($decoded) ? $decoded : null;
     }
 }

@@ -26,6 +26,8 @@ class ScrapeOpenriceRestaurantsJobTest extends TestCase
         $this->assertDatabaseHas('restaurants', ['openrice_poi_id' => '100301']);
         $this->assertDatabaseHas('restaurants', ['openrice_poi_id' => '200801']);
         $this->assertSame('Central 1', json_decode((string) DB::table('restaurants')->where('openrice_poi_id', '100301')->value('data'), true, flags: JSON_THROW_ON_ERROR)['name']);
+        $this->assertSame($this->pageQueryParameters(1003, 0), $this->restaurantQueryParameters('100301'));
+        $this->assertSame($this->pageQueryParameters(2008, 100), $this->restaurantQueryParameters('200901'));
 
         Http::assertSentCount(4);
         Http::assertNotSent(function (Request $request): bool {
@@ -35,13 +37,68 @@ class ScrapeOpenriceRestaurantsJobTest extends TestCase
         });
     }
 
-    public function test_it_updates_existing_restaurants_when_the_job_is_re_run(): void
+    public function test_it_resumes_from_the_next_page_after_the_latest_saved_restaurant(): void
     {
         DB::table('restaurants')->insert([
             'openrice_poi_id' => '100301',
-            'data' => json_encode(['poiId' => 100301, 'name' => 'Old Name'], JSON_THROW_ON_ERROR),
+            'data' => json_encode(['poiId' => 100301, 'name' => 'Saved Page'], JSON_THROW_ON_ERROR),
+            'query_params' => json_encode($this->pageQueryParameters(1003, 0), JSON_THROW_ON_ERROR),
             'created_at' => now()->subDay(),
-            'updated_at' => now()->subDay(),
+            'updated_at' => now(),
+        ]);
+
+        Http::preventStrayRequests();
+        Http::fake(fn (Request $request) => $this->fakeResponseForRequest($request, [
+            1003 => [
+                'count' => 101,
+                'pages' => [
+                    100 => [
+                        $this->restaurant(100399, 'Central Resume', 1003),
+                    ],
+                ],
+            ],
+            2008 => [
+                'count' => 1,
+                'pages' => [
+                    0 => [
+                        $this->restaurant(200801, 'Tsim Sha Tsui 200801', 2008),
+                    ],
+                ],
+            ],
+        ]));
+
+        (new ScrapeOpenriceRestaurants)->handle();
+
+        $this->assertDatabaseCount('restaurants', 3);
+        $this->assertSame('Saved Page', json_decode((string) DB::table('restaurants')->where('openrice_poi_id', '100301')->value('data'), true, flags: JSON_THROW_ON_ERROR)['name']);
+        $this->assertSame($this->pageQueryParameters(1003, 100), $this->restaurantQueryParameters('100399'));
+        $this->assertSame($this->pageQueryParameters(2008, 0), $this->restaurantQueryParameters('200801'));
+
+        Http::assertSentCount(3);
+        Http::assertNotSent(function (Request $request): bool {
+            $query = $this->queryParameters($request);
+
+            return (int) ($query['districtId'] ?? 0) === 1003 && (int) ($query['startAt'] ?? -1) === 0;
+        });
+    }
+
+    public function test_it_restarts_from_the_beginning_after_reaching_the_last_district_and_page(): void
+    {
+        DB::table('restaurants')->insert([
+            [
+                'openrice_poi_id' => '100301',
+                'data' => json_encode(['poiId' => 100301, 'name' => 'Old Name'], JSON_THROW_ON_ERROR),
+                'query_params' => json_encode($this->pageQueryParameters(1003, 0), JSON_THROW_ON_ERROR),
+                'created_at' => now()->subDay(),
+                'updated_at' => now()->subDay(),
+            ],
+            [
+                'openrice_poi_id' => '200801',
+                'data' => json_encode(['poiId' => 200801, 'name' => 'Last Page'], JSON_THROW_ON_ERROR),
+                'query_params' => json_encode($this->pageQueryParameters(2008, 0), JSON_THROW_ON_ERROR),
+                'created_at' => now()->subMinute(),
+                'updated_at' => now()->subMinute(),
+            ],
         ]);
 
         Http::preventStrayRequests();
@@ -55,17 +112,26 @@ class ScrapeOpenriceRestaurantsJobTest extends TestCase
                 ],
             ],
             2008 => [
-                'count' => 0,
+                'count' => 1,
                 'pages' => [
-                    0 => [],
+                    0 => [
+                        $this->restaurant(200801, 'Updated Last Page', 2008),
+                    ],
                 ],
             ],
         ]));
 
         (new ScrapeOpenriceRestaurants)->handle();
 
-        $this->assertDatabaseCount('restaurants', 1);
+        $this->assertDatabaseCount('restaurants', 2);
         $this->assertSame('Updated Name', json_decode((string) DB::table('restaurants')->where('openrice_poi_id', '100301')->value('data'), true, flags: JSON_THROW_ON_ERROR)['name']);
+        $this->assertSame('Updated Last Page', json_decode((string) DB::table('restaurants')->where('openrice_poi_id', '200801')->value('data'), true, flags: JSON_THROW_ON_ERROR)['name']);
+
+        Http::assertSent(function (Request $request): bool {
+            $query = $this->queryParameters($request);
+
+            return (int) ($query['districtId'] ?? 0) === 1003 && (int) ($query['startAt'] ?? -1) === 0;
+        });
     }
 
     public function test_it_propagates_api_failures(): void
@@ -146,6 +212,30 @@ class ScrapeOpenriceRestaurantsJobTest extends TestCase
         parse_str((string) parse_url($request->url(), PHP_URL_QUERY), $query);
 
         return $query;
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function restaurantQueryParameters(string $poiId): array
+    {
+        return json_decode((string) DB::table('restaurants')->where('openrice_poi_id', $poiId)->value('query_params'), true, flags: JSON_THROW_ON_ERROR);
+    }
+
+    /**
+     * @return array<string, int|string>
+     */
+    private function pageQueryParameters(int $districtId, int $startAt): array
+    {
+        return [
+            'regionId' => 0,
+            'districtId' => $districtId,
+            'startAt' => $startAt,
+            'rows' => 100,
+            'pageToken' => 'CONST_DUMMY_TOKEN',
+            'uiLang' => 'zh',
+            'uiCity' => 'hongkong',
+        ];
     }
 
     /**

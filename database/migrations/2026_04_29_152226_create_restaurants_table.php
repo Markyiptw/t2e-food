@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('openrice_poi_id')->unique();
             $table->json('data');
+            $table->json('query_params');
             $table->timestamps();
         });
     }
