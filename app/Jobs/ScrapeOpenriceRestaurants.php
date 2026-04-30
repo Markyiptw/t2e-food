@@ -86,6 +86,8 @@ class ScrapeOpenriceRestaurants implements ShouldQueue
 
         // https://www.openrice.com/api/v2/metadata/region/all?uiLang=zh&uiCity=hongkong
         // status = 10
+        // to-do: make a seperated scrape district job
+        // build a relatinship between district and its bucket, e.g. parent_id / districtGroupId
 
         $districts = collect(data_get($payload, 'refineSearchFilter.districts', []))
             ->filter(fn (array $district): bool => $this->shouldScrapeDistrict($district))
