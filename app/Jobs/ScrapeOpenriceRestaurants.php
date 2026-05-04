@@ -292,6 +292,36 @@ class ScrapeOpenriceRestaurants implements ShouldQueue
     }
 
     /**
+     * Persist scraped restaurants into the database.
+     *
+     * The `data` JSON column stores the full OpenRice API response. The `poiHours` sub-key
+     * (a JSON array of time-slot objects) encodes the restaurant's opening hours:
+     *
+     * ── Object fields ──
+     * - `pos`:          Category — 1–7 = Mon–Sun, 201–202 = holiday/holiday-eve override,
+     *                   211+ = special date override (with dateFrom/dateTo).
+     * - `weight`:       Priority — 0 = normal, 4 = holiday-level override, 5 = date-specific.
+     * - `dayOfWeek`:    1=Mon..7=Sun, 0 = applies regardless (used by overrides).
+     * - `period1Start/End`: First opening block (e.g. "12:00:00"–"22:30:00").
+     * - `period2Start/End`: Optional second block (split shifts, e.g. lunch + dinner).
+     * - `is24hr`:       24-hour opening (2,158 entries across all restaurants).
+     * - `isClose`:      Restaurant closed (7,470 entries across all restaurants).
+     * - `isHoliday` / `isHolidayEve`: Flags for pos:201–202 overrides.
+     * - `dateFrom` / `dateTo`: Date range for pos:211+ special-date overrides.
+     * - `displayNameLang1/2`: Human-readable label (e.g. "年初一至年初三").
+     * - `modifyTime`:   Last-modification timestamp.
+     * - `isUncertain`:  Whether hours are unconfirmed.
+     * - `day`, `lunarDay`, `weekOfMonth`: Always 0 in current data.
+     *
+     * ── Distribution (32,914 restaurants) ──
+     * - 0 entries:  5,873  (no hours data)
+     * - 7 entries: 19,344  (weekly schedule only — the standard case)
+     * - 8 entries:  3,893  (weekly + 1 override)
+     * - 9 entries:  2,832  (weekly + 2 overrides)
+     * - 10 entries:   584  (weekly + 3 overrides)
+     * - 11 entries:   131  (weekly + 4 overrides)
+     * - 12 entries:    31  (weekly + 5 overrides)
+     *
      * @param  Collection<int, array<string, mixed>>  $restaurants
      * @param  array<string, int|string>  $queryParameters
      */
