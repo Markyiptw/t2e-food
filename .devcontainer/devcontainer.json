@@ -27,13 +27,17 @@
         "chown": "chown -R 1000:1000 /var/www/html",
         "update-alternatives": "sudo update-alternatives --set iptables /usr/sbin/iptables-nft",
         "npm-install": "npm install -y --silent",
-        "composer-install": "composer install --no-interaction"
+        "composer-install": "composer install --no-interaction",
+        "install-opencode": "curl -fsSL https://opencode.ai/install | bash"
     },
     "features": {
         // fedora users need to see https://github.com/devcontainers/features/issues/1235
         "ghcr.io/devcontainers/features/docker-in-docker:2": {},
         "ghcr.io/devcontainers/features/copilot-cli:1": {}
-    }
+    },
+    "mounts": [
+        "type=bind,source=${localEnv:HOME}/.local/share/opencode/auth.json,target=/home/sail/.local/share/opencode/auth.json"
+    ]
     // "forwardPorts": [],
     // "runServices": [],
     // "shutdownAction": "none",

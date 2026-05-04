@@ -102,6 +102,9 @@ COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 COPY php.ini /etc/php/8.5/cli/conf.d/99-sail.ini
 RUN chmod +x /usr/local/bin/start-container
 
+RUN mkdir -p /home/sail/.local/share/opencode
+RUN chown -R sail:sail /home/sail/.local/share/opencode
+
 EXPOSE 80/tcp
 
 ENTRYPOINT ["start-container"]
