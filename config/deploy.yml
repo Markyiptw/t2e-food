@@ -4,6 +4,18 @@ image: markyiptw/openrice-scraper
 servers:
   web:
     - 43.199.193.158
+  queue:
+    hosts:
+      - 43.199.193.158
+    cmd: "php /var/www/html/artisan queue:work"
+    options:
+      health-cmd: "healthcheck-queue"
+  task:
+    hosts:
+      - 43.199.193.158
+    cmd: "php /var/www/html/artisan schedule:work"
+    options:
+      health-cmd: "healthcheck-schedule"
 
 builder:
   arch:
