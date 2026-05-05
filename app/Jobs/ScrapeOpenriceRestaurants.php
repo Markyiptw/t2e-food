@@ -224,7 +224,10 @@ class ScrapeOpenriceRestaurants implements ShouldQueue
             }
 
             $totalCount = $this->countFromPayload($payload, $districtId);
-            $this->persistRestaurants($restaurants, $this->requestParameters($queryParameters));
+
+            DB::transaction(function () use ($restaurants, $queryParameters) {
+                $this->persistRestaurants($restaurants, $this->requestParameters($queryParameters));
+            });
 
             $startAt += $restaurants->count();
         } while ($startAt < $totalCount);
