@@ -39,6 +39,7 @@ env:
     DB_USERNAME: postgres
     DB_DATABASE: postgres
     AUTORUN_ENABLED: true
+    LOG_CHANNEL: stdout
   secret:
     - APP_KEY
     - DB_PASSWORD
