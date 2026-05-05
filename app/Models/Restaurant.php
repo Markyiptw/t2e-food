@@ -58,6 +58,14 @@ class Restaurant extends Model
         return $this->data['poiHours'] ?? [];
     }
 
+    protected static function booted(): void
+    {
+        static::addGlobalScope('active', function (Builder $builder) {
+            $builder
+                ->where('data->status', 10)
+                ->whereNull('data->statusText');
+        });
+    }
 
     public function scopeOpenInWindow(Builder $query, int $dayOfWeek, string $startTime, string $endTime): void
     {
