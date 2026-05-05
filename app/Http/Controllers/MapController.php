@@ -24,7 +24,7 @@ class MapController extends Controller
         }
 
         $markers = $query
-            ->lazy()
+            ->lazyById()
             ->map(function (Restaurant $restaurant): array {
                 return [
                     'name' => $restaurant->getName(),
