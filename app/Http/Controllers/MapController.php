@@ -23,7 +23,8 @@ class MapController extends Controller
             $query->openInWindow($dayOfWeek, $startTime, $endTime);
         }
 
-        $markers = $query->get()
+        $markers = $query
+            ->lazy()
             ->map(function (Restaurant $restaurant): array {
                 return [
                     'name' => $restaurant->getName(),
@@ -38,7 +39,7 @@ class MapController extends Controller
             'dayOfWeek' => $dayOfWeek,
             'startTime' => $startTime,
             'endTime' => $endTime,
-            'markersJson' => json_encode($markers),
+            'markersJson' => $markers->toJson(),
         ]);
     }
 }
