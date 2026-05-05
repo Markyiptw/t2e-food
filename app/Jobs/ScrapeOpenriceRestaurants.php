@@ -325,6 +325,10 @@ class ScrapeOpenriceRestaurants implements ShouldQueue
      * @param  Collection<int, array<string, mixed>>  $restaurants
      * @param  array<string, int|string>  $queryParameters
      */
+    /**
+     * @param  Collection<int, array<string, mixed>>  $restaurants
+     * @param  array<string, int|string>  $queryParameters
+     */
     private function persistRestaurants(Collection $restaurants, array $queryParameters): void
     {
         $timestamp = now();
@@ -337,6 +341,9 @@ class ScrapeOpenriceRestaurants implements ShouldQueue
 
                 return [
                     'openrice_poi_id' => (string) $restaurant['poiId'],
+                    'name' => isset($restaurant['name']) && is_string($restaurant['name']) ? $restaurant['name'] : null,
+                    'latitude' => $this->numericOrNull($restaurant['mapLatitude'] ?? null),
+                    'longitude' => $this->numericOrNull($restaurant['mapLongitude'] ?? null),
                     'data' => json_encode($restaurant, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
                     'query_params' => json_encode($queryParameters, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
                     'created_at' => $timestamp,
@@ -348,8 +355,81 @@ class ScrapeOpenriceRestaurants implements ShouldQueue
         DB::table('restaurants')->upsert(
             $records,
             ['openrice_poi_id'],
-            ['data', 'query_params', 'updated_at'],
+            ['name', 'latitude', 'longitude', 'data', 'query_params', 'updated_at'],
         );
+
+        $openricePoiIds = array_column($records, 'openrice_poi_id');
+
+        $restaurantIds = DB::table('restaurants')
+            ->whereIn('openrice_poi_id', $openricePoiIds)
+            ->pluck('id', 'openrice_poi_id');
+
+        DB::table('restaurant_hours')
+            ->whereIn('restaurant_id', $restaurantIds->values())
+            ->delete();
+
+        $hoursRows = [];
+
+        foreach ($restaurants as $restaurant) {
+            $poiId = (string) $restaurant['poiId'];
+            $restaurantId = $restaurantIds[$poiId] ?? null;
+
+            if ($restaurantId === null) {
+                continue;
+            }
+
+            foreach ($restaurant['poiHours'] ?? [] as $hours) {
+                if (! is_array($hours)) {
+                    continue;
+                }
+
+                if (($hours['weight'] ?? 0) !== 0) {
+                    continue;
+                }
+
+                if (($hours['isClose'] ?? false) === true) {
+                    continue;
+                }
+
+                $hoursRows[] = [
+                    'restaurant_id' => $restaurantId,
+                    'day_of_week' => $hours['dayOfWeek'] ?? 0,
+                    'weight' => $hours['weight'] ?? 0,
+                    'is_24hr' => $hours['is24hr'] ?? false,
+                    'is_close' => $hours['isClose'] ?? false,
+                    'period_1_start' => $this->timeOrNull($hours['period1Start'] ?? null),
+                    'period_1_end' => $this->timeOrNull($hours['period1End'] ?? null),
+                    'period_2_start' => $this->timeOrNull($hours['period2Start'] ?? null),
+                    'period_2_end' => $this->timeOrNull($hours['period2End'] ?? null),
+                    'period_3_start' => $this->timeOrNull($hours['period3Start'] ?? null),
+                    'period_3_end' => $this->timeOrNull($hours['period3End'] ?? null),
+                    'created_at' => $timestamp,
+                    'updated_at' => $timestamp,
+                ];
+            }
+        }
+
+        if ($hoursRows !== []) {
+            DB::table('restaurant_hours')->insert($hoursRows);
+        }
+    }
+
+    private function numericOrNull(mixed $value): ?float
+    {
+        if (is_numeric($value)) {
+            return (float) $value;
+        }
+
+        return null;
+    }
+
+    private function timeOrNull(mixed $value): ?string
+    {
+        if (is_string($value) && $value !== '') {
+            return $value;
+        }
+
+        return null;
     }
 
     /**

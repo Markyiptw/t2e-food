@@ -178,6 +178,9 @@ class ExportRestaurantsJobTest extends TestCase
     {
         DB::table('restaurants')->insert([
             'openrice_poi_id' => $openricePoiId,
+            'name' => null,
+            'latitude' => null,
+            'longitude' => null,
             'data' => json_encode($data, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
             'query_params' => json_encode(['source' => 'test'], JSON_THROW_ON_ERROR),
             'created_at' => now(),
