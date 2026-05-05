@@ -1,13 +1,17 @@
-service: example
-image: example/example
+service: openrice-scraper
+image: markyiptw/openrice-scraper
 
 servers:
   web:
-    - www.example.com
+    - 43.199.193.158
+
+builder:
+  arch:
+    - arm64
 
 proxy:
   ssl: true
-  host: www.example.com
+  host: restaurants.himark.tools
   # default is 80
   # but our image listens to 8080
   app_port: 8080
@@ -19,7 +23,7 @@ env:
   clear:
     DB_CONNECTION: pgsql
     # hostname inside docker = ${service}-${accessory}
-    DB_HOST: example-db
+    DB_HOST: openrice-scraper-db
     DB_USERNAME: postgres
     DB_DATABASE: postgres
     AUTORUN_ENABLED: true
@@ -28,7 +32,7 @@ env:
     - DB_PASSWORD
 
 ssh:
-  user: example-user
+  user: ec2-user
 
 volumes:
   - "app_storage:/var/www/html/storage/app"
@@ -38,7 +42,7 @@ asset_path: /var/www/html/public/build/assets
 accessories:
   db:
     image: postgres:17
-    host: www.example.com
+    host: 43.199.193.158
     # port: 5432 # this option is for public exposure, not needed when communicating inside docker network
     env:
       clear:
