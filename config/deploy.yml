@@ -27,6 +27,7 @@ proxy:
   # default is 80
   # but our image listens to 8080
   app_port: 8080
+  response_timeout: 120
 
 registry:
   server: localhost:5555
