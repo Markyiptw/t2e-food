@@ -42,6 +42,63 @@ class ScrapeOpenriceRestaurants implements ShouldQueue
      */
     public function handle(): void
     {
+        LazyCollection::make(function () {
+            $districts = Http::openrice()
+                ->get('/metadata/region/all')
+                ->collect('districts');
+
+            FacadesValidator::validate($districts->all(), [
+                '*.districtId' => ['required', 'numeric'],
+                '*.districtGroupId' => ['nullable', 'numeric'],
+            ]);
+
+            $last = Restaurant::latest('updated_at')
+                ->first()
+                ?->query_params;
+
+            $districtIds = $districts
+                ->whereNotNull('districtGroupId')
+                ->pluck('districtId')
+                ->sort()
+                ->sortBy(fn ($districtId) => ! ($districtId >= ($last['districtId'] ?? PHP_INT_MAX)))
+                ->values()
+                ->dump();
+
+            foreach ($districtIds as $districtId) {
+                $queryParameters = [
+                    'districtId' => $districtId,
+                    'startAt' => $last['startAt'] ?? 0,
+                    'rows' => 50,
+                ];
+
+                do {
+                    $response = Http::openrice()
+                        ->get('/search', $queryParameters);
+
+                    $restaurants = $response->collect('paginationResult.results');
+
+                    yield ['restaurants' => $restaurants, 'queryParameters' => $queryParameters];
+
+                    dump($queryParameters);
+
+                    $total = $response->json('paginationResult.count');
+
+                    $queryParameters['startAt'] += $restaurants->count();
+                } while ($queryParameters['startAt'] < $total);
+            }
+        })
+            ->each(fn (array $result) => Restaurant::upsert(
+                $result['restaurants']
+                    ->map(fn (array $restaurant) => [
+                        'data' => json_encode($restaurant, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
+                        'query_params' => json_encode($result['queryParameters'], JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ])
+                    ->all(),
+                [DB::raw("(data->>'poiId')")],
+                ['data', 'updated_at'],
+            ));
         $districts = $this->districts();
         $resumeCheckpoint = $this->resumeCheckpoint($districts);
         $shouldSkipUntilCheckpoint = $resumeCheckpoint !== null;
