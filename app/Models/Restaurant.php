@@ -18,7 +18,7 @@ class Restaurant extends Model
 
     public function hours(): HasMany
     {
-        return $this->hasMany(RestaurantHour::class);
+        return $this->hasMany(Hour::class);
     }
 
     public function getName(): string
@@ -67,76 +67,40 @@ class Restaurant extends Model
         });
     }
 
-    public function scopeOpenInWindow(Builder $query, int $dayOfWeek, string $startTime, string $endTime): void
+    /**
+     * Scope to restaurants that are open during a given time window on a given day of the week.
+     *
+     * Hours ``weight`` semantics (higher weight overrides lower):
+     * - 0: base weekly schedule (dayOfWeek 1-7)
+     * - 1: lunar-day schedule (dayOfWeek 0, ``lunarDay`` field)
+     * - 2: week-of-month exception (dayOfWeek 1-7, ``weekOfMonth`` field)
+     * - 4: public-holiday schedule (dayOfWeek 0, ``isHoliday`` or ``isHolidayEve`` flag)
+     * - 5: date-range schedule (dayOfWeek 0, ``dateFrom``/``dateTo`` fields)
+     *
+     * Filtering to ``weight => 0`` restricts to the base weekly schedule only,
+     * deliberately ignoring week-of-month and special-occasion overrides.
+     * When ``$dayOfWeek`` is null, the day-of-week filter is omitted, returning
+     * all restaurants open in the given time window regardless of weekday.
+     */
+    public function scopeOpenInWindow(Builder $query, ?int $dayOfWeek, string $startTime, string $endTime): void
     {
-        $query->whereHas('hours', function (Builder $query) use ($dayOfWeek, $startTime, $endTime): void {
-            $query->where('day_of_week', $dayOfWeek)
-                ->where('weight', 0)
-                ->where('is_close', false)
-                ->where(function (Builder $query) use ($startTime, $endTime): void {
-                    $query->where('is_24hr', true)
-                        ->orWhere(function (Builder $query) use ($startTime, $endTime): void {
-                            $query->whereNotNull('period_1_start')
-                                ->whereNotNull('period_1_end')
-                                ->where('period_1_start', '<=', $startTime)
-                                ->where('period_1_end', '>=', $endTime);
-                        })
-                        ->orWhere(function (Builder $query) use ($startTime, $endTime): void {
-                            $query->whereNotNull('period_2_start')
-                                ->whereNotNull('period_2_end')
-                                ->where('period_2_start', '<=', $startTime)
-                                ->where('period_2_end', '>=', $endTime);
-                        })
-                        ->orWhere(function (Builder $query) use ($startTime, $endTime): void {
-                            $query->whereNotNull('period_3_start')
-                                ->whereNotNull('period_3_end')
-                                ->where('period_3_start', '<=', $startTime)
-                                ->where('period_3_end', '>=', $endTime);
-                        });
-                });
-        });
-    }
-
-    public function isOpenInWindow(int $dayOfWeek, string $startTime, string $endTime): bool
-    {
-        foreach ($this->getPoiHours() as $hours) {
-            if (! is_array($hours)) {
-                continue;
-            }
-
-            if (($hours['dayOfWeek'] ?? null) !== $dayOfWeek) {
-                continue;
-            }
-
-            if (($hours['weight'] ?? 0) !== 0) {
-                continue;
-            }
-
-            if (($hours['isClose'] ?? false) === true) {
-                continue;
-            }
-
-            if (($hours['is24hr'] ?? false) === true) {
-                return true;
-            }
-
-            foreach ([1, 2, 3] as $period) {
-                $periodStart = $hours["period{$period}Start"] ?? null;
-                $periodEnd = $hours["period{$period}End"] ?? null;
-
-                if (! is_string($periodStart) || $periodStart === '' || ! is_string($periodEnd) || $periodEnd === '') {
-                    continue;
-                }
-
-                $periodStart = substr($periodStart, 0, 5);
-                $periodEnd = substr($periodEnd, 0, 5);
-
-                if ($periodStart <= $startTime && $periodEnd >= $endTime) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
+        $query
+            ->whereHas('hours', fn (Builder $query) => $query
+                ->whereRaw('data @> ?', [
+                    collect([
+                        'weight' => 0,
+                        'isClose' => false,
+                    ])
+                        ->merge($dayOfWeek !== null ? ['dayOfWeek' => $dayOfWeek] : [])
+                        ->toJson(),
+                ])
+                ->where(fn (Builder $query) => $query
+                    ->whereRaw('data @> ?', [json_encode(['is24hr' => true])])
+                    ->orWhereHas('periods', fn (Builder $query) => $query->whereIn('position', [1, 2, 3])
+                        ->where('start', '<=', $startTime)
+                        ->where('end', '>=', $endTime)
+                    )
+                )
+            );
     }
 }
