@@ -19,7 +19,7 @@ const mapContainer = document.getElementById("map");
 if (mapContainer && window.restaurantMarkers) {
     const map = L.map("map").setView([22.3193, 114.1694], 12);
 
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
         attribution:
             '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
         maxZoom: 19,
