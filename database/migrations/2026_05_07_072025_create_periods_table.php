@@ -16,7 +16,11 @@ return new class extends Migration
             $table->smallInteger('position');
             $table->time('start');
             $table->time('end');
-            $table->foreignId('hour_id')->constrained()->cascadeOnDelete();
+            $table
+                ->foreignId('hour_id')
+                ->index()
+                ->constrained()
+                ->cascadeOnDelete();
             $table->timestamps();
         });
     }

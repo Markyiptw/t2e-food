@@ -13,7 +13,11 @@ return new class extends Migration
     {
         Schema::create('hours', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('restaurant_id')->constrained()->cascadeOnDelete();
+            $table
+                ->foreignId('restaurant_id')
+                ->index()
+                ->constrained()
+                ->cascadeOnDelete();
             $table->jsonb('data');
             $table->timestamps();
         });
