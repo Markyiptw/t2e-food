@@ -5,6 +5,7 @@ namespace App\Jobs;
 use App\Models\Hour;
 use App\Models\Period;
 use App\Models\Restaurant;
+use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Support\Collection;
@@ -14,7 +15,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
-class ScrapeOpenriceRestaurants implements ShouldQueue
+class ScrapeOpenriceRestaurants implements ShouldBeUnique, ShouldQueue
 {
     use Queueable;
 
