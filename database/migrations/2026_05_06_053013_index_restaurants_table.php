@@ -19,6 +19,5 @@ return new class extends Migration
             CREATE UNIQUE INDEX restaurants_poi_id_index
             ON restaurants ((data->>'poiId'))
         SQL);
-
     }
 };
