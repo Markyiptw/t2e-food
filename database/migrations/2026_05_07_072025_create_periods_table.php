@@ -11,11 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('districts', function (Blueprint $table) {
+        Schema::create('periods', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('openrice_id')->unique();
-            $table->foreignId('district_id')->nullable()->constrained('districts')->cascadeOnDelete();
-            $table->jsonb('data');
+            $table->smallInteger('position');
+            $table->time('start');
+            $table->time('end');
+            $table->foreignId('hour_id')->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
     }
@@ -25,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('districts');
+        Schema::dropIfExists('periods');
     }
 };
