@@ -11,12 +11,12 @@ return new class extends Migration
     public function up(): void
     {
         DB::statement(<<<'SQL'
-            CREATE INDEX restaurants_status_index
-            ON restaurants ((data->>'status'))
+            CREATE INDEX restaurants_data_index
+            ON restaurants USING GIN (data)
         SQL);
 
         DB::statement(<<<'SQL'
-            CREATE UNIQUE INDEX restaurants_poi_id_index
+            CREATE UNIQUE INDEX restaurants_poi_id_unique_index
             ON restaurants ((data->>'poiId'))
         SQL);
     }
