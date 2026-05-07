@@ -39,7 +39,7 @@
                 name="day_of_week"
                 class="mb-3 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200"
             >
-                <option value="">All Days</option>
+                <option value="">Any Day</option>
                 <option value="1" {{ $dayOfWeek === 1 ? 'selected' : '' }}>Monday</option>
                 <option value="2" {{ $dayOfWeek === 2 ? 'selected' : '' }}>Tuesday</option>
                 <option value="3" {{ $dayOfWeek === 3 ? 'selected' : '' }}>Wednesday</option>
