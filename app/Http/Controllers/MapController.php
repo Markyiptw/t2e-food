@@ -4,33 +4,30 @@ namespace App\Http\Controllers;
 
 use App\Models\Restaurant;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class MapController extends Controller
 {
     public function __invoke(Request $request)
     {
-        $dayOfWeek = $request->integer('day_of_week');
-        $startTime = $request->string('start_time')->trim()->value() ?: null;
-        $endTime = $request->string('end_time')->trim()->value() ?: null;
+        $validated = $request->validate([
+            'day_of_week' => 'nullable|integer|min:1|max:7',
+            'start_time' => 'nullable|string',
+            'end_time' => 'nullable|string',
+        ]);
 
-        $filterActive = $dayOfWeek > 0 && $startTime !== null && $endTime !== null;
+        $dayOfWeek = $validated['day_of_week'] ?? null;
+        $startTime = $validated['start_time'] ?? null;
+        $endTime = $validated['end_time'] ?? null;
 
-        $query = Restaurant::whereNotNull(DB::raw('NULLIF(latitude, 0)'))
-            ->whereNotNull(DB::raw('NULLIF(longitude, 0)'));
-
-        if ($filterActive) {
-            $query->openInWindow($dayOfWeek, $startTime, $endTime);
-        }
-
-        $markers = $query
+        $markers = Restaurant::query()
+            ->openInWindow($dayOfWeek, $startTime, $endTime)
             ->lazyById()
             ->map(function (Restaurant $restaurant): array {
                 return [
-                    'name' => $restaurant->getName(),
-                    'address' => $restaurant->getAddress(),
-                    'latitude' => $restaurant->getLatitude(),
-                    'longitude' => $restaurant->getLongitude(),
+                    'name' => $restaurant->data['name'],
+                    'address' => $restaurant->data['address'],
+                    'latitude' => $restaurant->data['mapLatitude'],
+                    'longitude' => $restaurant->data['mapLongitude'],
                 ];
             })
             ->values();

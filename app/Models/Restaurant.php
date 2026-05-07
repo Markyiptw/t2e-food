@@ -12,7 +12,6 @@ class Restaurant extends Model
     {
         return [
             'data' => 'array',
-            'query_params' => 'array',
         ];
     }
 
@@ -65,6 +64,14 @@ class Restaurant extends Model
                 ->where('data->status', 10)
                 ->whereNull('data->statusText');
         });
+
+        static::addGlobalScope('hasLocation', function (Builder $builder) {
+            $builder
+                ->whereNotNull('data->mapLatitude')
+                ->whereNotNull('data->mapLongitude')
+                ->where('data->mapLatitude', '!=', 0)
+                ->where('data->mapLongitude', '!=', 0);
+        });
     }
 
     /**
@@ -82,7 +89,7 @@ class Restaurant extends Model
      * When ``$dayOfWeek`` is null, the day-of-week filter is omitted, returning
      * all restaurants open in the given time window regardless of weekday.
      */
-    public function scopeOpenInWindow(Builder $query, ?int $dayOfWeek, string $startTime, string $endTime): void
+    public function scopeOpenInWindow(Builder $query, ?int $dayOfWeek, ?string $startTime, ?string $endTime): void
     {
         $query
             ->whereHas('hours', fn (Builder $query) => $query
@@ -96,9 +103,13 @@ class Restaurant extends Model
                 ])
                 ->where(fn (Builder $query) => $query
                     ->whereRaw('data @> ?', [json_encode(['is24hr' => true])])
-                    ->orWhereHas('periods', fn (Builder $query) => $query->whereIn('position', [1, 2, 3])
-                        ->where('start', '<=', $startTime)
-                        ->where('end', '>=', $endTime)
+                    ->orWhereHas('periods', fn (Builder $query) => $query
+                        ->when($startTime !== null, fn (Builder $query) => $query
+                            ->where('start', '<=', $startTime)
+                        )
+                        ->when($endTime !== null, fn (Builder $query) => $query
+                            ->where('end', '>=', $endTime)
+                        )
                     )
                 )
             );
