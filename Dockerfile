@@ -1,4 +1,4 @@
-FROM node:20 AS build-assets
+FROM node:24 AS build-assets
 WORKDIR /app
 # Copy the whole project for Tailwind scanning
 COPY . /app
