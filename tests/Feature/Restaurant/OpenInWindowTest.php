@@ -215,7 +215,7 @@ class OpenInWindowTest extends TestCase
     public function test_it_excludes_inactive_restaurants(): void
     {
         $restaurantId = DB::table('restaurants')->insertGetId([
-            'data' => json_encode(['status' => 5], JSON_THROW_ON_ERROR),
+            'data' => json_encode(['status' => 5, 'mapLatitude' => 22.3, 'mapLongitude' => 114.2], JSON_THROW_ON_ERROR),
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
         ]);
@@ -239,10 +239,106 @@ class OpenInWindowTest extends TestCase
         $this->assertEmpty($resultsWithScope);
     }
 
+    public function test_it_matches_overnight_period_covering_overnight_query(): void
+    {
+        $restaurantId = $this->insertActiveRestaurant();
+
+        $hourId = $this->insertHour($restaurantId, [
+            'dayOfWeek' => 4,
+            'weight' => 0,
+            'isClose' => false,
+            'is24hr' => false,
+        ]);
+
+        $this->insertPeriod($hourId, 1, '22:00:00', '02:00:00');
+
+        $results = Restaurant::openInWindow(4, '23:00:00', '01:00:00')->pluck('id');
+
+        $this->assertCount(1, $results);
+        $this->assertSame($restaurantId, $results->first());
+    }
+
+    public function test_it_requires_overnight_period_to_fully_cover_daytime_query(): void
+    {
+        $restaurantId = $this->insertActiveRestaurant();
+
+        $hourId = $this->insertHour($restaurantId, [
+            'dayOfWeek' => 4,
+            'weight' => 0,
+            'isClose' => false,
+            'is24hr' => false,
+        ]);
+
+        $this->insertPeriod($hourId, 1, '22:00:00', '02:00:00');
+
+        $results = Restaurant::openInWindow(4, '21:00:00', '23:00:00')->pluck('id');
+
+        $this->assertEmpty($results);
+    }
+
+    public function test_it_requires_overnight_period_to_fully_cover_overnight_query(): void
+    {
+        $restaurantId = $this->insertActiveRestaurant();
+
+        $hourId = $this->insertHour($restaurantId, [
+            'dayOfWeek' => 4,
+            'weight' => 0,
+            'isClose' => false,
+            'is24hr' => false,
+        ]);
+
+        $this->insertPeriod($hourId, 1, '22:00:00', '02:00:00');
+
+        $results = Restaurant::openInWindow(4, '23:00:00', '05:00:00')->pluck('id');
+
+        $this->assertEmpty($results);
+    }
+
+    public function test_it_matches_overnight_period_covering_early_morning_query(): void
+    {
+        $restaurantId = $this->insertActiveRestaurant();
+
+        $hourId = $this->insertHour($restaurantId, [
+            'dayOfWeek' => 4,
+            'weight' => 0,
+            'isClose' => false,
+            'is24hr' => false,
+        ]);
+
+        $this->insertPeriod($hourId, 1, '22:00:00', '02:00:00');
+
+        $results = Restaurant::openInWindow(4, '00:00:00', '02:00:00')->pluck('id');
+
+        $this->assertCount(1, $results);
+        $this->assertSame($restaurantId, $results->first());
+    }
+
+    public function test_it_does_not_match_overnight_query_against_daytime_period(): void
+    {
+        $restaurantId = $this->insertActiveRestaurant();
+
+        $hourId = $this->insertHour($restaurantId, [
+            'dayOfWeek' => 4,
+            'weight' => 0,
+            'isClose' => false,
+            'is24hr' => false,
+        ]);
+
+        $this->insertPeriod($hourId, 1, '09:00:00', '18:00:00');
+
+        $results = Restaurant::openInWindow(4, '22:00:00', '02:00:00')->pluck('id');
+
+        $this->assertEmpty($results);
+    }
+
     private function insertActiveRestaurant(): int
     {
         return DB::table('restaurants')->insertGetId([
-            'data' => json_encode(['status' => 10], JSON_THROW_ON_ERROR),
+            'data' => json_encode([
+                'status' => 10,
+                'mapLatitude' => 22.3,
+                'mapLongitude' => 114.2,
+            ], JSON_THROW_ON_ERROR),
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
         ]);
