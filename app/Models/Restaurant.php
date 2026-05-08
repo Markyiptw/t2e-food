@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Carbon;
 
 class Restaurant extends Model
 {
@@ -91,7 +92,6 @@ class Restaurant extends Model
      */
     public function scopeOpenInWindow(Builder $query, ?int $dayOfWeek, ?string $startTime, ?string $endTime): void
     {
-        // dd($dayOfWeek, $startTime, $endTime);
         $query
             ->whereHas('hours', fn (Builder $query) => $query
                 ->whereRaw('data @> ?', [
@@ -105,29 +105,44 @@ class Restaurant extends Model
                 ->where(fn (Builder $query) => $query
                     ->whereRaw('data @> ?', [json_encode(['is24hr' => true])])
                     ->orWhereHas('periods', fn (Builder $query) => $query
-                        ->when($startTime !== null, fn (Builder $query) => $query
-                            ->when(
-                                $endTime === null || $endTime >= $startTime,  // normal case
-                                fn (Builder $query) => $query->where('start', '<=', $startTime)
-                            )
-                            ->when(
-                                $endTime < $startTime,  // edge case
-                                fn (Builder $query) => $query->where('start', '>=', $startTime)
-                            )
-                        )
-                        ->when($endTime !== null, fn (Builder $query) => $query
-                            ->when(
-                                $startTime === null || $endTime >= $startTime,  // normal case
-                                fn (Builder $query) => $query->where('end', '>=', $endTime)
+                        ->when($startTime !== null, function (Builder $query) use ($startTime) {
+                            $startSeconds = Carbon::parse($startTime)->secondsSinceMidnight();
 
-                            )
-                            ->when(
-                                $endTime < $startTime,  // edge case
-                                fn (Builder $query) => $query->where('end', '<=', $startTime)
-                            )
-                        )
-                        ->when($endTime !== null, fn (Builder $query) => $query
-                        )
+                            /**
+                             * A period like 22:00→02:00 means "open from 10 PM tonight until 2 AM tomorrow".
+                             * It spans two calendar days. The question here is: "has the restaurant already
+                             * opened by the time our query starts?"
+                             *
+                             * Two ways that can be true:
+                             *   (A) Day-1 side: the query starts at or after 22:00 on the same day.
+                             *       → "start" <= $startSeconds   (e.g. 22:00 <= 23:00 ✓)
+                             *   (B) Day-2 side: the restaurant opened yesterday and we're querying
+                             *       early in the morning before it closes. Since the period hasn't
+                             *       ended yet, any query_start before the stored "end" is still inside
+                             *       the active open window.
+                             *       → "start" > "end"  AND  $startSeconds <= "end"
+                             *         (e.g. 22:00 > 02:00  AND  00:00 <= 02:00 ✓)
+                             */
+                            $query->whereRaw(
+                                '(EXTRACT(EPOCH FROM "start") <= ? OR ("start" > "end" AND ? <= EXTRACT(EPOCH FROM "end")))',
+                                [$startSeconds, $startSeconds],
+                            );
+                        })
+                        ->when($endTime !== null, function (Builder $query) use ($startTime, $endTime) {
+                            $end = Carbon::parse($endTime);
+                            $normEnd = $end->secondsSinceMidnight() + (($startTime && Carbon::parse($startTime)->greaterThan($end)) ? 86400 : 0);
+
+                            /**
+                             * Mirror of the startTime check: "will the restaurant still be open
+                             * when our query ends?" Both the stored "end" and the query's end time
+                             * are promoted by 24 h when they cross midnight, so the comparison
+                             * works on a single linear timeline.
+                             */
+                            $query->whereRaw(
+                                '(EXTRACT(EPOCH FROM "end") + CASE WHEN "start" > "end" THEN 86400 ELSE 0 END) >= ?',
+                                [$normEnd],
+                            );
+                        })
                     )
                 )
             );
