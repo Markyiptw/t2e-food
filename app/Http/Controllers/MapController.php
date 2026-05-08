@@ -15,21 +15,27 @@ class MapController extends Controller
             'end_time' => 'nullable|string',
         ]);
 
-        $dayOfWeek = $validated['day_of_week'] ?? null;
+        // dump($validated);
+
+        $dayOfWeek = isset($validated['day_of_week']) ? (int) $validated['day_of_week'] : null;
+        // $dayOfWeek = $validated['day_of_week'];
         $startTime = $validated['start_time'] ?? null;
         $endTime = $validated['end_time'] ?? null;
 
+        // $markers = collect();
+
         $markers = Restaurant::query()
+            ->select([
+                'data->name as name',
+                'data->address as address',
+                'data->mapLatitude as latitude',
+                'data->mapLongitude as longitude',
+            ])
             ->openInWindow($dayOfWeek, $startTime, $endTime)
-            ->lazyById()
-            ->map(function (Restaurant $restaurant): array {
-                return [
-                    'name' => $restaurant->data['name'],
-                    'address' => $restaurant->data['address'],
-                    'latitude' => $restaurant->data['mapLatitude'],
-                    'longitude' => $restaurant->data['mapLongitude'],
-                ];
-            })
+            // ->getQuery()
+            // ->lazyById()
+            ->get()
+            ->map(fn (Restaurant $restaurant) => $restaurant->toArray())
             ->values();
 
         return view('map', [
