@@ -91,6 +91,7 @@ class Restaurant extends Model
      */
     public function scopeOpenInWindow(Builder $query, ?int $dayOfWeek, ?string $startTime, ?string $endTime): void
     {
+        // dd($dayOfWeek, $startTime, $endTime);
         $query
             ->whereHas('hours', fn (Builder $query) => $query
                 ->whereRaw('data @> ?', [
@@ -105,10 +106,27 @@ class Restaurant extends Model
                     ->whereRaw('data @> ?', [json_encode(['is24hr' => true])])
                     ->orWhereHas('periods', fn (Builder $query) => $query
                         ->when($startTime !== null, fn (Builder $query) => $query
-                            ->where('start', '<=', $startTime)
+                            ->when(
+                                $endTime === null || $endTime >= $startTime,  // normal case
+                                fn (Builder $query) => $query->where('start', '<=', $startTime)
+                            )
+                            ->when(
+                                $endTime < $startTime,  // edge case
+                                fn (Builder $query) => $query->where('start', '>=', $startTime)
+                            )
                         )
                         ->when($endTime !== null, fn (Builder $query) => $query
-                            ->where('end', '>=', $endTime)
+                            ->when(
+                                $startTime === null || $endTime >= $startTime,  // normal case
+                                fn (Builder $query) => $query->where('end', '>=', $endTime)
+
+                            )
+                            ->when(
+                                $endTime < $startTime,  // edge case
+                                fn (Builder $query) => $query->where('end', '<=', $startTime)
+                            )
+                        )
+                        ->when($endTime !== null, fn (Builder $query) => $query
                         )
                     )
                 )
