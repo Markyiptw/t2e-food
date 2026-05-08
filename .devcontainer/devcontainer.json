@@ -32,8 +32,7 @@
     },
     "features": {
         // fedora users need to see https://github.com/devcontainers/features/issues/1235
-        "ghcr.io/devcontainers/features/docker-in-docker:2": {},
-        "ghcr.io/devcontainers/features/copilot-cli:1": {}
+        "ghcr.io/devcontainers/features/docker-in-docker:2": {}
     },
     "mounts": [
         "type=bind,source=${localEnv:HOME}/.local/share/opencode/auth.json,target=/home/sail/.local/share/opencode/auth.json"
