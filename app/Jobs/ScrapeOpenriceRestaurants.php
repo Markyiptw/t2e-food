@@ -44,53 +44,55 @@ class ScrapeOpenriceRestaurants implements ShouldBeUnique, ShouldQueue
 
         $restaurants = collect($response['paginationResult']['results']);
 
-        Restaurant::upsert(
+        DB::transaction(function () use ($restaurants) {
+            Restaurant::upsert(
+                $restaurants
+                    ->map(fn (array $restaurant) => [
+                        'data' => collect($restaurant)
+                            ->except(['poiHours'])
+                            ->toJson(),
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ])
+                    ->all(),
+                [DB::raw("(data->>'poiId')")],
+                ['data', 'updated_at'],
+            );
+
             $restaurants
-                ->map(fn (array $restaurant) => [
-                    'data' => collect($restaurant)
-                        ->except(['poiHours'])
-                        ->toJson(),
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ])
-                ->all(),
-            [DB::raw("(data->>'poiId')")],
-            ['data', 'updated_at'],
-        );
+                ->each(function ($restaurant) {
+                    $restaurantId = Restaurant::withoutGlobalScope('active')
+                        ->withoutGlobalScope('hasLocation')
+                        ->where('data->poiId', $restaurant['poiId'])
+                        ->first('id')
+                        ->id;
 
-        $restaurants
-            ->each(function ($restaurant) {
-                $restaurantId = Restaurant::withoutGlobalScope('active')
-                    ->withoutGlobalScope('hasLocation')
-                    ->where('data->poiId', $restaurant['poiId'])
-                    ->first('id')
-                    ->id;
+                    Hour::query()
+                        ->where('restaurant_id', $restaurantId)
+                        ->delete(); // delete existing hours (and their related periods) before inserting new ones to handle the case when the hours data structure changes, e.g. the number of periods changes
 
-                Hour::query()
-                    ->where('restaurant_id', $restaurantId)
-                    ->delete(); // delete existing hours (and their related periods) before inserting new ones to handle the case when the hours data structure changes, e.g. the number of periods changes
+                    collect($restaurant['poiHours'])
+                        ->each(function ($hour) use ($restaurantId) {
+                            $hourId = Hour::create([
+                                'restaurant_id' => $restaurantId,
+                                'data' => collect($hour)
+                                    ->filter(fn ($value, $key) => ! Str::startsWith($key, 'period'))
+                                    ->toJson(),
+                            ])->id;
 
-                collect($restaurant['poiHours'])
-                    ->each(function ($hour) use ($restaurantId) {
-                        $hourId = Hour::create([
-                            'restaurant_id' => $restaurantId,
-                            'data' => collect($hour)
-                                ->filter(fn ($value, $key) => ! Str::startsWith($key, 'period'))
-                                ->toJson(),
-                        ])->id;
-
-                        collect($hour)
-                            ->filter(fn ($value, $key) => Str::startsWith($key, 'period') && Str::endsWith($key, ['Start', 'End']))
-                            ->groupBy(fn ($value, $key) => Str::match('/^period(\d+)(Start|End)$/', $key), true)
-                            ->map(fn (Collection $period, $key) => [
-                                'position' => $key,
-                                'start' => $period["period{$key}Start"],
-                                'end' => $period["period{$key}End"],
-                                'hour_id' => $hourId,
-                            ])
-                            ->each(fn ($row) => Period::create($row));
-                    });
-            });
+                            collect($hour)
+                                ->filter(fn ($value, $key) => Str::startsWith($key, 'period') && Str::endsWith($key, ['Start', 'End']))
+                                ->groupBy(fn ($value, $key) => Str::match('/^period(\d+)(Start|End)$/', $key), true)
+                                ->map(fn (Collection $period, $key) => [
+                                    'position' => $key,
+                                    'start' => $period["period{$key}Start"],
+                                    'end' => $period["period{$key}End"],
+                                    'hour_id' => $hourId,
+                                ])
+                                ->each(fn ($row) => Period::create($row));
+                        });
+                });
+        });
 
         if ($response['paginationResult']['count'] > $queryParameters['startAt'] + $restaurants->count()) {
             Cache::put(
