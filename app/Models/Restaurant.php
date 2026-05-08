@@ -120,8 +120,8 @@ class Restaurant extends Model
                              *       early in the morning before it closes. Since the period hasn't
                              *       ended yet, any query_start before the stored "end" is still inside
                              *       the active open window.
-                             *       → "start" > "end"  AND  $startSeconds <= "end"
-                             *         (e.g. 22:00 > 02:00  AND  00:00 <= 02:00 ✓)
+                             *       → start > $startSeconds (inferred by condition a failing) AND "start" > "end"  AND  $startSeconds <= "end"
+                             *         (e.g. 22:00 > 00:00 AND 22:00 > 02:00  AND  00:00 <= 02:00 ✓)
                              */
                             $query->whereRaw(
                                 '(EXTRACT(EPOCH FROM "start") <= ? OR ("start" > "end" AND ? <= EXTRACT(EPOCH FROM "end")))',
