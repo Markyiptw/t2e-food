@@ -40,7 +40,8 @@ if (mapContainer && window.restaurantMarkers) {
 
             markers.addLayer(
                 L.marker(latLng).bindPopup(
-                    `<strong>${escapeHtml(r.name)}</strong><br>${escapeHtml(r.address)}`
+                    `<strong>${escapeHtml(r.name)}</strong><br>${escapeHtml(r.address)}` +
+                        (r.url ? `<br><a href="${escapeHtml(r.url)}" target="_blank" rel="noopener noreferrer">More info</a>` : '')
                 )
             );
         });

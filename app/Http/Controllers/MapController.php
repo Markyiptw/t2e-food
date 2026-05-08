@@ -30,6 +30,7 @@ class MapController extends Controller
                 'data->address as address',
                 'data->mapLatitude as latitude',
                 'data->mapLongitude as longitude',
+                'data->shortenUrl as url',
             ])
             ->openInWindow($dayOfWeek, $startTime, $endTime)
             // ->getQuery()
