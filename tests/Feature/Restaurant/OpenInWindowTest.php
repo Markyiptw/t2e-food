@@ -331,6 +331,24 @@ class OpenInWindowTest extends TestCase
         $this->assertEmpty($results);
     }
 
+    public function test_it_excludes_overnight_period_closing_at_query_start_when_query_is_daytime(): void
+    {
+        $restaurantId = $this->insertActiveRestaurant();
+
+        $hourId = $this->insertHour($restaurantId, [
+            'dayOfWeek' => 4,
+            'weight' => 0,
+            'isClose' => false,
+            'is24hr' => false,
+        ]);
+
+        $this->insertPeriod($hourId, 1, '18:00:00', '03:00:00');
+
+        $results = Restaurant::openInWindow(4, '03:00:00', '04:00:00')->pluck('id');
+
+        $this->assertEmpty($results);
+    }
+
     private function insertActiveRestaurant(): int
     {
         return DB::table('restaurants')->insertGetId([

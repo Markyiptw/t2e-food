@@ -129,18 +129,12 @@ class Restaurant extends Model
                             );
                         })
                         ->when($endTime !== null, function (Builder $query) use ($startTime, $endTime) {
-                            $end = Carbon::parse($endTime);
-                            $normEnd = $end->secondsSinceMidnight() + (($startTime && Carbon::parse($startTime)->greaterThan($end)) ? 86400 : 0);
+                            $queryCrosses = $startTime && Carbon::parse($startTime)->greaterThan(Carbon::parse($endTime));
+                            $normEnd = Carbon::parse($endTime)->secondsSinceMidnight() + ($queryCrosses ? 86400 : 0);
 
-                            /**
-                             * Mirror of the startTime check: "will the restaurant still be open
-                             * when our query ends?" Both the stored "end" and the query's end time
-                             * are promoted by 24 h when they cross midnight, so the comparison
-                             * works on a single linear timeline.
-                             */
                             $query->whereRaw(
-                                '(EXTRACT(EPOCH FROM "end") + CASE WHEN "start" > "end" THEN 86400 ELSE 0 END) >= ?',
-                                [$normEnd],
+                                '(EXTRACT(EPOCH FROM "end") + CASE WHEN "start" > "end" AND ? THEN 86400 ELSE 0 END) >= ?',
+                                [(int) $queryCrosses, $normEnd],
                             );
                         })
                     )
