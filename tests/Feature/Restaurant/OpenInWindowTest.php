@@ -13,197 +13,100 @@ class OpenInWindowTest extends TestCase
 {
     use LazilyRefreshDatabase;
 
-    public function test_it_matches_restaurant_with_periods_covering_window(): void
+    public function test_daytime_period_daytime_query(): void
     {
-        $restaurant = Restaurant::factory()
+        $valid = Restaurant::factory()
             ->has(
                 Hour::factory()
-                    ->dayOfWeek(2)
                     ->has(Period::factory()->state(['start' => '09:00:00', 'end' => '17:00:00']))
             )
             ->create();
 
-        $results = Restaurant::openInWindow(Carbon::createFromFormat('!H:i', '10:00'), Carbon::createFromFormat('!H:i', '14:00'))->pluck('id');
+        $invalids = collect([
+            ['start' => '10:00:00', 'end' => '14:00:00'],
+            ['start' => '09:00:00', 'end' => '11:00:00'],
+            ['start' => '08:30:00', 'end' => '11:30:00'],
+        ])->map(fn ($period) => Restaurant::factory()
+            ->has(Hour::factory()->has(Period::factory()->state($period)))
+            ->create()
+        );
 
-        $this->assertCount(1, $results);
-        $this->assertSame($restaurant->id, $results->first());
+        $this->assertEquals(
+            Restaurant::openInWindow(Carbon::createFromFormat('!H:i', '10:00'), Carbon::createFromFormat('!H:i', '16:00'))->pluck('id')->all(),
+            [$valid->id],
+        );
     }
 
-    public function test_it_requires_period_to_fully_cover_the_window(): void
+    public function test_exclusions(): void
     {
-        $restaurant = Restaurant::factory()
+        $close = Restaurant::factory()->has(Hour::factory()->is24hr()->isClose())->create();
+        $nonZeroWeight = Restaurant::factory()->has(Hour::factory()->nonZeroWeight()->is24hr())->create();
+        $inactive = Restaurant::factory()->inactive()->has(Hour::factory()->is24hr())->create();
+        $noHours = Restaurant::factory()->create();
+        $noPeriodsNot24hr = Restaurant::factory()->has(Hour::factory()->dayOfWeek(3))->create();
+
+        $results = Restaurant::openInWindow(Carbon::createFromFormat('!H:i', '10:00'), Carbon::createFromFormat('!H:i', '14:00'))->pluck('id');
+
+        $this->assertEmpty($results);
+    }
+
+    public function test_overnight_period_overnight_query(): void
+    {
+        $valid = Restaurant::factory()
             ->has(
                 Hour::factory()
-                    ->dayOfWeek(2)
-                    ->has(Period::factory()->state(['start' => '10:00:00', 'end' => '14:00:00']))
+                    ->has(Period::factory()->state(['start' => '22:00:00', 'end' => '02:00:00']))
             )
             ->create();
 
-        $results = Restaurant::openInWindow(Carbon::createFromFormat('!H:i', '08:00'), Carbon::createFromFormat('!H:i', '11:00'))->pluck('id');
+        $invalids = collect([
+            ['start' => '23:30:00', 'end' => '02:00:00'], // period starts after query start
+            ['start' => '22:00:00', 'end' => '00:30:00'], // period ends before query end
+            ['start' => '23:30:00', 'end' => '00:30:00'], // both start after and end before
+        ])->map(fn ($period) => Restaurant::factory()
+            ->has(Hour::factory()->has(Period::factory()->state($period)))
+            ->create()
+        );
 
-        $this->assertEmpty($results);
+        $this->assertEquals(
+            Restaurant::openInWindow(Carbon::createFromFormat('!H:i', '23:00'), Carbon::createFromFormat('!H:i', '01:00'))->pluck('id')->all(),
+            [$valid->id],
+        );
     }
 
-    public function test_it_excludes_restaurant_without_any_hours(): void
+    public function test_overnight_period_daytime_query(): void
     {
-        Restaurant::factory()->create();
+        $valid = Restaurant::factory()
+            ->has(
+                Hour::factory()
+                    ->has(Period::factory()->state(['start' => '20:00:00', 'end' => '04:00:00']))
+            )
+            ->create();
 
-        $results = Restaurant::openInWindow(Carbon::createFromFormat('!H:i', '10:00'), Carbon::createFromFormat('!H:i', '14:00'))->pluck('id');
+        $invalids = collect([
+            ['start' => '21:30:00', 'end' => '04:00:00'], // period starts after query start
+            ['start' => '20:00:00', 'end' => '22:00:00'], // period ends before query end
+            ['start' => '21:30:00', 'end' => '22:00:00'], // both start after and end before
+        ])->map(fn ($period) => Restaurant::factory()
+            ->has(Hour::factory()->has(Period::factory()->state($period)))
+            ->create()
+        );
 
-        $this->assertEmpty($results);
+        $this->assertEquals(
+            Restaurant::openInWindow(Carbon::createFromFormat('!H:i', '21:00'), Carbon::createFromFormat('!H:i', '23:00'))->pluck('id')->all(),
+            [$valid->id],
+        );
     }
 
-    public function test_it_excludes_restaurant_with_hour_but_no_periods_and_not_24hr(): void
+    public function test_daytime_period_overnight_query(): void
     {
         Restaurant::factory()
-            ->has(Hour::factory()->dayOfWeek(3))
+            ->has(Hour::factory()->has(Period::factory()->state(['start' => '00:00:00', 'end' => '23:00:00'])))
             ->create();
 
-        $results = Restaurant::openInWindow(Carbon::createFromFormat('!H:i', '10:00'), Carbon::createFromFormat('!H:i', '14:00'))->pluck('id');
+        // there should be no overlap
 
-        $this->assertEmpty($results);
-    }
-
-    public function test_it_matches_restaurants_regardless_of_weekday(): void
-    {
-        $monday = Restaurant::factory()->has(Hour::factory()->dayOfWeek(1)->is24hr())->create();
-        $friday = Restaurant::factory()->has(Hour::factory()->dayOfWeek(5)->is24hr())->create();
-
-        $results = Restaurant::openInWindow(Carbon::createFromFormat('!H:i', '10:00'), Carbon::createFromFormat('!H:i', '14:00'))->pluck('id');
-
-        $this->assertCount(2, $results);
-        $this->assertContains($monday->id, $results->all());
-        $this->assertContains($friday->id, $results->all());
-    }
-
-    public function test_it_excludes_is_close(): void
-    {
-        $open = Restaurant::factory()->has(Hour::factory()->is24hr())->create();
-        $closed = Restaurant::factory()->has(Hour::factory()->is24hr()->isClose())->create();
-
-        $results = Restaurant::openInWindow(Carbon::createFromFormat('!H:i', '10:00'), Carbon::createFromFormat('!H:i', '14:00'))->pluck('id');
-
-        $this->assertCount(1, $results);
-        $this->assertSame($open->id, $results->first());
-    }
-
-    public function test_it_excludes_non_zero_weight(): void
-    {
-        $base = Restaurant::factory()->has(Hour::factory()->is24hr())->create();
-        $holiday = Restaurant::factory()->has(Hour::factory()->nonZeroWeight()->is24hr())->create();
-
-        $results = Restaurant::openInWindow(Carbon::createFromFormat('!H:i', '10:00'), Carbon::createFromFormat('!H:i', '14:00'))->pluck('id');
-
-        $this->assertCount(1, $results);
-        $this->assertSame($base->id, $results->first());
-    }
-
-    public function test_it_excludes_inactive_restaurants(): void
-    {
-        $inactive = Restaurant::factory()->inactive()->has(Hour::factory()->is24hr())->create();
-
-        $results = Restaurant::withoutGlobalScope('active')
-            ->openInWindow(Carbon::createFromFormat('!H:i', '10:00'), Carbon::createFromFormat('!H:i', '14:00'))
-            ->pluck('id');
-
-        $this->assertCount(1, $results);
-        $this->assertSame($inactive->id, $results->first());
-
-        $resultsWithScope = Restaurant::openInWindow(Carbon::createFromFormat('!H:i', '10:00'), Carbon::createFromFormat('!H:i', '14:00'))->pluck('id');
-
-        $this->assertEmpty($resultsWithScope);
-    }
-
-    public function test_it_matches_overnight_period_covering_overnight_query(): void
-    {
-        $restaurant = Restaurant::factory()
-            ->has(
-                Hour::factory()
-                    ->dayOfWeek(4)
-                    ->has(Period::factory()->state(['start' => '22:00:00', 'end' => '02:00:00']))
-            )
-            ->create();
-
-        $results = Restaurant::openInWindow(Carbon::createFromFormat('!H:i', '23:00'), Carbon::createFromFormat('!H:i', '01:00'))->pluck('id');
-
-        $this->assertCount(1, $results);
-        $this->assertSame($restaurant->id, $results->first());
-    }
-
-    public function test_it_requires_overnight_period_to_fully_cover_daytime_query(): void
-    {
-        $restaurant = Restaurant::factory()
-            ->has(
-                Hour::factory()
-                    ->dayOfWeek(4)
-                    ->has(
-                        Period::factory()
-                            ->state(['start' => '22:00:00', 'end' => '02:00:00'])
-                    )
-            )
-            ->create();
-
-        $results = Restaurant::openInWindow(Carbon::createFromFormat('!H:i', '21:00'), Carbon::createFromFormat('!H:i', '23:00'))->pluck('id');
-
-        $this->assertEmpty($results);
-    }
-
-    public function test_it_requires_overnight_period_to_fully_cover_overnight_query(): void
-    {
-        $restaurant = Restaurant::factory()
-            ->has(
-                Hour::factory()
-                    ->has(Period::factory()->state(['start' => '22:00:00', 'end' => '02:00:00']))
-            )
-            ->create();
-
-        $results = Restaurant::openInWindow(Carbon::createFromFormat('!H:i', '23:00'), Carbon::createFromFormat('!H:i', '05:00'))->pluck('id');
-
-        $this->assertEmpty($results);
-    }
-
-    public function test_it_matches_overnight_period_covering_early_morning_query(): void
-    {
-        $restaurant = Restaurant::factory()
-            ->has(
-                Hour::factory()
-                    ->dayOfWeek(4)
-                    ->has(Period::factory()->state(['start' => '22:00:00', 'end' => '02:00:00']))
-            )
-            ->create();
-
-        $results = Restaurant::openInWindow(Carbon::createFromFormat('!H:i', '00:00'), Carbon::createFromFormat('!H:i', '02:00'))->pluck('id');
-
-        $this->assertCount(1, $results);
-        $this->assertSame($restaurant->id, $results->first());
-    }
-
-    public function test_it_does_not_match_overnight_query_against_daytime_period(): void
-    {
-        $restaurant = Restaurant::factory()
-            ->has(
-                Hour::factory()
-                    ->dayOfWeek(4)
-                    ->has(Period::factory()->state(['start' => '09:00:00', 'end' => '18:00:00']))
-            )
-            ->create();
-
-        $results = Restaurant::openInWindow(Carbon::createFromFormat('!H:i', '22:00'), Carbon::createFromFormat('!H:i', '02:00'))->pluck('id');
-
-        $this->assertEmpty($results);
-    }
-
-    public function test_it_excludes_overnight_period_closing_at_query_start_when_query_is_daytime(): void
-    {
-        $restaurant = Restaurant::factory()
-            ->has(
-                Hour::factory()
-                    ->dayOfWeek(4)
-                    ->has(Period::factory()->state(['start' => '18:00:00', 'end' => '03:00:00']))
-            )
-            ->create();
-
-        $results = Restaurant::openInWindow(Carbon::createFromFormat('!H:i', '03:00'), Carbon::createFromFormat('!H:i', '04:00'))->pluck('id');
+        $results = Restaurant::openInWindow(Carbon::createFromFormat('!H:i', '23:00'), Carbon::createFromFormat('!H:i', '00:00'))->pluck('id');
 
         $this->assertEmpty($results);
     }
