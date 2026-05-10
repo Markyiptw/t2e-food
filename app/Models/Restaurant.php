@@ -21,43 +21,6 @@ class Restaurant extends Model
         return $this->hasMany(Hour::class);
     }
 
-    public function getName(): string
-    {
-        return $this->name ?? $this->data['name'] ?? 'Unknown';
-    }
-
-    public function getAddress(): string
-    {
-        return $this->data['address'] ?? '';
-    }
-
-    public function getLatitude(): ?float
-    {
-        if ($this->latitude !== null) {
-            return (float) $this->latitude;
-        }
-
-        $lat = $this->data['mapLatitude'] ?? null;
-
-        return is_numeric($lat) ? (float) $lat : null;
-    }
-
-    public function getLongitude(): ?float
-    {
-        if ($this->longitude !== null) {
-            return (float) $this->longitude;
-        }
-
-        $lng = $this->data['mapLongitude'] ?? null;
-
-        return is_numeric($lng) ? (float) $lng : null;
-    }
-
-    public function getPoiHours(): array
-    {
-        return $this->data['poiHours'] ?? [];
-    }
-
     protected static function booted(): void
     {
         static::addGlobalScope('active', function (Builder $builder) {
