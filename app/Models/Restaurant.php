@@ -95,61 +95,43 @@ class Restaurant extends Model
                             )
                         )
                         ->when($end !== null, fn (Builder $query) => $query
-                            /**
-                             * Query spans two calendar days (e.g. 21:00→03:00).
-                             * Add 86400 seconds to the period-end to account for the
-                             * midnight-crossing offset, then compare against the query
-                             * end (which is already on day-2).
-                             */
-                            ->when(isset($start) && $start->gt($end),
+                            ->when(
+                                /**
+                                 * Query spans two calendar days (e.g. 21:00→03:00).
+                                 * Add 86400 seconds to the period-end to account for the
+                                 * midnight-crossing offset, then compare against the query
+                                 * end (which is already on day-2).
+                                 */
+                                isset($start) && $start->gt($end),
                                 fn (Builder $query) => $query
                                     ->whereRaw(
                                         '(EXTRACT(EPOCH FROM "end") + CASE WHEN "start" > "end" THEN 86400 ELSE 0 END) >= ?',
                                         [$end->secondsSinceMidnight() + 86400],
                                     ),
-                            )
-                            /**
-                             * Query is within a single day, both $start and $end are known.
-                             *
-                             * Daytime period (start < end):
-                             *   → end >= query_end
-                             *
-                             * Overnight period (start > end), two sub-cases:
-                             *   (A) Query on day-1 (before midnight): period hasn't ended yet.
-                             *       → end < query_start
-                             *   (B) Query on day-2 (after midnight): period must close at or after query end.
-                             *       → end >= query_end
-                             */
-                            ->when(isset($start) && ! $start->gt($end),
                                 fn (Builder $query) => $query
                                     ->where(fn (Builder $query) => $query
                                         ->where(fn (Builder $query) => $query
+                                            // the grouping is for semantics only
+                                            // think of this as the basic of set of record in the general case
+                                            // and later you include more records for each edge case
+                                            // to-do: think if there's other way to express !(isset($start) && $start->gt($end))
                                             ->whereColumn('start', '<', 'end')
                                             ->where('end', '>=', $end->format('H:i'))
                                         )
-                                        ->orWhere(fn (Builder $query) => $query
-                                            ->whereColumn('start', '>', 'end')
-                                            ->where(fn (Builder $query) => $query
-                                                ->where('end', '<', $start->format('H:i'))
-                                                ->orWhere('end', '>=', $end->format('H:i'))
-                                            )
+                                        ->when(
+                                            isset($start),
+                                            fn (Builder $query) => $query
+                                                ->orWhere(fn (Builder $query) => $query
+                                                    ->whereColumn('start', '>', 'end')
+                                                    ->where(fn (Builder $query) => $query
+                                                        ->where('end', '<', $start->format('H:i'))
+                                                        ->orWhere('end', '>=', $end->format('H:i'))
+                                                    )
+                                                ),
+                                            fn (Builder $query) => $query->orWhereColumn('start', '>', 'end')
                                         )
-                                    ),
+                                    )
                             )
-                            /**
-                             * Without a query start time the day-1/day-2 distinction cannot
-                             * be decided, so ``start > end`` alone is sufficient.
-                             */
-                            ->when(! isset($start),
-                                fn (Builder $query) => $query
-                                    ->where(fn (Builder $query) => $query
-                                        ->where(fn (Builder $query) => $query
-                                            ->whereColumn('start', '<', 'end')
-                                            ->where('end', '>=', $end->format('H:i'))
-                                        )
-                                        ->orWhereColumn('start', '>', 'end')
-                                    ),
-                            ),
                         ),
                     )
                 )
