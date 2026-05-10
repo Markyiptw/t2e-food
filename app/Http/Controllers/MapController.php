@@ -24,17 +24,10 @@ class MapController extends Controller
             ],
         ]);
 
-        dd($validated);
-
-        // use the same date to make the result more "determinstic"
-        // Carbon::createFromFormat('!H:i', $validated['start'] ?? null);
-
-        // dump($validated);
+        // use the same date, i.e. 1970-01-01, to make the result more "determinstic"
 
         $start = isset($validated['start']) ? Carbon::createFromFormat('!H:i', $validated['start']) : null;
         $end = isset($validated['end']) ? Carbon::createFromFormat('!H:i', $validated['end']) : null;
-
-        // $markers = collect();
 
         $markers = Restaurant::query()
             ->select([
@@ -45,15 +38,13 @@ class MapController extends Controller
                 'data->shortenUrl as url',
             ])
             ->openInWindow($start, $end)
-            // ->getQuery()
-            // ->lazyById()
             ->get()
             ->map(fn (Restaurant $restaurant) => $restaurant->toArray())
             ->values();
 
         return view('map', [
-            'start' => $start,
-            'end' => $end,
+            'start' => $start?->format('H:i'),
+            'end' => $end?->format('H:i'),
             'markersJson' => $markers->toJson(),
         ]);
     }
