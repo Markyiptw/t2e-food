@@ -110,11 +110,8 @@ class Restaurant extends Model
                                             isset($start),
                                             fn (Builder $query) => $query
                                                 ->orWhere(fn (Builder $query) => $query
-                                                    ->whereColumn('start', '>', 'end')
-                                                    ->where(fn (Builder $query) => $query
-                                                        ->where('end', '<', $start->format('H:i'))
-                                                        ->orWhere('end', '>=', $end->format('H:i'))
-                                                    )
+                                                    ->whereColumn('start', '>=', 'end') // equal should be be considered overnight, such case should have been convered to 24hrs
+                                                    ->where('end', '<', $start->format('H:i')) // similar logic to the day-2 side of the start time check?
                                                 ),
                                         ),
                                     /**
