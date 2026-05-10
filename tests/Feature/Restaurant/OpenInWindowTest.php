@@ -12,24 +12,7 @@ class OpenInWindowTest extends TestCase
 {
     use LazilyRefreshDatabase;
 
-    public function test_it_matches_restaurant_open_24_hours_on_specified_weekday(): void
-    {
-        $restaurantId = $this->insertActiveRestaurant();
-
-        $this->insertHour($restaurantId, [
-            'dayOfWeek' => 3,
-            'weight' => 0,
-            'isClose' => false,
-            'is24hr' => true,
-        ]);
-
-        $results = Restaurant::openInWindow(3, '10:00:00', '14:00:00')->pluck('id');
-
-        $this->assertCount(1, $results);
-        $this->assertSame($restaurantId, $results->first());
-    }
-
-    public function test_it_matches_restaurant_with_periods_covering_window_on_specified_weekday(): void
+    public function test_it_matches_restaurant_with_periods_covering_window(): void
     {
         $restaurantId = $this->insertActiveRestaurant();
 
@@ -42,7 +25,7 @@ class OpenInWindowTest extends TestCase
 
         $this->insertPeriod($hourId, 1, '09:00:00', '17:00:00');
 
-        $results = Restaurant::openInWindow(2, '10:00:00', '14:00:00')->pluck('id');
+        $results = Restaurant::openInWindow('10:00:00', '14:00:00')->pluck('id');
 
         $this->assertCount(1, $results);
         $this->assertSame($restaurantId, $results->first());
@@ -61,55 +44,7 @@ class OpenInWindowTest extends TestCase
 
         $this->insertPeriod($hourId, 1, '10:00:00', '14:00:00');
 
-        $results = Restaurant::openInWindow(2, '08:00:00', '11:00:00')->pluck('id');
-
-        $this->assertEmpty($results);
-    }
-
-    public function test_it_excludes_restaurant_with_mismatched_weekday(): void
-    {
-        $restaurantId = $this->insertActiveRestaurant();
-
-        $this->insertHour($restaurantId, [
-            'dayOfWeek' => 5,
-            'weight' => 0,
-            'isClose' => false,
-            'is24hr' => true,
-        ]);
-
-        $results = Restaurant::openInWindow(3, '10:00:00', '14:00:00')->pluck('id');
-
-        $this->assertEmpty($results);
-    }
-
-    public function test_it_excludes_restaurant_with_is_close_true(): void
-    {
-        $restaurantId = $this->insertActiveRestaurant();
-
-        $this->insertHour($restaurantId, [
-            'dayOfWeek' => 3,
-            'weight' => 0,
-            'isClose' => true,
-            'is24hr' => true,
-        ]);
-
-        $results = Restaurant::openInWindow(3, '10:00:00', '14:00:00')->pluck('id');
-
-        $this->assertEmpty($results);
-    }
-
-    public function test_it_excludes_restaurant_with_non_zero_weight(): void
-    {
-        $restaurantId = $this->insertActiveRestaurant();
-
-        $this->insertHour($restaurantId, [
-            'dayOfWeek' => 3,
-            'weight' => 4,
-            'isClose' => false,
-            'is24hr' => true,
-        ]);
-
-        $results = Restaurant::openInWindow(3, '10:00:00', '14:00:00')->pluck('id');
+        $results = Restaurant::openInWindow('08:00:00', '11:00:00')->pluck('id');
 
         $this->assertEmpty($results);
     }
@@ -118,7 +53,7 @@ class OpenInWindowTest extends TestCase
     {
         $this->insertActiveRestaurant();
 
-        $results = Restaurant::openInWindow(3, '10:00:00', '14:00:00')->pluck('id');
+        $results = Restaurant::openInWindow('10:00:00', '14:00:00')->pluck('id');
 
         $this->assertEmpty($results);
     }
@@ -134,12 +69,12 @@ class OpenInWindowTest extends TestCase
             'is24hr' => false,
         ]);
 
-        $results = Restaurant::openInWindow(3, '10:00:00', '14:00:00')->pluck('id');
+        $results = Restaurant::openInWindow('10:00:00', '14:00:00')->pluck('id');
 
         $this->assertEmpty($results);
     }
 
-    public function test_it_matches_any_weekday_when_day_of_week_is_null(): void
+    public function test_it_matches_restaurants_regardless_of_weekday(): void
     {
         $mondayId = $this->insertActiveRestaurant();
         $this->insertHour($mondayId, [
@@ -157,14 +92,14 @@ class OpenInWindowTest extends TestCase
             'is24hr' => true,
         ]);
 
-        $results = Restaurant::openInWindow(null, '10:00:00', '14:00:00')->pluck('id');
+        $results = Restaurant::openInWindow('10:00:00', '14:00:00')->pluck('id');
 
         $this->assertCount(2, $results);
         $this->assertContains($mondayId, $results->all());
         $this->assertContains($fridayId, $results->all());
     }
 
-    public function test_it_still_excludes_is_close_when_day_of_week_is_null(): void
+    public function test_it_excludes_is_close(): void
     {
         $openId = $this->insertActiveRestaurant();
         $this->insertHour($openId, [
@@ -182,13 +117,13 @@ class OpenInWindowTest extends TestCase
             'is24hr' => true,
         ]);
 
-        $results = Restaurant::openInWindow(null, '10:00:00', '14:00:00')->pluck('id');
+        $results = Restaurant::openInWindow('10:00:00', '14:00:00')->pluck('id');
 
         $this->assertCount(1, $results);
         $this->assertSame($openId, $results->first());
     }
 
-    public function test_it_still_excludes_non_zero_weight_when_day_of_week_is_null(): void
+    public function test_it_excludes_non_zero_weight(): void
     {
         $baseId = $this->insertActiveRestaurant();
         $this->insertHour($baseId, [
@@ -206,7 +141,7 @@ class OpenInWindowTest extends TestCase
             'is24hr' => true,
         ]);
 
-        $results = Restaurant::openInWindow(null, '10:00:00', '14:00:00')->pluck('id');
+        $results = Restaurant::openInWindow('10:00:00', '14:00:00')->pluck('id');
 
         $this->assertCount(1, $results);
         $this->assertSame($baseId, $results->first());
@@ -228,13 +163,13 @@ class OpenInWindowTest extends TestCase
         ]);
 
         $results = Restaurant::withoutGlobalScope('active')
-            ->openInWindow(3, '10:00:00', '14:00:00')
+            ->openInWindow('10:00:00', '14:00:00')
             ->pluck('id');
 
         $this->assertCount(1, $results);
         $this->assertSame($restaurantId, $results->first());
 
-        $resultsWithScope = Restaurant::openInWindow(3, '10:00:00', '14:00:00')->pluck('id');
+        $resultsWithScope = Restaurant::openInWindow('10:00:00', '14:00:00')->pluck('id');
 
         $this->assertEmpty($resultsWithScope);
     }
@@ -252,7 +187,7 @@ class OpenInWindowTest extends TestCase
 
         $this->insertPeriod($hourId, 1, '22:00:00', '02:00:00');
 
-        $results = Restaurant::openInWindow(4, '23:00:00', '01:00:00')->pluck('id');
+        $results = Restaurant::openInWindow('23:00:00', '01:00:00')->pluck('id');
 
         $this->assertCount(1, $results);
         $this->assertSame($restaurantId, $results->first());
@@ -271,7 +206,7 @@ class OpenInWindowTest extends TestCase
 
         $this->insertPeriod($hourId, 1, '22:00:00', '02:00:00');
 
-        $results = Restaurant::openInWindow(4, '21:00:00', '23:00:00')->pluck('id');
+        $results = Restaurant::openInWindow('21:00:00', '23:00:00')->pluck('id');
 
         $this->assertEmpty($results);
     }
@@ -289,7 +224,7 @@ class OpenInWindowTest extends TestCase
 
         $this->insertPeriod($hourId, 1, '22:00:00', '02:00:00');
 
-        $results = Restaurant::openInWindow(4, '23:00:00', '05:00:00')->pluck('id');
+        $results = Restaurant::openInWindow('23:00:00', '05:00:00')->pluck('id');
 
         $this->assertEmpty($results);
     }
@@ -307,7 +242,7 @@ class OpenInWindowTest extends TestCase
 
         $this->insertPeriod($hourId, 1, '22:00:00', '02:00:00');
 
-        $results = Restaurant::openInWindow(4, '00:00:00', '02:00:00')->pluck('id');
+        $results = Restaurant::openInWindow('00:00:00', '02:00:00')->pluck('id');
 
         $this->assertCount(1, $results);
         $this->assertSame($restaurantId, $results->first());
@@ -326,7 +261,7 @@ class OpenInWindowTest extends TestCase
 
         $this->insertPeriod($hourId, 1, '09:00:00', '18:00:00');
 
-        $results = Restaurant::openInWindow(4, '22:00:00', '02:00:00')->pluck('id');
+        $results = Restaurant::openInWindow('22:00:00', '02:00:00')->pluck('id');
 
         $this->assertEmpty($results);
     }
@@ -344,7 +279,7 @@ class OpenInWindowTest extends TestCase
 
         $this->insertPeriod($hourId, 1, '18:00:00', '03:00:00');
 
-        $results = Restaurant::openInWindow(4, '03:00:00', '04:00:00')->pluck('id');
+        $results = Restaurant::openInWindow('03:00:00', '04:00:00')->pluck('id');
 
         $this->assertEmpty($results);
     }
