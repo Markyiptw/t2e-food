@@ -10,15 +10,12 @@ class MapController extends Controller
     public function __invoke(Request $request)
     {
         $validated = $request->validate([
-            'day_of_week' => 'nullable|integer|min:1|max:7',
             'start_time' => 'nullable|string',
             'end_time' => 'nullable|string',
         ]);
 
         // dump($validated);
 
-        $dayOfWeek = isset($validated['day_of_week']) ? (int) $validated['day_of_week'] : null;
-        // $dayOfWeek = $validated['day_of_week'];
         $startTime = $validated['start_time'] ?? null;
         $endTime = $validated['end_time'] ?? null;
 
@@ -32,7 +29,7 @@ class MapController extends Controller
                 'data->mapLongitude as longitude',
                 'data->shortenUrl as url',
             ])
-            ->openInWindow($dayOfWeek, $startTime, $endTime)
+            ->openInWindow($startTime, $endTime)
             // ->getQuery()
             // ->lazyById()
             ->get()
@@ -40,7 +37,6 @@ class MapController extends Controller
             ->values();
 
         return view('map', [
-            'dayOfWeek' => $dayOfWeek,
             'startTime' => $startTime,
             'endTime' => $endTime,
             'markersJson' => $markers->toJson(),

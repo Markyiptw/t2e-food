@@ -16,7 +16,295 @@
             @vite(['resources/css/app.css', 'resources/js/app.js'])
         @else
             <style>
-                /*! tailwindcss v4.0.7 | MIT License | https://tailwindcss.com */@layer theme{:root,:host{--font-sans:'Instrument Sans',ui-sans-serif,system-ui,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";--font-serif:ui-serif,Georgia,Cambria,"Times New Roman",Times,serif;--font-mono:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;--color-red-50:oklch(.971 .013 17.38);--color-red-100:oklch(.936 .032 17.717);--color-red-200:oklch(.885 .062 18.334);--color-red-300:oklch(.808 .114 19.571);--color-red-400:oklch(.704 .191 22.216);--color-red-500:oklch(.637 .237 25.331);--color-red-600:oklch(.577 .245 27.325);--color-red-700:oklch(.505 .213 27.518);--color-red-800:oklch(.444 .177 26.899);--color-red-900:oklch(.396 .141 25.723);--color-red-950:oklch(.258 .092 26.042);--color-orange-50:oklch(.98 .016 73.684);--color-orange-100:oklch(.954 .038 75.164);--color-orange-200:oklch(.901 .076 70.697);--color-orange-300:oklch(.837 .128 66.29);--color-orange-400:oklch(.75 .183 55.934);--color-orange-500:oklch(.705 .213 47.604);--color-orange-600:oklch(.646 .222 41.116);--color-orange-700:oklch(.553 .195 38.402);--color-orange-800:oklch(.47 .157 37.304);--color-orange-900:oklch(.408 .123 38.172);--color-orange-950:oklch(.266 .079 36.259);--color-amber-50:oklch(.987 .022 95.277);--color-amber-100:oklch(.962 .059 95.617);--color-amber-200:oklch(.924 .12 95.746);--color-amber-300:oklch(.879 .169 91.605);--color-amber-400:oklch(.828 .189 84.429);--color-amber-500:oklch(.769 .188 70.08);--color-amber-600:oklch(.666 .179 58.318);--color-amber-700:oklch(.555 .163 48.998);--color-amber-800:oklch(.473 .137 46.201);--color-amber-900:oklch(.414 .112 45.904);--color-amber-950:oklch(.279 .077 45.635);--color-yellow-50:oklch(.987 .026 102.212);--color-yellow-100:oklch(.973 .071 103.193);--color-yellow-200:oklch(.945 .129 101.54);--color-yellow-300:oklch(.905 .182 98.111);--color-yellow-400:oklch(.852 .199 91.936);--color-yellow-500:oklch(.795 .184 86.047);--color-yellow-600:oklch(.681 .162 75.834);--color-yellow-700:oklch(.554 .135 66.442);--color-yellow-800:oklch(.476 .114 61.907);--color-yellow-900:oklch(.421 .095 57.708);--color-yellow-950:oklch(.286 .066 53.813);--color-green-50:oklch(.982 .018 155.826);--color-green-100:oklch(.962 .044 156.743);--color-green-200:oklch(.925 .084 155.995);--color-green-300:oklch(.871 .15 154.449);--color-green-400:oklch(.792 .209 151.711);--color-green-500:oklch(.723 .219 149.579);--color-green-600:oklch(.627 .194 149.214);--color-green-700:oklch(.527 .154 150.069);--color-green-800:oklch(.448 .119 151.328);--color-green-900:oklch(.393 .095 152.535);--color-green-950:oklch(.266 .065 152.934);--color-teal-50:oklch(.984 .014 180.72);--color-teal-100:oklch(.953 .051 180.801);--color-teal-200:oklch(.91 .096 180.426);--color-teal-300:oklch(.855 .138 181.071);--color-teal-400:oklch(.777 .152 181.912);--color-teal-500:oklch(.704 .14 182.503);--color-teal-600:oklch(.6 .118 184.704);--color-teal-700:oklch(.511 .096 186.391);--color-teal-800:oklch(.437 .078 188.216);--color-teal-900:oklch(.386 .063 188.416);--color-teal-950:oklch(.277 .046 192.524);--color-blue-50:oklch(.97 .014 254.604);--color-blue-100:oklch(.932 .032 255.585);--color-blue-200:oklch(.882 .059 254.128);--color-blue-300:oklch(.809 .105 251.813);--color-blue-400:oklch(.707 .165 254.624);--color-blue-500:oklch(.623 .214 259.815);--color-blue-600:oklch(.546 .245 262.881);--color-blue-700:oklch(.488 .243 264.376);--color-blue-800:oklch(.424 .199 265.638);--color-blue-900:oklch(.379 .146 265.522);--color-blue-950:oklch(.282 .091 267.935);--color-indigo-50:oklch(.962 .018 272.314);--color-indigo-100:oklch(.93 .034 272.788);--color-indigo-200:oklch(.87 .065 274.039);--color-indigo-300:oklch(.785 .115 274.713);--color-indigo-400:oklch(.673 .182 276.935);--color-indigo-500:oklch(.585 .233 277.117);--color-indigo-600:oklch(.511 .262 276.966);--color-indigo-700:oklch(.457 .24 277.023);--color-indigo-800:oklch(.398 .195 277.366);--color-indigo-900:oklch(.359 .144 278.697);--color-indigo-950:oklch(.257 .09 281.288);--color-purple-50:oklch(.977 .014 308.299);--color-purple-100:oklch(.946 .033 307.174);--color-purple-200:oklch(.902 .063 306.703);--color-purple-300:oklch(.827 .119 306.383);--color-purple-400:oklch(.714 .203 305.504);--color-purple-500:oklch(.627 .265 303.9);--color-purple-600:oklch(.558 .288 302.321);--color-purple-700:oklch(.496 .265 301.924);--color-purple-800:oklch(.438 .218 303.724);--color-purple-900:oklch(.381 .176 304.987);--color-purple-950:oklch(.291 .149 302.717);--color-pink-50:oklch(.971 .014 343.198);--color-pink-100:oklch(.948 .028 342.258);--color-pink-200:oklch(.899 .061 343.231);--color-pink-300:oklch(.823 .12 346.018);--color-pink-400:oklch(.718 .202 349.761);--color-pink-500:oklch(.656 .241 354.308);--color-pink-600:oklch(.592 .249 .584);--color-pink-700:oklch(.525 .223 3.958);--color-pink-800:oklch(.459 .187 3.815);--color-pink-900:oklch(.408 .153 2.432);--color-pink-950:oklch(.284 .109 3.907);--color-gray-50:oklch(.985 .002 247.839);--color-gray-100:oklch(.967 .003 264.542);--color-gray-200:oklch(.928 .006 264.531);--color-gray-300:oklch(.872 .01 258.338);--color-gray-400:oklch(.707 .022 261.325);--color-gray-500:oklch(.551 .027 264.364);--color-gray-600:oklch(.446 .03 256.802);--color-gray-700:oklch(.373 .034 259.733);--color-gray-800:oklch(.278 .033 256.848);--color-gray-900:oklch(.21 .034 264.665);--color-gray-950:oklch(.13 .028 261.692);--color-black:#000;--color-white:#fff;--spacing:.25rem;--breakpoint-sm:40rem;--breakpoint-md:48rem;--breakpoint-lg:64rem;--breakpoint-xl:80rem;--breakpoint-2xl:96rem;--container-3xs:16rem;--container-2xs:18rem;--container-xs:20rem;--container-sm:24rem;--container-md:28rem;--container-lg:32rem;--container-xl:36rem;--container-2xl:42rem;--container-3xl:48rem;--container-4xl:56rem;--container-5xl:64rem;--container-6xl:72rem;--container-7xl:80rem;--text-xs:.75rem;--text-xs--line-height:1rem;--text-sm:.875rem;--text-sm--line-height:1.25rem;--text-base:1rem;--text-base--line-height:1.5rem;--text-lg:1.125rem;--text-lg--line-height:1.75rem;--text-xl:1.25rem;--text-xl--line-height:1.75rem;--text-2xl:1.5rem;--text-2xl--line-height:2rem;--text-3xl:1.875rem;--text-3xl--line-height:2.25rem;--text-4xl:2.25rem;--text-4xl--line-height:2.5rem;--text-5xl:3rem;--text-5xl--line-height:1;--text-6xl:3.75rem;--text-6xl--line-height:1;--text-7xl:4.5rem;--text-7xl--line-height:1;--text-8xl:6rem;--text-8xl--line-height:1;--text-9xl:8rem;--text-9xl--line-height:1;--font-weight-thin:100;--font-weight-extralight:200;--font-weight-light:300;--font-weight-normal:400;--font-weight-medium:500;--font-weight-semibold:600;--font-weight-bold:700;--font-weight-extrabold:800;--font-weight-black:900;--leading-none:1;--leading-tight:1.25;--leading-snug:1.375;--leading-normal:1.5;--leading-relaxed:1.625;--leading-loose:2;--radius-xs:.125rem;--radius-sm:.25rem;--radius-md:.375rem;--radius-lg:.5rem;--radius-xl:.75rem;--radius-2xl:1.5rem;--ease-in:cubic-bezier(.4,0,1,1);--ease-out:cubic-bezier(0,0,.2,1);--ease-in-out:cubic-bezier(.4,0,.2,1);--animate-spin:spin 1s linear infinite;--animate-ping:ping 1s cubic-bezier(0,0,.2,1)infinite;--default-transition-duration:.15s;--default-transition-timing-function:cubic-bezier(.4,0,.2,1);--default-font-family:var(--font-sans);--default-mono-font-family:var(--font-mono)}}@layer base{*,:after,:before,::backdrop{--tw-border-style:solid;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-opacity: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-drop-shadow-color: ;--tw-drop-shadow-alpha:100%;--tw-drop-shadow-size: ;box-sizing:border-box;border:0 solid;--tw-shadow:0 0 #0000;--tw-ring-inset:var(--tw-empty,);--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:color-mix(in oklch,currentColor calc(var(--tw-ring-alpha, 0)*100%)transparent)}html{line-height:1.5;-webkit-text-size-adjust:100%}}@layer utilities{*{--tw-shadow:0 0 #0000;--tw-ring-color:color-mix(in oklch,currentColor calc(var(--tw-ring-alpha, 0)*100%)transparent)}body{margin:0;font-family:var(--font-sans);line-height:inherit}}@keyframes ping{75%,to{transform:scale(2);opacity:0}}@keyframes spin{to{transform:rotate(360deg)}}@property --tw-ring-alpha{syntax:"*";inherits:false;initial-value:0}
+                /*! tailwindcss v4.0.7 | MIT License | https://tailwindcss.com */
+                @layer theme {
+                    :root,
+                    :host {
+                        --font-sans:
+                            'Instrument Sans', ui-sans-serif, system-ui,
+                            sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+                            'Segoe UI Symbol', 'Noto Color Emoji';
+                        --font-serif:
+                            ui-serif, Georgia, Cambria, 'Times New Roman',
+                            Times, serif;
+                        --font-mono:
+                            ui-monospace, SFMono-Regular, Menlo, Monaco,
+                            Consolas, 'Liberation Mono', 'Courier New',
+                            monospace;
+                        --color-red-50: oklch(0.971 0.013 17.38);
+                        --color-red-100: oklch(0.936 0.032 17.717);
+                        --color-red-200: oklch(0.885 0.062 18.334);
+                        --color-red-300: oklch(0.808 0.114 19.571);
+                        --color-red-400: oklch(0.704 0.191 22.216);
+                        --color-red-500: oklch(0.637 0.237 25.331);
+                        --color-red-600: oklch(0.577 0.245 27.325);
+                        --color-red-700: oklch(0.505 0.213 27.518);
+                        --color-red-800: oklch(0.444 0.177 26.899);
+                        --color-red-900: oklch(0.396 0.141 25.723);
+                        --color-red-950: oklch(0.258 0.092 26.042);
+                        --color-orange-50: oklch(0.98 0.016 73.684);
+                        --color-orange-100: oklch(0.954 0.038 75.164);
+                        --color-orange-200: oklch(0.901 0.076 70.697);
+                        --color-orange-300: oklch(0.837 0.128 66.29);
+                        --color-orange-400: oklch(0.75 0.183 55.934);
+                        --color-orange-500: oklch(0.705 0.213 47.604);
+                        --color-orange-600: oklch(0.646 0.222 41.116);
+                        --color-orange-700: oklch(0.553 0.195 38.402);
+                        --color-orange-800: oklch(0.47 0.157 37.304);
+                        --color-orange-900: oklch(0.408 0.123 38.172);
+                        --color-orange-950: oklch(0.266 0.079 36.259);
+                        --color-amber-50: oklch(0.987 0.022 95.277);
+                        --color-amber-100: oklch(0.962 0.059 95.617);
+                        --color-amber-200: oklch(0.924 0.12 95.746);
+                        --color-amber-300: oklch(0.879 0.169 91.605);
+                        --color-amber-400: oklch(0.828 0.189 84.429);
+                        --color-amber-500: oklch(0.769 0.188 70.08);
+                        --color-amber-600: oklch(0.666 0.179 58.318);
+                        --color-amber-700: oklch(0.555 0.163 48.998);
+                        --color-amber-800: oklch(0.473 0.137 46.201);
+                        --color-amber-900: oklch(0.414 0.112 45.904);
+                        --color-amber-950: oklch(0.279 0.077 45.635);
+                        --color-yellow-50: oklch(0.987 0.026 102.212);
+                        --color-yellow-100: oklch(0.973 0.071 103.193);
+                        --color-yellow-200: oklch(0.945 0.129 101.54);
+                        --color-yellow-300: oklch(0.905 0.182 98.111);
+                        --color-yellow-400: oklch(0.852 0.199 91.936);
+                        --color-yellow-500: oklch(0.795 0.184 86.047);
+                        --color-yellow-600: oklch(0.681 0.162 75.834);
+                        --color-yellow-700: oklch(0.554 0.135 66.442);
+                        --color-yellow-800: oklch(0.476 0.114 61.907);
+                        --color-yellow-900: oklch(0.421 0.095 57.708);
+                        --color-yellow-950: oklch(0.286 0.066 53.813);
+                        --color-green-50: oklch(0.982 0.018 155.826);
+                        --color-green-100: oklch(0.962 0.044 156.743);
+                        --color-green-200: oklch(0.925 0.084 155.995);
+                        --color-green-300: oklch(0.871 0.15 154.449);
+                        --color-green-400: oklch(0.792 0.209 151.711);
+                        --color-green-500: oklch(0.723 0.219 149.579);
+                        --color-green-600: oklch(0.627 0.194 149.214);
+                        --color-green-700: oklch(0.527 0.154 150.069);
+                        --color-green-800: oklch(0.448 0.119 151.328);
+                        --color-green-900: oklch(0.393 0.095 152.535);
+                        --color-green-950: oklch(0.266 0.065 152.934);
+                        --color-teal-50: oklch(0.984 0.014 180.72);
+                        --color-teal-100: oklch(0.953 0.051 180.801);
+                        --color-teal-200: oklch(0.91 0.096 180.426);
+                        --color-teal-300: oklch(0.855 0.138 181.071);
+                        --color-teal-400: oklch(0.777 0.152 181.912);
+                        --color-teal-500: oklch(0.704 0.14 182.503);
+                        --color-teal-600: oklch(0.6 0.118 184.704);
+                        --color-teal-700: oklch(0.511 0.096 186.391);
+                        --color-teal-800: oklch(0.437 0.078 188.216);
+                        --color-teal-900: oklch(0.386 0.063 188.416);
+                        --color-teal-950: oklch(0.277 0.046 192.524);
+                        --color-blue-50: oklch(0.97 0.014 254.604);
+                        --color-blue-100: oklch(0.932 0.032 255.585);
+                        --color-blue-200: oklch(0.882 0.059 254.128);
+                        --color-blue-300: oklch(0.809 0.105 251.813);
+                        --color-blue-400: oklch(0.707 0.165 254.624);
+                        --color-blue-500: oklch(0.623 0.214 259.815);
+                        --color-blue-600: oklch(0.546 0.245 262.881);
+                        --color-blue-700: oklch(0.488 0.243 264.376);
+                        --color-blue-800: oklch(0.424 0.199 265.638);
+                        --color-blue-900: oklch(0.379 0.146 265.522);
+                        --color-blue-950: oklch(0.282 0.091 267.935);
+                        --color-indigo-50: oklch(0.962 0.018 272.314);
+                        --color-indigo-100: oklch(0.93 0.034 272.788);
+                        --color-indigo-200: oklch(0.87 0.065 274.039);
+                        --color-indigo-300: oklch(0.785 0.115 274.713);
+                        --color-indigo-400: oklch(0.673 0.182 276.935);
+                        --color-indigo-500: oklch(0.585 0.233 277.117);
+                        --color-indigo-600: oklch(0.511 0.262 276.966);
+                        --color-indigo-700: oklch(0.457 0.24 277.023);
+                        --color-indigo-800: oklch(0.398 0.195 277.366);
+                        --color-indigo-900: oklch(0.359 0.144 278.697);
+                        --color-indigo-950: oklch(0.257 0.09 281.288);
+                        --color-purple-50: oklch(0.977 0.014 308.299);
+                        --color-purple-100: oklch(0.946 0.033 307.174);
+                        --color-purple-200: oklch(0.902 0.063 306.703);
+                        --color-purple-300: oklch(0.827 0.119 306.383);
+                        --color-purple-400: oklch(0.714 0.203 305.504);
+                        --color-purple-500: oklch(0.627 0.265 303.9);
+                        --color-purple-600: oklch(0.558 0.288 302.321);
+                        --color-purple-700: oklch(0.496 0.265 301.924);
+                        --color-purple-800: oklch(0.438 0.218 303.724);
+                        --color-purple-900: oklch(0.381 0.176 304.987);
+                        --color-purple-950: oklch(0.291 0.149 302.717);
+                        --color-pink-50: oklch(0.971 0.014 343.198);
+                        --color-pink-100: oklch(0.948 0.028 342.258);
+                        --color-pink-200: oklch(0.899 0.061 343.231);
+                        --color-pink-300: oklch(0.823 0.12 346.018);
+                        --color-pink-400: oklch(0.718 0.202 349.761);
+                        --color-pink-500: oklch(0.656 0.241 354.308);
+                        --color-pink-600: oklch(0.592 0.249 0.584);
+                        --color-pink-700: oklch(0.525 0.223 3.958);
+                        --color-pink-800: oklch(0.459 0.187 3.815);
+                        --color-pink-900: oklch(0.408 0.153 2.432);
+                        --color-pink-950: oklch(0.284 0.109 3.907);
+                        --color-gray-50: oklch(0.985 0.002 247.839);
+                        --color-gray-100: oklch(0.967 0.003 264.542);
+                        --color-gray-200: oklch(0.928 0.006 264.531);
+                        --color-gray-300: oklch(0.872 0.01 258.338);
+                        --color-gray-400: oklch(0.707 0.022 261.325);
+                        --color-gray-500: oklch(0.551 0.027 264.364);
+                        --color-gray-600: oklch(0.446 0.03 256.802);
+                        --color-gray-700: oklch(0.373 0.034 259.733);
+                        --color-gray-800: oklch(0.278 0.033 256.848);
+                        --color-gray-900: oklch(0.21 0.034 264.665);
+                        --color-gray-950: oklch(0.13 0.028 261.692);
+                        --color-black: #000;
+                        --color-white: #fff;
+                        --spacing: 0.25rem;
+                        --breakpoint-sm: 40rem;
+                        --breakpoint-md: 48rem;
+                        --breakpoint-lg: 64rem;
+                        --breakpoint-xl: 80rem;
+                        --breakpoint-2xl: 96rem;
+                        --container-3xs: 16rem;
+                        --container-2xs: 18rem;
+                        --container-xs: 20rem;
+                        --container-sm: 24rem;
+                        --container-md: 28rem;
+                        --container-lg: 32rem;
+                        --container-xl: 36rem;
+                        --container-2xl: 42rem;
+                        --container-3xl: 48rem;
+                        --container-4xl: 56rem;
+                        --container-5xl: 64rem;
+                        --container-6xl: 72rem;
+                        --container-7xl: 80rem;
+                        --text-xs: 0.75rem;
+                        --text-xs--line-height: 1rem;
+                        --text-sm: 0.875rem;
+                        --text-sm--line-height: 1.25rem;
+                        --text-base: 1rem;
+                        --text-base--line-height: 1.5rem;
+                        --text-lg: 1.125rem;
+                        --text-lg--line-height: 1.75rem;
+                        --text-xl: 1.25rem;
+                        --text-xl--line-height: 1.75rem;
+                        --text-2xl: 1.5rem;
+                        --text-2xl--line-height: 2rem;
+                        --text-3xl: 1.875rem;
+                        --text-3xl--line-height: 2.25rem;
+                        --text-4xl: 2.25rem;
+                        --text-4xl--line-height: 2.5rem;
+                        --text-5xl: 3rem;
+                        --text-5xl--line-height: 1;
+                        --text-6xl: 3.75rem;
+                        --text-6xl--line-height: 1;
+                        --text-7xl: 4.5rem;
+                        --text-7xl--line-height: 1;
+                        --text-8xl: 6rem;
+                        --text-8xl--line-height: 1;
+                        --text-9xl: 8rem;
+                        --text-9xl--line-height: 1;
+                        --font-weight-thin: 100;
+                        --font-weight-extralight: 200;
+                        --font-weight-light: 300;
+                        --font-weight-normal: 400;
+                        --font-weight-medium: 500;
+                        --font-weight-semibold: 600;
+                        --font-weight-bold: 700;
+                        --font-weight-extrabold: 800;
+                        --font-weight-black: 900;
+                        --leading-none: 1;
+                        --leading-tight: 1.25;
+                        --leading-snug: 1.375;
+                        --leading-normal: 1.5;
+                        --leading-relaxed: 1.625;
+                        --leading-loose: 2;
+                        --radius-xs: 0.125rem;
+                        --radius-sm: 0.25rem;
+                        --radius-md: 0.375rem;
+                        --radius-lg: 0.5rem;
+                        --radius-xl: 0.75rem;
+                        --radius-2xl: 1.5rem;
+                        --ease-in: cubic-bezier(0.4, 0, 1, 1);
+                        --ease-out: cubic-bezier(0, 0, 0.2, 1);
+                        --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+                        --animate-spin: spin 1s linear infinite;
+                        --animate-ping: ping 1s cubic-bezier(0, 0, 0.2, 1)
+                            infinite;
+                        --default-transition-duration: 0.15s;
+                        --default-transition-timing-function: cubic-bezier(
+                            0.4,
+                            0,
+                            0.2,
+                            1
+                        );
+                        --default-font-family: var(--font-sans);
+                        --default-mono-font-family: var(--font-mono);
+                    }
+                }
+                @layer base {
+                    *,
+                    :after,
+                    :before,
+                    ::backdrop {
+                        --tw-border-style: solid;
+                        --tw-blur: ;
+                        --tw-brightness: ;
+                        --tw-contrast: ;
+                        --tw-grayscale: ;
+                        --tw-hue-rotate: ;
+                        --tw-invert: ;
+                        --tw-opacity: ;
+                        --tw-saturate: ;
+                        --tw-sepia: ;
+                        --tw-drop-shadow: ;
+                        --tw-drop-shadow-color: ;
+                        --tw-drop-shadow-alpha: 100%;
+                        --tw-drop-shadow-size: ;
+                        box-sizing: border-box;
+                        border: 0 solid;
+                        --tw-shadow: 0 0 #0000;
+                        --tw-ring-inset: var(--tw-empty,);
+                        --tw-ring-offset-width: 0px;
+                        --tw-ring-offset-color: #fff;
+                        --tw-ring-color: color-mix(
+                            in oklch,
+                            currentColor calc(var(--tw-ring-alpha, 0) * 100%)
+                                transparent
+                        );
+                    }
+                    html {
+                        line-height: 1.5;
+                        -webkit-text-size-adjust: 100%;
+                    }
+                }
+                @layer utilities {
+                    * {
+                        --tw-shadow: 0 0 #0000;
+                        --tw-ring-color: color-mix(
+                            in oklch,
+                            currentColor calc(var(--tw-ring-alpha, 0) * 100%)
+                                transparent
+                        );
+                    }
+                    body {
+                        margin: 0;
+                        font-family: var(--font-sans);
+                        line-height: inherit;
+                    }
+                }
+                @keyframes ping {
+                    75%,
+                    to {
+                        transform: scale(2);
+                        opacity: 0;
+                    }
+                }
+                @keyframes spin {
+                    to {
+                        transform: rotate(360deg);
+                    }
+                }
+                @property --tw-ring-alpha {
+                    syntax: '*';
+                    inherits: false;
+                    initial-value: 0;
+                }
             </style>
         @endif
     </head>
@@ -26,30 +314,29 @@
         <form
             method="GET"
             action="/map"
-            class="fixed right-4 top-4 z-[1000] w-72 rounded-lg bg-white/95 p-4 shadow-lg backdrop-blur-sm dark:bg-gray-800/95"
+            class="fixed top-4 right-4 z-[1000] w-72 rounded-lg bg-white/95 p-4 shadow-lg backdrop-blur-sm dark:bg-gray-800/95"
         >
-            <h2 class="mb-3 text-sm font-semibold text-gray-900 uppercase tracking-wider dark:text-gray-100">
+            <h2
+                class="mb-3 text-sm font-semibold tracking-wider text-gray-900 uppercase dark:text-gray-100"
+            >
                 Filter by Opening Hours
             </h2>
 
-            <label class="mb-1 block text-xs font-medium text-gray-500 dark:text-gray-400">
+            <label
+                class="mb-1 block text-xs font-medium text-gray-500 dark:text-gray-400"
+            >
                 Day of Week
             </label>
             <select
                 name="day_of_week"
                 class="mb-3 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200"
             >
-                <option value="">Any Day</option>
-                <option value="1" {{ $dayOfWeek === 1 ? 'selected' : '' }}>Monday</option>
-                <option value="2" {{ $dayOfWeek === 2 ? 'selected' : '' }}>Tuesday</option>
-                <option value="3" {{ $dayOfWeek === 3 ? 'selected' : '' }}>Wednesday</option>
-                <option value="4" {{ $dayOfWeek === 4 ? 'selected' : '' }}>Thursday</option>
-                <option value="5" {{ $dayOfWeek === 5 ? 'selected' : '' }}>Friday</option>
-                <option value="6" {{ $dayOfWeek === 6 ? 'selected' : '' }}>Saturday</option>
-                <option value="7" {{ $dayOfWeek === 7 ? 'selected' : '' }}>Sunday</option>
+                <option selected>Any</option>
             </select>
 
-            <label class="mb-1 block text-xs font-medium text-gray-500 dark:text-gray-400">
+            <label
+                class="mb-1 block text-xs font-medium text-gray-500 dark:text-gray-400"
+            >
                 Dining Window
             </label>
             <div class="mb-3 flex items-center gap-2">
@@ -75,7 +362,7 @@
                 Filter
             </button>
 
-            @if ($dayOfWeek > 0 || $startTime !== null || $endTime !== null)
+            @if ($startTime !== null || $endTime !== null)
                 <a
                     href="/map"
                     class="mt-2 block w-full rounded-md border border-gray-300 bg-white px-4 py-2 text-center text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600"

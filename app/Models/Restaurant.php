@@ -90,7 +90,7 @@ class Restaurant extends Model
      * When ``$dayOfWeek`` is null, the day-of-week filter is omitted, returning
      * all restaurants open in the given time window regardless of weekday.
      */
-    public function scopeOpenInWindow(Builder $query, ?int $dayOfWeek, ?string $startTime, ?string $endTime): void
+    public function scopeOpenInWindow(Builder $query, ?string $startTime, ?string $endTime): void
     {
         $query
             ->whereHas('hours', fn (Builder $query) => $query
@@ -99,7 +99,6 @@ class Restaurant extends Model
                         'weight' => 0,
                         'isClose' => false,
                     ])
-                        ->merge($dayOfWeek !== null ? ['dayOfWeek' => $dayOfWeek] : [])
                         ->toJson(),
                 ])
                 ->where(fn (Builder $query) => $query
