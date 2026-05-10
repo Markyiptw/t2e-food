@@ -100,7 +100,13 @@ class Restaurant extends Model
                                     isset($start) && $start->gt($end),
                                     fn (Builder $query) => $query
                                         ->whereRaw('(EXTRACT(EPOCH FROM "end") + CASE WHEN "start" > "end" THEN 86400 ELSE 0 END) >= ?', [$end->secondsSinceMidnight() + 86400]),
-                                    fn (Builder $query) => $query->where('end', '>=', $end->format('H:i'))
+                                    fn (Builder $query) => $query->where(fn (Builder $query) => $query
+                                        ->where(fn (Builder $query) => $query
+                                            ->whereColumn('start', '<', 'end')
+                                            ->where('end', '>=', $end->format('H:i'))
+                                        )
+                                        ->orWhereColumn('start', '>', 'end')
+                                    )
                                 ),
                         )
                     )
