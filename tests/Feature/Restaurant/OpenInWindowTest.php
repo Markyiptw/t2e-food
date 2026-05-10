@@ -110,4 +110,15 @@ class OpenInWindowTest extends TestCase
 
         $this->assertEmpty($results);
     }
+
+    public function test_not_sure_what_case_this_is_but_it_is_failing(): void
+    {
+        Restaurant::factory()
+            ->has(Hour::factory()->has(Period::factory()->state(['start' => '18:00:00', 'end' => '04:00:00'])))
+            ->create();
+
+        $results = Restaurant::openInWindow(Carbon::createFromFormat('!H:i', '04:00'), Carbon::createFromFormat('!H:i', '05:00'))->pluck('id');
+
+        $this->assertEmpty($results);
+    }
 }
