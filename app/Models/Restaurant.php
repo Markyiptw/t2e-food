@@ -100,13 +100,50 @@ class Restaurant extends Model
                                     isset($start) && $start->gt($end),
                                     fn (Builder $query) => $query
                                         ->whereRaw('(EXTRACT(EPOCH FROM "end") + CASE WHEN "start" > "end" THEN 86400 ELSE 0 END) >= ?', [$end->secondsSinceMidnight() + 86400]),
-                                    fn (Builder $query) => $query->where(fn (Builder $query) => $query
+                                    fn (Builder $query) => $query
+                                        /**
+                                         * End-condition for daytime queries (query start <= query end).
+                                         *
+                                         * For a daytime period like 09:00→17:00, just check that the
+                                         * period closes at or after the query end:
+                                         *   → start < end  AND  end >= query_end
+                                         *
+                                         * For an overnight period like 18:00→04:00 spanning two calendar
+                                         * days, the query (which is a single-day daytime window) can fall
+                                         * on either side of midnight:
+                                         *
+                                         *   (A) Query is on day-1 (before midnight).  The period hasn't
+                                         *       ended yet, so the restaurant is still open.
+                                         *       → start > end  AND  end < query_start
+                                         *       (e.g. period 20:00→04:00, query 21:00→23:00:
+                                         *        04:00 < 21:00 ✓)
+                                         *
+                                         *   (B) Query is on day-2 (after midnight).  The period ends
+                                         *       during the query day, so it must close at or after the
+                                         *       query end.
+                                         *       → start > end  AND  end >= query_end
+                                         *       (e.g. period 18:00→04:00, query 04:00→05:00:
+                                         *        04:00 >= 05:00 ✗  → excluded)
+                                         *
+                                         * When ``$start`` is null, the day-1 / day-2 distinction above
+                                         * cannot be decided, so we fall back to the simpler original
+                                         * rule: ``start > end`` alone is enough (``when`` below is skipped).
+                                         */
                                         ->where(fn (Builder $query) => $query
-                                            ->whereColumn('start', '<', 'end')
-                                            ->where('end', '>=', $end->format('H:i'))
+                                            ->where(fn (Builder $query) => $query
+                                                ->whereColumn('start', '<', 'end')
+                                                ->where('end', '>=', $end->format('H:i'))
+                                            )
+                                            ->orWhere(fn (Builder $query) => $query
+                                                ->whereColumn('start', '>', 'end')
+                                                ->when($start !== null, fn (Builder $query) => $query
+                                                    ->where(fn (Builder $query) => $query
+                                                        ->where('end', '<', $start->format('H:i'))
+                                                        ->orWhere('end', '>=', $end->format('H:i'))
+                                                    )
+                                                )
+                                            )
                                         )
-                                        ->orWhereColumn('start', '>', 'end')
-                                    )
                                 ),
                         )
                     )
