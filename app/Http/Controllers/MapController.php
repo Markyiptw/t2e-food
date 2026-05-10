@@ -4,20 +4,35 @@ namespace App\Http\Controllers;
 
 use App\Models\Restaurant;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
+use Illuminate\Validation\Rule;
 
 class MapController extends Controller
 {
     public function __invoke(Request $request)
     {
         $validated = $request->validate([
-            'start_time' => 'nullable|string',
-            'end_time' => 'nullable|string',
+            'start' => [
+                'nullable',
+                'string',
+                Rule::date()->format('H:i'),
+            ],
+            'end' => [
+                'nullable',
+                'string',
+                Rule::date()->format('H:i'),
+            ],
         ]);
+
+        dd($validated);
+
+        // use the same date to make the result more "determinstic"
+        // Carbon::createFromFormat('!H:i', $validated['start'] ?? null);
 
         // dump($validated);
 
-        $startTime = $validated['start_time'] ?? null;
-        $endTime = $validated['end_time'] ?? null;
+        $start = isset($validated['start']) ? Carbon::createFromFormat('!H:i', $validated['start']) : null;
+        $end = isset($validated['end']) ? Carbon::createFromFormat('!H:i', $validated['end']) : null;
 
         // $markers = collect();
 
@@ -29,7 +44,7 @@ class MapController extends Controller
                 'data->mapLongitude as longitude',
                 'data->shortenUrl as url',
             ])
-            ->openInWindow($startTime, $endTime)
+            ->openInWindow($start, $end)
             // ->getQuery()
             // ->lazyById()
             ->get()
@@ -37,8 +52,8 @@ class MapController extends Controller
             ->values();
 
         return view('map', [
-            'startTime' => $startTime,
-            'endTime' => $endTime,
+            'start' => $start,
+            'end' => $end,
             'markersJson' => $markers->toJson(),
         ]);
     }

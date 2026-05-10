@@ -56,7 +56,7 @@ class Restaurant extends Model
      * When ``$dayOfWeek`` is null, the day-of-week filter is omitted, returning
      * all restaurants open in the given time window regardless of weekday.
      */
-    public function scopeOpenInWindow(Builder $query, ?string $startTime, ?string $endTime): void
+    public function scopeOpenInWindow(Builder $query, ?Carbon $start, ?Carbon $end): void
     {
         $query
             ->whereHas('hours', fn (Builder $query) => $query
@@ -70,9 +70,7 @@ class Restaurant extends Model
                 ->where(fn (Builder $query) => $query
                     ->whereRaw('data @> ?', [json_encode(['is24hr' => true])])
                     ->orWhereHas('periods', fn (Builder $query) => $query
-                        ->when($startTime !== null, function (Builder $query) use ($startTime) {
-                            $startSeconds = Carbon::parse($startTime)->secondsSinceMidnight();
-
+                        ->when($start !== null, fn (Builder $query) => $query
                             /**
                              * A period like 22:00→02:00 means "open from 10 PM tonight until 2 AM tomorrow".
                              * It spans two calendar days. The question here is: "has the restaurant already
@@ -88,20 +86,23 @@ class Restaurant extends Model
                              *       → start > $startSeconds (inferred by condition a failing) AND "start" > "end"  AND  $startSeconds <= "end"
                              *         (e.g. 22:00 > 00:00 AND 22:00 > 02:00  AND  00:00 <= 02:00 ✓)
                              */
-                            $query->whereRaw(
-                                '(EXTRACT(EPOCH FROM "start") <= ? OR ("start" > "end" AND ? <= EXTRACT(EPOCH FROM "end")))',
-                                [$startSeconds, $startSeconds],
-                            );
-                        })
-                        ->when($endTime !== null, function (Builder $query) use ($startTime, $endTime) {
-                            $queryCrosses = $startTime && Carbon::parse($startTime)->greaterThan(Carbon::parse($endTime));
-                            $normEnd = Carbon::parse($endTime)->secondsSinceMidnight() + ($queryCrosses ? 86400 : 0);
-
-                            $query->whereRaw(
-                                '(EXTRACT(EPOCH FROM "end") + CASE WHEN "start" > "end" AND ? THEN 86400 ELSE 0 END) >= ?',
-                                [(int) $queryCrosses, $normEnd],
-                            );
-                        })
+                            ->where(fn (Builder $query) => $query
+                                ->where('start', '<=', $start->format('H:i'))
+                                ->orWhere(fn (Builder $query) => $query
+                                    ->whereColumn('start', '>', 'end')
+                                    ->where('end', '>=', $start->format('H:i'))
+                                )
+                            )
+                        )
+                        ->when($end !== null,
+                            fn (Builder $query) => $query
+                                ->when(
+                                    isset($start) && $start->gt($end),
+                                    fn (Builder $query) => $query
+                                        ->whereRaw('(EXTRACT(EPOCH FROM "end") + CASE WHEN "start" > "end" THEN 86400 ELSE 0 END) >= ?', [$end->secondsSinceMidnight() + 86400]),
+                                    fn (Builder $query) => $query->where('end', '>=', $end->format('H:i'))
+                                ),
+                        )
                     )
                 )
             );

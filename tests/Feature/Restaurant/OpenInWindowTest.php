@@ -6,6 +6,7 @@ use App\Models\Hour;
 use App\Models\Period;
 use App\Models\Restaurant;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
+use Illuminate\Support\Carbon;
 use Tests\TestCase;
 
 class OpenInWindowTest extends TestCase
@@ -22,7 +23,7 @@ class OpenInWindowTest extends TestCase
             )
             ->create();
 
-        $results = Restaurant::openInWindow('10:00:00', '14:00:00')->pluck('id');
+        $results = Restaurant::openInWindow(Carbon::createFromFormat('!H:i', '10:00'), Carbon::createFromFormat('!H:i', '14:00'))->pluck('id');
 
         $this->assertCount(1, $results);
         $this->assertSame($restaurant->id, $results->first());
@@ -38,7 +39,7 @@ class OpenInWindowTest extends TestCase
             )
             ->create();
 
-        $results = Restaurant::openInWindow('08:00:00', '11:00:00')->pluck('id');
+        $results = Restaurant::openInWindow(Carbon::createFromFormat('!H:i', '08:00'), Carbon::createFromFormat('!H:i', '11:00'))->pluck('id');
 
         $this->assertEmpty($results);
     }
@@ -47,7 +48,7 @@ class OpenInWindowTest extends TestCase
     {
         Restaurant::factory()->create();
 
-        $results = Restaurant::openInWindow('10:00:00', '14:00:00')->pluck('id');
+        $results = Restaurant::openInWindow(Carbon::createFromFormat('!H:i', '10:00'), Carbon::createFromFormat('!H:i', '14:00'))->pluck('id');
 
         $this->assertEmpty($results);
     }
@@ -58,7 +59,7 @@ class OpenInWindowTest extends TestCase
             ->has(Hour::factory()->dayOfWeek(3))
             ->create();
 
-        $results = Restaurant::openInWindow('10:00:00', '14:00:00')->pluck('id');
+        $results = Restaurant::openInWindow(Carbon::createFromFormat('!H:i', '10:00'), Carbon::createFromFormat('!H:i', '14:00'))->pluck('id');
 
         $this->assertEmpty($results);
     }
@@ -68,7 +69,7 @@ class OpenInWindowTest extends TestCase
         $monday = Restaurant::factory()->has(Hour::factory()->dayOfWeek(1)->is24hr())->create();
         $friday = Restaurant::factory()->has(Hour::factory()->dayOfWeek(5)->is24hr())->create();
 
-        $results = Restaurant::openInWindow('10:00:00', '14:00:00')->pluck('id');
+        $results = Restaurant::openInWindow(Carbon::createFromFormat('!H:i', '10:00'), Carbon::createFromFormat('!H:i', '14:00'))->pluck('id');
 
         $this->assertCount(2, $results);
         $this->assertContains($monday->id, $results->all());
@@ -80,7 +81,7 @@ class OpenInWindowTest extends TestCase
         $open = Restaurant::factory()->has(Hour::factory()->is24hr())->create();
         $closed = Restaurant::factory()->has(Hour::factory()->is24hr()->isClose())->create();
 
-        $results = Restaurant::openInWindow('10:00:00', '14:00:00')->pluck('id');
+        $results = Restaurant::openInWindow(Carbon::createFromFormat('!H:i', '10:00'), Carbon::createFromFormat('!H:i', '14:00'))->pluck('id');
 
         $this->assertCount(1, $results);
         $this->assertSame($open->id, $results->first());
@@ -91,7 +92,7 @@ class OpenInWindowTest extends TestCase
         $base = Restaurant::factory()->has(Hour::factory()->is24hr())->create();
         $holiday = Restaurant::factory()->has(Hour::factory()->nonZeroWeight()->is24hr())->create();
 
-        $results = Restaurant::openInWindow('10:00:00', '14:00:00')->pluck('id');
+        $results = Restaurant::openInWindow(Carbon::createFromFormat('!H:i', '10:00'), Carbon::createFromFormat('!H:i', '14:00'))->pluck('id');
 
         $this->assertCount(1, $results);
         $this->assertSame($base->id, $results->first());
@@ -102,13 +103,13 @@ class OpenInWindowTest extends TestCase
         $inactive = Restaurant::factory()->inactive()->has(Hour::factory()->is24hr())->create();
 
         $results = Restaurant::withoutGlobalScope('active')
-            ->openInWindow('10:00:00', '14:00:00')
+            ->openInWindow(Carbon::createFromFormat('!H:i', '10:00'), Carbon::createFromFormat('!H:i', '14:00'))
             ->pluck('id');
 
         $this->assertCount(1, $results);
         $this->assertSame($inactive->id, $results->first());
 
-        $resultsWithScope = Restaurant::openInWindow('10:00:00', '14:00:00')->pluck('id');
+        $resultsWithScope = Restaurant::openInWindow(Carbon::createFromFormat('!H:i', '10:00'), Carbon::createFromFormat('!H:i', '14:00'))->pluck('id');
 
         $this->assertEmpty($resultsWithScope);
     }
@@ -123,7 +124,7 @@ class OpenInWindowTest extends TestCase
             )
             ->create();
 
-        $results = Restaurant::openInWindow('23:00:00', '01:00:00')->pluck('id');
+        $results = Restaurant::openInWindow(Carbon::createFromFormat('!H:i', '23:00'), Carbon::createFromFormat('!H:i', '01:00'))->pluck('id');
 
         $this->assertCount(1, $results);
         $this->assertSame($restaurant->id, $results->first());
@@ -135,11 +136,14 @@ class OpenInWindowTest extends TestCase
             ->has(
                 Hour::factory()
                     ->dayOfWeek(4)
-                    ->has(Period::factory()->state(['start' => '22:00:00', 'end' => '02:00:00']))
+                    ->has(
+                        Period::factory()
+                            ->state(['start' => '22:00:00', 'end' => '02:00:00'])
+                    )
             )
             ->create();
 
-        $results = Restaurant::openInWindow('21:00:00', '23:00:00')->pluck('id');
+        $results = Restaurant::openInWindow(Carbon::createFromFormat('!H:i', '21:00'), Carbon::createFromFormat('!H:i', '23:00'))->pluck('id');
 
         $this->assertEmpty($results);
     }
@@ -149,12 +153,11 @@ class OpenInWindowTest extends TestCase
         $restaurant = Restaurant::factory()
             ->has(
                 Hour::factory()
-                    ->dayOfWeek(4)
                     ->has(Period::factory()->state(['start' => '22:00:00', 'end' => '02:00:00']))
             )
             ->create();
 
-        $results = Restaurant::openInWindow('23:00:00', '05:00:00')->pluck('id');
+        $results = Restaurant::openInWindow(Carbon::createFromFormat('!H:i', '23:00'), Carbon::createFromFormat('!H:i', '05:00'))->pluck('id');
 
         $this->assertEmpty($results);
     }
@@ -169,7 +172,7 @@ class OpenInWindowTest extends TestCase
             )
             ->create();
 
-        $results = Restaurant::openInWindow('00:00:00', '02:00:00')->pluck('id');
+        $results = Restaurant::openInWindow(Carbon::createFromFormat('!H:i', '00:00'), Carbon::createFromFormat('!H:i', '02:00'))->pluck('id');
 
         $this->assertCount(1, $results);
         $this->assertSame($restaurant->id, $results->first());
@@ -185,7 +188,7 @@ class OpenInWindowTest extends TestCase
             )
             ->create();
 
-        $results = Restaurant::openInWindow('22:00:00', '02:00:00')->pluck('id');
+        $results = Restaurant::openInWindow(Carbon::createFromFormat('!H:i', '22:00'), Carbon::createFromFormat('!H:i', '02:00'))->pluck('id');
 
         $this->assertEmpty($results);
     }
@@ -200,7 +203,7 @@ class OpenInWindowTest extends TestCase
             )
             ->create();
 
-        $results = Restaurant::openInWindow('03:00:00', '04:00:00')->pluck('id');
+        $results = Restaurant::openInWindow(Carbon::createFromFormat('!H:i', '03:00'), Carbon::createFromFormat('!H:i', '04:00'))->pluck('id');
 
         $this->assertEmpty($results);
     }
