@@ -17,11 +17,12 @@ Alpine.start();
 const { VITE_POSTHOG_API_KEY, VITE_POSTHOG_HOST } = import.meta.env;
 
 if (VITE_POSTHOG_API_KEY) {
-    const { default: posthog } = await import("posthog-js");
-    posthog.init(VITE_POSTHOG_API_KEY, {
-        api_host: VITE_POSTHOG_HOST,
+    import("posthog-js").then(({ default: posthog }) => {
+        posthog.init(VITE_POSTHOG_API_KEY, {
+            api_host: VITE_POSTHOG_HOST,
+        });
+        window.posthog = posthog;
     });
-    window.posthog = posthog;
 }
 
 import "./map";
