@@ -1,6 +1,6 @@
 <?php
 
 return [
-    'api_key' => env('POSTHOG_PROJECT_TOKEN'),
+    'api_key' => env('POSTHOG_API_KEY'),
     'host' => env('POSTHOG_HOST'),
 ];

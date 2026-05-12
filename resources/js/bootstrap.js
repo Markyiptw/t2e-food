@@ -14,13 +14,14 @@ window.Alpine = Alpine;
 
 Alpine.start();
 
-import posthog from "posthog-js";
+const { VITE_POSTHOG_API_KEY, VITE_POSTHOG_HOST } = import.meta.env;
 
-import.meta.env.VITE_POSTHOG_KEY && posthog.init(import.meta.env.VITE_POSTHOG_KEY, {
-    api_host: import.meta.env.VITE_POSTHOG_HOST,
-});
+if (VITE_POSTHOG_API_KEY) {
+    const { default: posthog } = await import("posthog-js");
+    posthog.init(VITE_POSTHOG_API_KEY, {
+        api_host: VITE_POSTHOG_HOST,
+    });
+    window.posthog = posthog;
+}
 
-window.posthog = posthog;
-
-
-import './map';
+import "./map";
