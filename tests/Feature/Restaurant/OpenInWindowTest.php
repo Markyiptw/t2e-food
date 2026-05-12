@@ -50,6 +50,17 @@ class OpenInWindowTest extends TestCase
         $this->assertEmpty($results);
     }
 
+    public function test_return_all_on_null(): void
+    {
+        $count = 3;
+
+        Restaurant::factory()->has(Hour::factory()->has(Period::factory()))->count($count)->create();
+
+        $results = Restaurant::openInWindow(null, null)->get();
+
+        $this->assertCount($count, $results);
+    }
+
     public function test_overnight_period_overnight_query(): void
     {
         $valid = Restaurant::factory()
