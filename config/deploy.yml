@@ -45,6 +45,8 @@ env:
   secret:
     - APP_KEY
     - DB_PASSWORD
+    - POSTHOG_API_KEY
+    - VITE_POSTHOG_API_KEY:POSTHOG_API_KEY
 
 ssh:
   user: ec2-user
