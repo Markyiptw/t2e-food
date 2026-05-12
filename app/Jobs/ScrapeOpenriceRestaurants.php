@@ -77,7 +77,7 @@ class ScrapeOpenriceRestaurants implements ShouldBeUnique, ShouldQueue
                                 'restaurant_id' => $restaurantId,
                                 'data' => collect($hour)
                                     ->filter(fn ($value, $key) => ! Str::startsWith($key, 'period'))
-                                    ->toJson(),
+                                    ->all(),
                             ])->id;
 
                             collect($hour)
