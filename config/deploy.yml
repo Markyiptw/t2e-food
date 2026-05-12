@@ -46,7 +46,7 @@ env:
     - APP_KEY
     - DB_PASSWORD
     - POSTHOG_API_KEY
-    - VITE_POSTHOG_API_KEY:POSTHOG_API_KEY
+    - VITE_POSTHOG_API_KEY:POSTHOG_API_KEY # shit this is not available at build time
 
 ssh:
   user: ec2-user
@@ -60,7 +60,7 @@ accessories:
   db:
     image: postgres:17
     host: 43.199.193.158
-    # port: 5432 # this option is for public exposure, not needed when communicating inside docker network
+    # port: 5432 # this option is for public exposure
     env:
       clear:
         PGDATA: "/var/lib/postgresql/17/docker"
