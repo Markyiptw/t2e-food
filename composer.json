@@ -12,6 +12,7 @@
         "php": "^8.3",
         "laravel/framework": "^13.0",
         "laravel/tinker": "^3.0",
+        "posthog/posthog-php": "^4.3",
         "spatie/simple-excel": "^3.9"
     },
     "require-dev": {

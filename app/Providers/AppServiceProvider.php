@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\ServiceProvider;
+use PostHog\PostHog;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -27,5 +28,12 @@ class AppServiceProvider extends ServiceProvider
                 ->retry([100, 500, 1000])
                 ->baseUrl('https://www.openrice.com/api/v2');
         });
+
+        if (config('posthog.api_key')) {
+            PostHog::init(
+                config('posthog.api_key'),
+                ['host' => config('posthog.host')] // default to US host
+            );
+        }
     }
 }
