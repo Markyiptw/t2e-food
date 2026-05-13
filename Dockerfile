@@ -3,7 +3,8 @@ WORKDIR /app
 # Copy the whole project for Tailwind scanning
 COPY . /app
 RUN npm install
-RUN npm run build
+RUN --mount=type=secret,id=VITE_POSTHOG_API_KEY,env=VITE_POSTHOG_API_KEY \
+    npm run build
 
 FROM serversideup/php:8.5-frankenphp-debian-v4.3.5
 # Switch to root so we can do root things
