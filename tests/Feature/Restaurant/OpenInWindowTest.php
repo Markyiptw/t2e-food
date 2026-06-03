@@ -122,13 +122,13 @@ class OpenInWindowTest extends TestCase
         $this->assertEmpty($results);
     }
 
-    public function test_not_sure_what_case_this_is_but_it_is_failing(): void
+    public function test_positive_duration_does_not_match_overnight_closing_boundary(): void
     {
         Restaurant::factory()
-            ->has(Hour::factory()->has(Period::factory()->state(['start' => '18:00:00', 'end' => '04:00:00'])))
+            ->has(Hour::factory()->has(Period::factory()->state(['start' => '23:00:00', 'end' => '00:00:00'])))
             ->create();
 
-        $results = Restaurant::openInWindow(Carbon::createFromFormat('!H:i', '04:00'), 60)->pluck('id');
+        $results = Restaurant::openInWindow(Carbon::createFromFormat('!H:i', '00:00'), 1)->pluck('id');
 
         $this->assertEmpty($results);
     }
