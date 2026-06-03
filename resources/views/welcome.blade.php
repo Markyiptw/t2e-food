@@ -1,189 +1,155 @@
 <x-layout>
-    <header
-        class="mb-6 w-full max-w-[335px] text-sm not-has-[nav]:hidden lg:max-w-4xl"
-    >
-        @if (Route::has('login'))
-            <nav class="flex items-center justify-end gap-4">
-                @auth
-                    <a
-                        href="{{ url('/dashboard') }}"
-                        class="inline-block rounded-sm border border-[#19140035] px-5 py-1.5 text-sm leading-normal text-[#1b1b18] hover:border-[#1915014a] dark:border-[#3E3E3A] dark:text-[#EDEDEC] dark:hover:border-[#62605b]"
-                    >
-                        Dashboard
-                    </a>
-                @else
-                    <a
-                        href="{{ route('login') }}"
-                        class="inline-block rounded-sm border border-transparent px-5 py-1.5 text-sm leading-normal text-[#1b1b18] hover:border-[#19140035] dark:text-[#EDEDEC] dark:hover:border-[#3E3E3A]"
-                    >
-                        Log in
-                    </a>
+    <div class="flex w-full max-w-3xl flex-col items-center">
+        {{-- Header --}}
+        <header class="mb-16 flex w-full items-center justify-between pt-8">
+            <a
+                href="/"
+                class="text-xl font-bold tracking-tight text-[#1b1b18] dark:text-[#EDEDEC]"
+            >
+                Time 2 Eat
+            </a>
 
-                    @if (Route::has('register'))
+            <nav class="flex items-center gap-6 text-sm">
+                <a
+                    href="/map"
+                    class="text-[#706f6c] hover:text-[#1b1b18] dark:text-[#A1A09A] dark:hover:text-[#EDEDEC]"
+                >
+                    Map
+                </a>
+                <a
+                    href="#"
+                    class="text-[#706f6c] hover:text-[#1b1b18] dark:text-[#A1A09A] dark:hover:text-[#EDEDEC]"
+                >
+                    Data
+                </a>
+
+                @if (Route::has('login'))
+                    @auth
                         <a
-                            href="{{ route('register') }}"
-                            class="inline-block rounded-sm border border-[#19140035] px-5 py-1.5 text-sm leading-normal text-[#1b1b18] hover:border-[#1915014a] dark:border-[#3E3E3A] dark:text-[#EDEDEC] dark:hover:border-[#62605b]"
+                            href="{{ url('/dashboard') }}"
+                            class="text-[#706f6c] hover:text-[#1b1b18] dark:text-[#A1A09A] dark:hover:text-[#EDEDEC]"
                         >
-                            Register
+                            Dashboard
                         </a>
-                    @endif
-                @endauth
+                    @else
+                        <a
+                            href="{{ route('login') }}"
+                            class="text-[#706f6c] hover:text-[#1b1b18] dark:text-[#A1A09A] dark:hover:text-[#EDEDEC]"
+                        >
+                            Log in
+                        </a>
+                        @if (Route::has('register'))
+                            <a
+                                href="{{ route('register') }}"
+                                class="text-[#706f6c] hover:text-[#1b1b18] dark:text-[#A1A09A] dark:hover:text-[#EDEDEC]"
+                            >
+                                Register
+                            </a>
+                        @endif
+                    @endauth
+                @endif
             </nav>
-        @endif
-    </header>
+        </header>
 
-    <div
-        class="flex w-full max-w-4xl flex-col items-center text-center opacity-100 transition-opacity duration-750 starting:opacity-0"
-    >
-        <svg
-            width="120"
-            height="120"
-            viewBox="0 0 120 120"
-            xmlns="http://www.w3.org/2000/svg"
-            class="mb-10 text-[#1b1b18] dark:text-[#EDEDEC]"
+        {{-- Search Hero --}}
+        <section
+            class="w-full rounded-sm bg-[#f5f0eb] p-10 text-center dark:bg-[#1a1816]"
         >
-            <circle
-                cx="60"
-                cy="60"
-                r="54"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2.5"
-            />
-            <line
-                x1="60"
-                y1="10"
-                x2="60"
-                y2="20"
-                stroke="currentColor"
-                stroke-width="2.5"
-            />
-            <line
-                x1="110"
-                y1="60"
-                x2="100"
-                y2="60"
-                stroke="currentColor"
-                stroke-width="2.5"
-            />
-            <line
-                x1="60"
-                y1="110"
-                x2="60"
-                y2="100"
-                stroke="currentColor"
-                stroke-width="2.5"
-            />
-            <line
-                x1="10"
-                y1="60"
-                x2="20"
-                y2="60"
-                stroke="currentColor"
-                stroke-width="2.5"
-            />
-            <line
-                x1="60"
-                y1="60"
-                x2="60"
-                y2="30"
-                stroke="currentColor"
-                stroke-width="4"
-                stroke-linecap="round"
-                transform="rotate(60 60 60)"
-            />
-            <line
-                x1="60"
-                y1="60"
-                x2="60"
-                y2="20"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-            />
-            <circle
-                cx="60"
-                cy="60"
-                r="3.5"
-                fill="currentColor"
-            />
-        </svg>
-
-        <h1
-            class="text-5xl font-black tracking-tight lg:text-7xl"
-        >
-            Time
-            <span class="text-[#F53003] dark:text-[#FF4433]">2</span>
-            Eat
-        </h1>
-
-        <p
-            class="mt-6 max-w-md text-lg leading-relaxed text-[#706f6c] lg:text-xl dark:text-[#A1A09A]"
-        >
-            Choose your dining window.<br />Find what&rsquo;s open.
-        </p>
-
-        <a
-            href="/map"
-            class="mt-10 inline-block rounded-full bg-[#F53003] px-10 py-4 text-lg font-bold text-white transition-all hover:scale-105 hover:bg-[#d42a02] hover:shadow-lg dark:bg-[#FF4433] dark:hover:bg-[#e63a2a]"
-        >
-            Explore the Map &rarr;
-        </a>
-
-        <div
-            class="mt-20 grid w-full grid-cols-1 gap-6 sm:grid-cols-3"
-        >
-            <div
-                class="rounded-lg bg-white p-6 shadow-[inset_0px_0px_0px_1px_rgba(26,26,0,0.16)] dark:bg-[#161615] dark:shadow-[inset_0px_0px_0px_1px_#fffaed2d]"
+            <form
+                action="/map"
+                method="GET"
+                class="flex flex-col items-center gap-6"
             >
-                <div class="mb-3 text-3xl">&#x1F5FA;&#xFE0F;</div>
-                <h3 class="mb-2 text-base font-semibold">
-                    Interactive Map
-                </h3>
-                <p
-                    class="text-sm leading-relaxed text-[#706f6c] dark:text-[#A1A09A]"
+                <div
+                    class="flex flex-wrap items-center justify-center gap-2 text-lg text-[#1b1b18] lg:text-xl dark:text-[#EDEDEC]"
                 >
-                    Browse restaurant locations across Hong Kong.
+                    <span>I am looking for food at</span>
+
+                    <select
+                        name="start"
+                        class="rounded-sm border border-[#d4cfc8] bg-white px-3 py-2 text-base font-medium text-[#1b1b18] focus:border-[#c45b3c] focus:outline-none dark:border-[#3E3E3A] dark:bg-[#161615] dark:text-[#EDEDEC]"
+                    >
+                        <option value="08:00">08:00</option>
+                        <option value="12:00">12:00</option>
+                        <option value="20:00">20:00</option>
+                        <option value="02:00" selected>02:00</option>
+                    </select>
+
+                    <span>with a</span>
+
+                    <input
+                        type="number"
+                        name="duration"
+                        value="15"
+                        min="0"
+                        class="w-20 rounded-sm border border-[#d4cfc8] bg-white px-3 py-2 text-center text-base font-medium text-[#1b1b18] focus:border-[#c45b3c] focus:outline-none dark:border-[#3E3E3A] dark:bg-[#161615] dark:text-[#EDEDEC]"
+                    />
+
+                    <span>minutes window before closing.</span>
+                </div>
+
+                <button
+                    type="submit"
+                    class="mt-2 inline-block rounded-full bg-[#c45b3c] px-10 py-4 text-lg font-bold text-white transition-all hover:bg-[#a84d32]"
+                >
+                    Explore the Map &rarr;
+                </button>
+
+                <a
+                    href="#"
+                    class="text-sm text-[#706f6c] underline decoration-[#c45b3c] underline-offset-4 hover:text-[#1b1b18] dark:text-[#A1A09A] dark:hover:text-[#EDEDEC]"
+                >
+                    &hellip;or export for all the data nerds &rarr;
+                </a>
+            </form>
+        </section>
+
+        {{-- Why Time 2 Eat? --}}
+        <section class="mt-16 w-full text-left">
+            <div class="border-t border-[#e5e0da] py-8 dark:border-[#2d2c2a]">
+                <p
+                    class="text-lg leading-relaxed text-[#1b1b18] dark:text-[#EDEDEC]"
+                >
+                    Most apps show you what&rsquo;s nearby. We show you
+                    what&rsquo;s actually open.
                 </p>
             </div>
 
-            <div
-                class="rounded-lg bg-white p-6 shadow-[inset_0px_0px_0px_1px_rgba(26,26,0,0.16)] dark:bg-[#161615] dark:shadow-[inset_0px_0px_0px_1px_#fffaed2d]"
-            >
-                <div class="mb-3 text-3xl">&#x23F0;</div>
-                <h3 class="mb-2 text-base font-semibold">
-                    Flexible Time Filters
-                </h3>
+            <div class="border-t border-[#e5e0da] py-8 dark:border-[#2d2c2a]">
                 <p
-                    class="text-sm leading-relaxed text-[#706f6c] dark:text-[#A1A09A]"
+                    class="text-lg leading-relaxed text-[#1b1b18] dark:text-[#EDEDEC]"
                 >
-                    Pick any dining window &mdash; morning, late night,
-                    or weekday afternoon &mdash; and find what&rsquo;s
-                    open.
+                    Real coverage, updated regularly. 33,000+ restaurants across
+                    Hong Kong.
                 </p>
             </div>
 
-            <div
-                class="rounded-lg bg-white p-6 shadow-[inset_0px_0px_0px_1px_rgba(26,26,0,0.16)] dark:bg-[#161615] dark:shadow-[inset_0px_0px_0px_1px_#fffaed2d]"
-            >
-                <div class="mb-3 text-3xl">&#x1F4CB;</div>
-                <h3 class="mb-2 text-base font-semibold">
-                    Rich Listings
-                </h3>
+            <div class="border-t border-[#e5e0da] py-8 dark:border-[#2d2c2a]">
                 <p
-                    class="text-sm leading-relaxed text-[#706f6c] dark:text-[#A1A09A]"
+                    class="text-lg leading-relaxed text-[#1b1b18] dark:text-[#EDEDEC]"
                 >
-                    Addresses, hours, and direct links for every
-                    restaurant.
+                    No accounts, no ads, no tracking. Just a tool that works.
                 </p>
             </div>
-        </div>
 
-        <p
-            class="mt-14 text-center text-xs text-[#A1A09A] dark:text-[#62605b]"
+            <div class="border-t border-[#e5e0da] py-8 dark:border-[#2d2c2a]">
+                <p
+                    class="text-lg leading-relaxed text-[#1b1b18] dark:text-[#EDEDEC]"
+                >
+                    For researchers, too. Export clean, structured data for your
+                    own projects.
+                </p>
+            </div>
+        </section>
+
+        {{-- Footer --}}
+        <footer
+            class="mt-16 w-full border-t border-[#e5e0da] pt-6 pb-8 text-center text-sm text-[#A1A09A] dark:border-[#2d2c2a] dark:text-[#62605b]"
         >
-            With gratitude to OpenRice &mdash; Hong Kong&rsquo;s leading
-            restaurant platform
-        </p>
+            &copy; Time 2 Eat &middot;
+            <a href="#" class="hover:text-[#1b1b18] dark:hover:text-[#EDEDEC]">
+                GitHub
+            </a>
+        </footer>
     </div>
 </x-layout>
