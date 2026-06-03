@@ -1,24 +1,24 @@
 <x-layout>
-    <div class="flex w-full max-w-3xl flex-col items-center">
+    <div class="grain-texture flex w-full max-w-5xl flex-col items-center px-6 lg:px-8">
         {{-- Header --}}
-        <header class="mb-16 flex w-full items-center justify-between pt-8">
+        <header class="mb-20 flex w-full items-center justify-between pt-10">
             <a
                 href="/"
-                class="text-xl font-bold tracking-tight text-[#1b1b18] dark:text-[#EDEDEC]"
+                class="text-2xl font-extrabold tracking-tight text-midnight-indigo"
             >
                 Time 2 Eat
             </a>
 
-            <nav class="flex items-center gap-6 text-sm">
+            <nav class="flex items-center gap-8 text-sm font-medium">
                 <a
                     href="/map"
-                    class="text-[#706f6c] hover:text-[#1b1b18] dark:text-[#A1A09A] dark:hover:text-[#EDEDEC]"
+                    class="text-midnight-indigo/60 transition-colors hover:text-midnight-indigo"
                 >
                     Map
                 </a>
                 <a
                     href="#"
-                    class="text-[#706f6c] hover:text-[#1b1b18] dark:text-[#A1A09A] dark:hover:text-[#EDEDEC]"
+                    class="text-midnight-indigo/60 transition-colors hover:text-midnight-indigo"
                 >
                     Data
                 </a>
@@ -27,21 +27,21 @@
                     @auth
                         <a
                             href="{{ url('/dashboard') }}"
-                            class="text-[#706f6c] hover:text-[#1b1b18] dark:text-[#A1A09A] dark:hover:text-[#EDEDEC]"
+                            class="text-midnight-indigo/60 transition-colors hover:text-midnight-indigo"
                         >
                             Dashboard
                         </a>
                     @else
                         <a
                             href="{{ route('login') }}"
-                            class="text-[#706f6c] hover:text-[#1b1b18] dark:text-[#A1A09A] dark:hover:text-[#EDEDEC]"
+                            class="text-midnight-indigo/60 transition-colors hover:text-midnight-indigo"
                         >
                             Log in
                         </a>
                         @if (Route::has('register'))
                             <a
                                 href="{{ route('register') }}"
-                                class="text-[#706f6c] hover:text-[#1b1b18] dark:text-[#A1A09A] dark:hover:text-[#EDEDEC]"
+                                class="rounded-full border border-midnight-indigo/20 px-5 py-2 text-midnight-indigo transition-all hover:border-midnight-indigo hover:bg-midnight-indigo hover:text-hazy-sand"
                             >
                                 Register
                             </a>
@@ -51,23 +51,33 @@
             </nav>
         </header>
 
-        {{-- Search Hero --}}
+        {{-- Hero --}}
+        <section class="mb-16 w-full text-center">
+            <h1 class="mx-auto max-w-2xl text-balance text-5xl font-extrabold leading-[1.1] tracking-tight text-midnight-indigo md:text-6xl">
+                What is <em class="not-italic text-sunset-apricot">actually</em> open right now.
+            </h1>
+        </section>
+
+        {{-- Search --}}
         <section
-            class="w-full rounded-sm bg-[#f5f0eb] p-10 text-center dark:bg-[#1a1816]"
+            class="relative w-full overflow-hidden rounded-3xl border border-midnight-indigo/10 bg-white/60 p-10 shadow-xl shadow-midnight-indigo/5 backdrop-blur-sm md:p-14"
         >
+            <div class="absolute -top-24 -right-24 h-48 w-48 rounded-full bg-electric-amber/20 blur-3xl"></div>
+            <div class="absolute -bottom-16 -left-16 h-40 w-40 rounded-full bg-sunset-apricot/15 blur-3xl"></div>
+
             <form
                 action="/map"
                 method="GET"
-                class="flex flex-col items-center gap-6"
+                class="relative z-10 flex flex-col items-center gap-8"
             >
                 <div
-                    class="flex flex-wrap items-center justify-center gap-2 text-lg text-[#1b1b18] lg:text-xl dark:text-[#EDEDEC]"
+                    class="flex flex-wrap items-center justify-center gap-x-3 gap-y-4 text-xl font-medium text-midnight-indigo md:text-2xl"
                 >
-                    <span>I am looking for food at</span>
+                    <span>Food at</span>
 
                     <select
                         name="start"
-                        class="rounded-sm border border-[#d4cfc8] bg-white px-3 py-2 text-base font-medium text-[#1b1b18] focus:border-[#c45b3c] focus:outline-none dark:border-[#3E3E3A] dark:bg-[#161615] dark:text-[#EDEDEC]"
+                        class="rounded-xl border-2 border-midnight-indigo/15 bg-hazy-sand px-4 py-2.5 font-mono text-lg font-bold text-midnight-indigo transition-all focus:border-sunset-apricot focus:outline-none"
                     >
                         <option value="08:00">08:00</option>
                         <option value="12:00">12:00</option>
@@ -75,79 +85,54 @@
                         <option value="02:00" selected>02:00</option>
                     </select>
 
-                    <span>with a</span>
+                    <span>within</span>
 
                     <input
                         type="number"
                         name="duration"
                         value="15"
                         min="0"
-                        class="w-20 rounded-sm border border-[#d4cfc8] bg-white px-3 py-2 text-center text-base font-medium text-[#1b1b18] focus:border-[#c45b3c] focus:outline-none dark:border-[#3E3E3A] dark:bg-[#161615] dark:text-[#EDEDEC]"
+                        class="w-24 rounded-xl border-2 border-midnight-indigo/15 bg-hazy-sand px-4 py-2.5 text-center font-mono text-lg font-bold text-midnight-indigo transition-all focus:border-sunset-apricot focus:outline-none"
                     />
 
-                    <span>minutes window before closing.</span>
+                    <span>minutes of closing.</span>
                 </div>
 
                 <button
                     type="submit"
-                    class="mt-2 inline-block rounded-full bg-[#c45b3c] px-10 py-4 text-lg font-bold text-white transition-all hover:bg-[#a84d32]"
+                    class="group mt-2 inline-flex items-center gap-3 rounded-full bg-sunset-apricot px-10 py-5 text-lg font-bold text-white shadow-lg shadow-sunset-apricot/30 transition-all hover:-translate-y-0.5 hover:bg-electric-amber hover:shadow-xl hover:shadow-electric-amber/30 active:translate-y-0"
                 >
-                    Explore the Map &rarr;
+                    <span>Explore the Map</span>
+                    <span class="transition-transform group-hover:translate-x-1">&rarr;</span>
                 </button>
 
                 <a
                     href="#"
-                    class="text-sm text-[#706f6c] underline decoration-[#c45b3c] underline-offset-4 hover:text-[#1b1b18] dark:text-[#A1A09A] dark:hover:text-[#EDEDEC]"
+                    class="text-sm font-medium text-midnight-indigo/50 underline decoration-sunset-apricot/60 underline-offset-4 transition-colors hover:text-midnight-indigo"
                 >
                     &hellip;or export for all the data nerds &rarr;
                 </a>
             </form>
         </section>
 
-        {{-- Why Time 2 Eat? --}}
-        <section class="mt-16 w-full text-left">
-            <div class="border-t border-[#e5e0da] py-8 dark:border-[#2d2c2a]">
-                <p
-                    class="text-lg leading-relaxed text-[#1b1b18] dark:text-[#EDEDEC]"
-                >
-                    Most apps show you what&rsquo;s nearby. We show you
-                    what&rsquo;s actually open.
-                </p>
-            </div>
-
-            <div class="border-t border-[#e5e0da] py-8 dark:border-[#2d2c2a]">
-                <p
-                    class="text-lg leading-relaxed text-[#1b1b18] dark:text-[#EDEDEC]"
-                >
-                    Real coverage, updated regularly. 33,000+ restaurants across
-                    Hong Kong.
-                </p>
-            </div>
-
-            <div class="border-t border-[#e5e0da] py-8 dark:border-[#2d2c2a]">
-                <p
-                    class="text-lg leading-relaxed text-[#1b1b18] dark:text-[#EDEDEC]"
-                >
-                    No accounts, no ads, no tracking. Just a tool that works.
-                </p>
-            </div>
-
-            <div class="border-t border-[#e5e0da] py-8 dark:border-[#2d2c2a]">
-                <p
-                    class="text-lg leading-relaxed text-[#1b1b18] dark:text-[#EDEDEC]"
-                >
-                    For researchers, too. Export clean, structured data for your
-                    own projects.
-                </p>
-            </div>
+        {{-- Minimal Stats --}}
+        <section class="mt-16 flex w-full flex-wrap items-center justify-center gap-8 text-sm font-medium text-midnight-indigo/50">
+            <span>33,000+ restaurants</span>
+            <span class="hidden h-1 w-1 rounded-full bg-midnight-indigo/30 sm:inline-block"></span>
+            <span>No accounts</span>
+            <span class="hidden h-1 w-1 rounded-full bg-midnight-indigo/30 sm:inline-block"></span>
+            <span>No ads</span>
         </section>
 
         {{-- Footer --}}
         <footer
-            class="mt-16 w-full border-t border-[#e5e0da] pt-6 pb-8 text-center text-sm text-[#A1A09A] dark:border-[#2d2c2a] dark:text-[#62605b]"
+            class="mt-20 mb-12 flex w-full items-center justify-between border-t border-midnight-indigo/10 pt-8 text-sm text-midnight-indigo/40"
         >
-            &copy; Time 2 Eat &middot;
-            <a href="#" class="hover:text-[#1b1b18] dark:hover:text-[#EDEDEC]">
+            <span>&copy; Time 2 Eat</span>
+            <a
+                href="#"
+                class="transition-colors hover:text-midnight-indigo"
+            >
                 GitHub
             </a>
         </footer>

@@ -59,10 +59,9 @@ class WelcomeTest extends TestCase
     {
         $response = $this->get('/');
 
-        $response->assertSee('Most apps show you what&rsquo;s nearby. We show you what&rsquo;s actually open.', false);
-        $response->assertSee('Real coverage, updated regularly.', false);
-        $response->assertSee('No accounts, no ads, no tracking.', false);
-        $response->assertSee('For researchers, too.', false);
+        $response->assertSee('33,000+ restaurants', false);
+        $response->assertSee('No accounts', false);
+        $response->assertSee('No ads', false);
     }
 
     public function test_no_openrice_credit_is_present(): void
