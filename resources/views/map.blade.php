@@ -337,22 +337,32 @@
             <label
                 class="mb-1 block text-xs font-medium text-gray-500 dark:text-gray-400"
             >
-                Dining Window
+                Start Time
+            </label>
+            <input
+                type="time"
+                name="start"
+                value="{{ $start }}"
+                required
+                class="mb-3 w-full rounded-md border border-gray-300 px-2 py-2 text-sm text-gray-700 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200"
+            />
+
+            <label
+                class="mb-1 block text-xs font-medium text-gray-500 dark:text-gray-400"
+            >
+                Duration
             </label>
             <div class="mb-3 flex items-center gap-2">
                 <input
-                    type="time"
-                    name="start"
-                    value="{{ $start }}"
+                    type="number"
+                    name="duration"
+                    value="{{ $duration }}"
+                    min="0"
+                    step="1"
+                    placeholder="0"
                     class="w-full rounded-md border border-gray-300 px-2 py-2 text-sm text-gray-700 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200"
                 />
-                <span class="text-xs text-gray-400 dark:text-gray-500">to</span>
-                <input
-                    type="time"
-                    name="end"
-                    value="{{ $end }}"
-                    class="w-full rounded-md border border-gray-300 px-2 py-2 text-sm text-gray-700 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200"
-                />
+                <span class="text-xs text-gray-400 dark:text-gray-500">minutes</span>
             </div>
 
             <button
@@ -362,7 +372,7 @@
                 Filter
             </button>
 
-            @if ($start !== null || $end !== null)
+            @if ($start !== null || $duration !== null)
                 <a
                     href="/map"
                     class="mt-2 block w-full rounded-md border border-gray-300 bg-white px-4 py-2 text-center text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600"

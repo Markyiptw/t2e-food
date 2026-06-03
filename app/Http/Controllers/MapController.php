@@ -13,38 +13,44 @@ class MapController extends Controller
     {
         $validated = $request->validate([
             'start' => [
+                'required_with:duration',
                 'nullable',
                 'string',
                 Rule::date()->format('H:i'),
             ],
-            'end' => [
+            'duration' => [
                 'nullable',
-                'string',
-                Rule::date()->format('H:i'),
+                'integer',
+                'min:0',
             ],
         ]);
 
         // use the same date, i.e. 1970-01-01, to make the result more "determinstic"
 
         $start = isset($validated['start']) ? Carbon::createFromFormat('!H:i', $validated['start']) : null;
-        $end = isset($validated['end']) ? Carbon::createFromFormat('!H:i', $validated['end']) : null;
+        $durationInMinutes = isset($validated['duration']) ? (int) $validated['duration'] : null;
 
-        $markers = Restaurant::query()
+        $restaurants = Restaurant::query()
             ->select([
                 'data->name as name',
                 'data->address as address',
                 'data->mapLatitude as latitude',
                 'data->mapLongitude as longitude',
                 'data->shortenUrl as url',
-            ])
-            ->openInWindow($start, $end)
+            ]);
+
+        if ($start !== null) {
+            $restaurants->openInWindow($start, $durationInMinutes ?? 0);
+        }
+
+        $markers = $restaurants
             ->get()
             ->map(fn (Restaurant $restaurant) => $restaurant->toArray())
             ->values();
 
         return view('map', [
             'start' => $start?->format('H:i'),
-            'end' => $end?->format('H:i'),
+            'duration' => $durationInMinutes,
             'markersJson' => $markers->toJson(),
         ]);
     }

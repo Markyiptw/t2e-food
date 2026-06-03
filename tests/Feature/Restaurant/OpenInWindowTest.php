@@ -32,7 +32,7 @@ class OpenInWindowTest extends TestCase
         );
 
         $this->assertEquals(
-            Restaurant::openInWindow(Carbon::createFromFormat('!H:i', '10:00'), Carbon::createFromFormat('!H:i', '16:00'))->pluck('id')->all(),
+            Restaurant::openInWindow(Carbon::createFromFormat('!H:i', '10:00'), 360)->pluck('id')->all(),
             [$valid->id],
         );
     }
@@ -45,20 +45,20 @@ class OpenInWindowTest extends TestCase
         $noHours = Restaurant::factory()->create();
         $noPeriodsNot24hr = Restaurant::factory()->has(Hour::factory()->dayOfWeek(3))->create();
 
-        $results = Restaurant::openInWindow(Carbon::createFromFormat('!H:i', '10:00'), Carbon::createFromFormat('!H:i', '14:00'))->pluck('id');
+        $results = Restaurant::openInWindow(Carbon::createFromFormat('!H:i', '10:00'), 240)->pluck('id');
 
         $this->assertEmpty($results);
     }
 
-    public function test_return_all_on_null(): void
+    public function test_default_duration_matches_closing_boundary(): void
     {
-        $count = 3;
+        $valid = Restaurant::factory()
+            ->has(Hour::factory()->has(Period::factory()->state(['start' => '18:00:00', 'end' => '04:00:00'])))
+            ->create();
 
-        Restaurant::factory()->has(Hour::factory()->has(Period::factory()))->count($count)->create();
+        $results = Restaurant::openInWindow(Carbon::createFromFormat('!H:i', '04:00'))->pluck('id')->all();
 
-        $results = Restaurant::openInWindow(null, null)->get();
-
-        $this->assertCount($count, $results);
+        $this->assertEquals([$valid->id], $results);
     }
 
     public function test_overnight_period_overnight_query(): void
@@ -80,7 +80,7 @@ class OpenInWindowTest extends TestCase
         );
 
         $this->assertEquals(
-            Restaurant::openInWindow(Carbon::createFromFormat('!H:i', '23:00'), Carbon::createFromFormat('!H:i', '01:00'))->pluck('id')->all(),
+            Restaurant::openInWindow(Carbon::createFromFormat('!H:i', '23:00'), 120)->pluck('id')->all(),
             [$valid->id],
         );
     }
@@ -104,7 +104,7 @@ class OpenInWindowTest extends TestCase
         );
 
         $this->assertEquals(
-            Restaurant::openInWindow(Carbon::createFromFormat('!H:i', '21:00'), Carbon::createFromFormat('!H:i', '23:00'))->pluck('id')->all(),
+            Restaurant::openInWindow(Carbon::createFromFormat('!H:i', '21:00'), 120)->pluck('id')->all(),
             [$valid->id],
         );
     }
@@ -117,7 +117,7 @@ class OpenInWindowTest extends TestCase
 
         // there should be no overlap
 
-        $results = Restaurant::openInWindow(Carbon::createFromFormat('!H:i', '23:00'), Carbon::createFromFormat('!H:i', '00:00'))->pluck('id');
+        $results = Restaurant::openInWindow(Carbon::createFromFormat('!H:i', '23:00'), 60)->pluck('id');
 
         $this->assertEmpty($results);
     }
@@ -128,7 +128,7 @@ class OpenInWindowTest extends TestCase
             ->has(Hour::factory()->has(Period::factory()->state(['start' => '18:00:00', 'end' => '04:00:00'])))
             ->create();
 
-        $results = Restaurant::openInWindow(Carbon::createFromFormat('!H:i', '04:00'), Carbon::createFromFormat('!H:i', '05:00'))->pluck('id');
+        $results = Restaurant::openInWindow(Carbon::createFromFormat('!H:i', '04:00'), 60)->pluck('id');
 
         $this->assertEmpty($results);
     }
