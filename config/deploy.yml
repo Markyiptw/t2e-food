@@ -61,7 +61,7 @@ accessories:
   db:
     image: postgres:17
     host: 43.199.193.158
-    # port: 5432 # this option is for public exposure
+    # port: "127.0.0.1:5432:5432" # accessable with ssh tunnel
     env:
       clear:
         PGDATA: "/var/lib/postgresql/17/docker"
