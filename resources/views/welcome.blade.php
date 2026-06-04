@@ -1,140 +1,222 @@
 <x-layout>
-    <div class="grain-texture flex w-full max-w-5xl flex-col items-center px-6 lg:px-8">
-        {{-- Header --}}
-        <header class="mb-20 flex w-full items-center justify-between pt-10">
-            <a
-                href="/"
-                class="text-2xl font-extrabold tracking-tight text-midnight-indigo"
-            >
-                Time 2 Eat
-            </a>
+    <main
+        class="font-body min-h-screen bg-[#f4ecd8] text-[#1f2a24] antialiased"
+    >
+        {{-- Tile strip --}}
+        <div
+            class="h-3 w-full bg-[repeating-linear-gradient(90deg,#0f6b54_0_22px,#0c5644_22px_24px)]"
+        ></div>
 
-            <nav class="flex items-center gap-8 text-sm font-medium">
-                <a
-                    href="/map"
-                    class="text-midnight-indigo/60 transition-colors hover:text-midnight-indigo"
+        {{-- Nav --}}
+        <header
+            class="mx-auto flex max-w-5xl items-center justify-between px-6 py-6"
+        >
+            <div class="flex items-baseline gap-3">
+                <span
+                    class="text-xl tracking-[0.25em] text-[#0f6b54]"
+                    style="font-family: 'Oswald', ui-sans-serif, sans-serif"
                 >
-                    Map
-                </a>
-                <a
-                    href="/export"
-                    class="text-midnight-indigo/60 transition-colors hover:text-midnight-indigo"
-                >
-                    Data
-                </a>
-
-                @if (Route::has('login'))
-                    @auth
-                        <a
-                            href="{{ url('/dashboard') }}"
-                            class="text-midnight-indigo/60 transition-colors hover:text-midnight-indigo"
-                        >
-                            Dashboard
-                        </a>
-                    @else
-                        <a
-                            href="{{ route('login') }}"
-                            class="text-midnight-indigo/60 transition-colors hover:text-midnight-indigo"
-                        >
-                            Log in
-                        </a>
-                        @if (Route::has('register'))
-                            <a
-                                href="{{ route('register') }}"
-                                class="rounded-full border border-midnight-indigo/20 px-5 py-2 text-midnight-indigo transition-all hover:border-midnight-indigo hover:bg-midnight-indigo hover:text-hazy-sand"
-                            >
-                                Register
-                            </a>
-                        @endif
-                    @endauth
-                @endif
-            </nav>
+                    TIME <span class="text-[#b32b22]">2</span> EAT
+                </span>
+            </div>
         </header>
 
         {{-- Hero --}}
-        <section class="mb-16 w-full text-center">
-            <h1 class="mx-auto max-w-2xl text-balance text-5xl font-extrabold leading-[1.1] tracking-tight text-midnight-indigo md:text-6xl">
-                What is <em class="not-italic text-sunset-apricot">actually</em> open right now.
-            </h1>
-        </section>
-
-        {{-- Search --}}
         <section
-            class="relative w-full overflow-hidden rounded-3xl border border-midnight-indigo/10 bg-white/60 p-10 shadow-xl shadow-midnight-indigo/5 backdrop-blur-sm md:p-14"
+            class="mx-auto grid max-w-5xl items-center gap-12 px-6 pt-10 pb-16 md:grid-cols-[1.1fr_0.9fr]"
         >
-            <div class="absolute -top-24 -right-24 h-48 w-48 rounded-full bg-electric-amber/20 blur-3xl"></div>
-            <div class="absolute -bottom-16 -left-16 h-40 w-40 rounded-full bg-sunset-apricot/15 blur-3xl"></div>
+            <div>
+                <h1
+                    class="mt-3 font-serif text-6xl font-medium tracking-tight italic"
+                >
+                    Will there be <span class="text-[#b32b22]">food</span>?
+                </h1>
+                <p class="mt-6 max-w-md text-lg leading-relaxed text-[#3c4a42]">
+                    tell us your eta, and we'll tell you which Hong Kong kitchens are still firing the wok.
+                </p>
 
-            <form
-                action="/map"
-                method="GET"
-                class="relative z-10 flex flex-col items-center gap-8"
-            >
+                {{-- Order slip input --}}
                 <div
-                    class="flex flex-wrap items-center justify-center gap-x-3 gap-y-4 text-xl font-medium text-midnight-indigo md:text-2xl"
+                    class="mt-9 max-w-md border border-[#1f2a24]/15 bg-[#fbf6e9] p-2 shadow-[6px_6px_0_#0f6b54]"
                 >
-                    <span>Food at</span>
-
-                    <select
-                        name="start"
-                        class="rounded-xl border-2 border-midnight-indigo/15 bg-hazy-sand px-4 py-2.5 font-mono text-lg font-bold text-midnight-indigo transition-all focus:border-sunset-apricot focus:outline-none"
+                    <div
+                        class="flex items-center gap-3 border-b border-dashed border-[#1f2a24]/20 px-3 py-2.5 text-sm"
                     >
-                        <option value="08:00">08:00</option>
-                        <option value="12:00">12:00</option>
-                        <option value="20:00">20:00</option>
-                        <option value="02:00" selected>02:00</option>
-                    </select>
-
-                    <span>within</span>
-
-                    <input
-                        type="number"
-                        name="duration"
-                        value="15"
-                        min="0"
-                        class="w-24 rounded-xl border-2 border-midnight-indigo/15 bg-hazy-sand px-4 py-2.5 text-center font-mono text-lg font-bold text-midnight-indigo transition-all focus:border-sunset-apricot focus:outline-none"
-                    />
-
-                    <span>minutes of closing.</span>
+                        <span class="font-hk w-16 font-bold text-[#b32b22]">
+                            Time
+                        </span>
+                        <span class="font-medium">02:00</span>
+                    </div>
+                    <div class="flex items-center gap-3 px-3 py-2.5 text-sm">
+                        <span class="font-hk w-16 font-bold text-[#b32b22]">
+                            Buffer
+                        </span>
+                        <span class="font-medium">15 minutes</span>
+                    </div>
+                    <button
+                        type="button"
+                        class="font-display mt-1 flex w-full items-center justify-center gap-2 bg-[#b32b22] py-3 text-lg tracking-[0.2em] text-[#f4ecd8] hover:bg-[#962219]"
+                    >
+                        VIEW ON MAP
+                    </button>
                 </div>
-
-                <button
-                    type="submit"
-                    class="group mt-2 inline-flex items-center gap-3 rounded-full bg-sunset-apricot px-10 py-5 text-lg font-bold text-white shadow-lg shadow-sunset-apricot/30 transition-all hover:-translate-y-0.5 hover:bg-electric-amber hover:shadow-xl hover:shadow-electric-amber/30 active:translate-y-0"
-                >
-                    <span>Explore the Map</span>
-                    <span class="transition-transform group-hover:translate-x-1">&rarr;</span>
-                </button>
-
                 <a
-                    href="/export"
-                    class="text-sm font-medium text-midnight-indigo/50 underline decoration-sunset-apricot/60 underline-offset-4 transition-colors hover:text-midnight-indigo"
+                    href="#"
+                    class="mt-3 block text-sm tracking-wide text-[#3c4a42]/70 underline"
                 >
-                    &hellip;or export for all the data nerds &rarr;
+                    …or export for all the data nerds →
                 </a>
-            </form>
+            </div>
+
+            {{-- Menu chit / receipt --}}
+            <div
+                id="menu"
+                class="relative mx-auto w-full max-w-xs rotate-1 bg-[#fbf6e9] p-6 shadow-[0_18px_40px_-18px_rgba(31,42,36,0.55)]"
+                style="
+                    clip-path: polygon(
+                        0 0,
+                        100% 0,
+                        100% 97%,
+                        96% 100%,
+                        92% 97%,
+                        88% 100%,
+                        84% 97%,
+                        80% 100%,
+                        76% 97%,
+                        72% 100%,
+                        68% 97%,
+                        64% 100%,
+                        60% 97%,
+                        56% 100%,
+                        52% 97%,
+                        48% 100%,
+                        44% 97%,
+                        40% 100%,
+                        36% 97%,
+                        32% 100%,
+                        28% 97%,
+                        24% 100%,
+                        20% 97%,
+                        16% 100%,
+                        12% 97%,
+                        8% 100%,
+                        4% 97%,
+                        0 100%
+                    );
+                "
+            >
+                <div class="text-center">
+                    <p
+                        class="font-hk text-2xl font-black tracking-[0.3em] text-[#b32b22]"
+                    >
+                        MENU
+                    </p>
+                </div>
+                <div
+                    class="my-4 border-t border-dashed border-[#1f2a24]/25"
+                ></div>
+                <ul class="space-y-3 text-sm">
+                    <li class="flex items-start justify-between gap-3">
+                        <div>
+                            <p class="font-serif text-xs text-[#3c4a42]">
+                                Data Source
+                            </p>
+                        </div>
+                        <span
+                            class="mt-0.5 shrink-0 text-xs font-semibold text-[#0f6b54]"
+                        >
+                            you guess
+                        </span>
+                    </li>
+                    <li class="flex items-start justify-between gap-3">
+                        <div>
+                            <p class="font-serif text-xs text-[#3c4a42]">
+                                Usefulness
+                            </p>
+                        </div>
+                        <span
+                            class="mt-0.5 shrink-0 text-xs font-semibold text-[#0f6b54]"
+                        >
+                            quite
+                        </span>
+                    </li>
+                    <li class="flex items-start justify-between gap-3">
+                        <div>
+                            <p class="font-serif text-xs text-[#3c4a42]">
+                                Vibe Check
+                            </p>
+                        </div>
+                        <span
+                            class="mt-0.5 shrink-0 text-xs font-semibold text-[#0f6b54]"
+                        >
+                            pass
+                        </span>
+                    </li>
+                    <li class="flex items-start justify-between gap-3">
+                        <div>
+                            <p class="font-serif text-xs text-[#3c4a42]">ADS</p>
+                        </div>
+                        <span
+                            class="mt-0.5 shrink-0 text-xs font-semibold text-[#1f2a24]/35 line-through"
+                        >
+                            none
+                        </span>
+                    </li>
+                </ul>
+                <div
+                    class="my-4 border-t border-dashed border-[#1f2a24]/25"
+                ></div>
+                <div
+                    class="font-display block justify-between text-center text-xs tracking-[0.2em] text-[#3c4a42]"
+                >
+                    多謝 THANK YOU
+                </div>
+            </div>
         </section>
 
-        {{-- Minimal Stats --}}
-        <section class="mt-16 flex w-full flex-wrap items-center justify-center gap-8 text-sm font-medium text-midnight-indigo/50">
-            <span>33,000+ restaurants</span>
-            <span class="hidden h-1 w-1 rounded-full bg-midnight-indigo/30 sm:inline-block"></span>
-            <span>No accounts</span>
-            <span class="hidden h-1 w-1 rounded-full bg-midnight-indigo/30 sm:inline-block"></span>
-            <span>No ads</span>
+        {{-- Tile divider --}}
+        <div
+            class="h-2 w-full bg-[repeating-linear-gradient(90deg,#b32b22_0_14px,#f4ecd8_14px_16px)] opacity-60"
+        ></div>
+
+        {{-- Open source band --}}
+        <section class="mx-auto my-16 max-w-5xl px-6 pb-20">
+            <div
+                class="flex flex-col items-start justify-between gap-6 border-2 border-[#0f6b54] bg-[#0f6b54] p-9 text-[#f4ecd8] md:flex-row md:items-center"
+            >
+                <div>
+                    <h2 class="text-2xl">
+                        <span class="font-serif italic">
+                            A community project
+                        </span>
+                    </h2>
+                    <p class="mt-2 max-w-lg text-sm text-[#f4ecd8]/85">
+                        Open source and free. Wrong opening time? Send a pull
+                        request — every fix feeds the whole street.
+                    </p>
+                </div>
+                <div class="flex shrink-0 gap-3">
+                    <a
+                        href="#"
+                        class="font-display bg-[#b32b22] px-5 py-3 text-base tracking-[0.15em] hover:bg-[#962219]"
+                    >
+                        ⭐ GITHUB
+                    </a>
+                    <a
+                        href="#"
+                        class="font-display border border-[#f4ecd8] px-5 py-3 text-base tracking-[0.15em] hover:bg-[#f4ecd8]/10"
+                    >
+                        <span class="font-hk tracking-normal">幫手</span> CONTRIBUTE
+                    </a>
+                </div>
+            </div>
         </section>
 
         {{-- Footer --}}
         <footer
-            class="mt-20 mb-12 flex w-full items-center justify-between border-t border-midnight-indigo/10 pt-8 text-sm text-midnight-indigo/40"
+            class="font-display mx-auto max-w-5xl px-6 pb-28 text-center text-sm tracking-[0.2em] text-[#3c4a42]"
         >
-            <span>&copy; Time 2 Eat</span>
-            <a
-                href="#"
-                class="transition-colors hover:text-midnight-indigo"
-            >
-                GitHub
-            </a>
+            TIME 2 EAT · website by oh.himark.yip · research method by liberresearch
         </footer>
-    </div>
+    </main>
 </x-layout>

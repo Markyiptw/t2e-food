@@ -9,9 +9,10 @@
         <title>{{ $title ?? 'Time 2 Eat' }}</title>
 
         <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.bunny.net" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link
-            href="https://fonts.bunny.net/css?family=outfit:300,400,500,600,700,800|space-mono:400,400i,700,700i"
+            href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IM+Fell+English:ital@0;1&family=Noto+Serif+HK:wght@300..900&family=Oswald:wght@400..700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap"
             rel="stylesheet"
         />
 
@@ -34,7 +35,7 @@
     <body
         hx-ext="response-targets"
         hx-target-error="this"
-        class="flex min-h-screen flex-col items-center font-sans antialiased"
+        class="min-h-screen font-sans antialiased"
     >
         {{ $slot }}
     </body>

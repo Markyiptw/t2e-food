@@ -7,10 +7,13 @@
 @source '../**/*.js';
 
 @theme {
-    --font-sans: 'Outfit', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-sans: 'IM Fell English', ui-serif, Georgia, 'Times New Roman', serif;
     --font-mono: 'Space Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono',
         'Courier New', monospace;
+    --font-display: 'Bebas Neue', 'Inter', ui-sans-serif, sans-serif;
+    --font-serif: 'Playfair Display', ui-serif, Georgia, 'Times New Roman', serif;
+    --font-body: 'IM Fell English', ui-serif, Georgia, 'Times New Roman', serif;
+    --font-hk: 'Noto Serif HK', 'Noto Serif TC', ui-serif, serif;
 
     --color-hazy-sand: #F7F4EF;
     --color-dusk-lavender: #E5DFED;
@@ -19,12 +22,20 @@
     --color-electric-amber: #FFB000;
     --color-sand-stone: #D4CFC8;
     --color-fog: #A1A09A;
+
+    --color-parchment: #f4ecd8;
+    --color-forest: #0f6b54;
+    --color-forest-dark: #0c5644;
+    --color-rust: #b32b22;
+    --color-rust-dark: #962219;
+    --color-ink: #1f2a24;
+    --color-tint: #3c4a42;
+    --color-cream: #fbf6e9;
 }
 
 @layer base {
     body {
         background: linear-gradient(165deg, var(--color-hazy-sand) 0%, var(--color-dusk-lavender) 100%);
-        color: var(--color-midnight-indigo);
         min-height: 100vh;
     }
 }
