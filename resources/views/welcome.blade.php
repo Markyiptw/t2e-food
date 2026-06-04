@@ -36,7 +36,9 @@
                 </p>
 
                 {{-- Order slip input --}}
-                <div
+                <form
+                    method="GET"
+                    action="/map"
                     class="mt-9 max-w-md border border-[#1f2a24]/15 bg-[#fbf6e9] p-2 shadow-[6px_6px_0_#0f6b54]"
                 >
                     <div
@@ -45,21 +47,36 @@
                         <span class="font-hk w-16 font-bold text-[#b32b22]">
                             Time
                         </span>
-                        <span class="font-medium">02:00</span>
+                        <select
+                            name="start"
+                            class="font-medium bg-transparent text-[#1f2a24] outline-none"
+                        >
+                            <option value="02:00" selected>02:00</option>
+                            <option value="05:00">05:00</option>
+                            <option value="09:00">09:00</option>
+                        </select>
                     </div>
                     <div class="flex items-center gap-3 px-3 py-2.5 text-sm">
                         <span class="font-hk w-16 font-bold text-[#b32b22]">
                             Buffer
                         </span>
-                        <span class="font-medium">15 minutes</span>
+                        <input
+                            type="number"
+                            name="duration"
+                            value="15"
+                            min="0"
+                            step="1"
+                            class="w-16 bg-transparent font-medium text-[#1f2a24] outline-none"
+                        />
+                        <span class="font-medium">minutes</span>
                     </div>
                     <button
-                        type="button"
+                        type="submit"
                         class="font-display mt-1 flex w-full items-center justify-center gap-2 bg-[#b32b22] py-3 text-lg tracking-[0.2em] text-[#f4ecd8] hover:bg-[#962219]"
                     >
                         VIEW ON MAP
                     </button>
-                </div>
+                </form>
                 <a
                     href="#"
                     class="mt-3 block text-sm tracking-wide text-[#3c4a42]/70 underline"
