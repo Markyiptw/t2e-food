@@ -12,12 +12,15 @@
             class="mx-auto flex max-w-5xl items-center justify-between px-6 py-6"
         >
             <div class="flex items-baseline gap-3">
-                <span
+                <a
+                    href="/"
                     class="text-xl tracking-[0.25em] text-[#0f6b54]"
                     style="font-family: 'Oswald', ui-sans-serif, sans-serif"
                 >
-                    TIME <span class="text-[#b32b22]">2</span> EAT
-                </span>
+                    TIME
+                    <span class="text-[#b32b22]">2</span>
+                    EAT
+                </a>
             </div>
         </header>
 
@@ -29,10 +32,13 @@
                 <h1
                     class="mt-3 font-serif text-6xl font-medium tracking-tight italic"
                 >
-                    Will there be <span class="text-[#b32b22]">food</span>?
+                    Will there be
+                    <span class="text-[#b32b22]">food</span>
+                    ?
                 </h1>
                 <p class="mt-6 max-w-md text-lg leading-relaxed text-[#3c4a42]">
-                    tell us your eta, and we'll tell you which Hong Kong kitchens are still firing the wok.
+                    tell us your eta, and we'll tell you which Hong Kong
+                    kitchens are still firing the wok.
                 </p>
 
                 {{-- Order slip input --}}
@@ -49,7 +55,7 @@
                         </span>
                         <select
                             name="start"
-                            class="font-medium bg-transparent text-[#1f2a24] outline-none"
+                            class="bg-transparent font-medium text-[#1f2a24] outline-none"
                         >
                             <option value="02:00" selected>02:00</option>
                             <option value="05:00">05:00</option>
@@ -78,7 +84,7 @@
                     </button>
                 </form>
                 <a
-                    href="#"
+                    href="/export"
                     class="mt-3 block text-sm tracking-wide text-[#3c4a42]/70 underline"
                 >
                     …or export for all the data nerds →
@@ -208,22 +214,16 @@
                         </span>
                     </h2>
                     <p class="mt-2 max-w-lg text-sm text-[#f4ecd8]/85">
-                        Open source and free. Wrong opening time? Send a pull
-                        request — every fix feeds the whole street.
+                        Open source and free. Found a bug? Send a pull request —
+                        every fix feeds the whole street.
                     </p>
                 </div>
                 <div class="flex shrink-0 gap-3">
                     <a
-                        href="#"
+                        href="https://github.com/Markyiptw/t2e-food"
                         class="font-display bg-[#b32b22] px-5 py-3 text-base tracking-[0.15em] hover:bg-[#962219]"
                     >
                         ⭐ GITHUB
-                    </a>
-                    <a
-                        href="#"
-                        class="font-display border border-[#f4ecd8] px-5 py-3 text-base tracking-[0.15em] hover:bg-[#f4ecd8]/10"
-                    >
-                        <span class="font-hk tracking-normal">幫手</span> CONTRIBUTE
                     </a>
                 </div>
             </div>
@@ -233,7 +233,14 @@
         <footer
             class="font-display mx-auto max-w-5xl px-6 pb-28 text-center text-sm tracking-[0.2em] text-[#3c4a42]"
         >
-            TIME 2 EAT · website by oh.himark.yip · research method by liberresearch
+            TIME 2 EAT · website by
+            <a href="https://instagram.com/oh.hi.mark.ii" class="underline">
+                oh.himark.ii
+            </a>
+            · research method by
+            <a href="https://instagram.com/liberresearch" class="underline">
+                liberresearch
+            </a>
         </footer>
     </main>
 </x-layout>
