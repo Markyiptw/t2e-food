@@ -17,7 +17,7 @@
                     Map
                 </a>
                 <a
-                    href="#"
+                    href="/export"
                     class="text-midnight-indigo/60 transition-colors hover:text-midnight-indigo"
                 >
                     Data
@@ -107,7 +107,7 @@
                 </button>
 
                 <a
-                    href="#"
+                    href="/export"
                     class="text-sm font-medium text-midnight-indigo/50 underline decoration-sunset-apricot/60 underline-offset-4 transition-colors hover:text-midnight-indigo"
                 >
                     &hellip;or export for all the data nerds &rarr;

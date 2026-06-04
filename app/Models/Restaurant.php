@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Closure;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -59,30 +60,67 @@ class Restaurant extends Model
         $queryStartSeconds = $start->secondsSinceMidnight();
         $queryEndSeconds = $queryStartSeconds + ($durationInMinutes * 60);
 
-        $query
-            ->whereHas('hours', fn (Builder $query) => $query
-                ->whereRaw('data @> ?', [
-                    collect([
-                        'weight' => 0,
-                        'isClose' => false,
-                    ])
-                        ->toJson(),
-                ])
-                ->where(fn (Builder $query) => $query
-                    ->whereRaw('data @> ?', [json_encode(['is24hr' => true])])
-                    ->orWhereHas('periods', fn (Builder $query) => $query
-                        ->where(fn (Builder $query) => $query
-                            ->whereRaw(
-                                'EXTRACT(EPOCH FROM "start") <= ? AND (EXTRACT(EPOCH FROM "end") + CASE WHEN "start" > "end" THEN 86400 ELSE 0 END) >= ?',
-                                [$queryStartSeconds, $queryEndSeconds],
-                            )
-                            ->orWhereRaw(
-                                '"start" > "end" AND (EXTRACT(EPOCH FROM "start") - 86400) <= ? AND EXTRACT(EPOCH FROM "end") >= ?',
-                                [$queryStartSeconds, $queryEndSeconds],
-                            )
-                        ),
-                    )
+        $this->whereHasBaseOpenHours(
+            $query,
+            fn (Builder $query) => $query->where(fn (Builder $query) => $query
+                ->whereRaw(
+                    'EXTRACT(EPOCH FROM "start") <= ? AND (EXTRACT(EPOCH FROM "end") + CASE WHEN "start" > "end" THEN 86400 ELSE 0 END) >= ?',
+                    [$queryStartSeconds, $queryEndSeconds],
                 )
-            );
+                ->orWhereRaw(
+                    '"start" > "end" AND (EXTRACT(EPOCH FROM "start") - 86400) <= ? AND EXTRACT(EPOCH FROM "end") >= ?',
+                    [$queryStartSeconds, $queryEndSeconds],
+                )
+            ),
+        );
+    }
+
+    /**
+     * Scope to restaurants that are open at any point between the given times.
+     */
+    public function scopeOpenInAnyWindowBetween(Builder $query, Carbon $start, Carbon $end): void
+    {
+        $queryStartSeconds = $start->secondsSinceMidnight();
+        $queryEndSeconds = $end->secondsSinceMidnight();
+
+        if ($queryStartSeconds > $queryEndSeconds) {
+            $queryEndSeconds += 86400;
+        }
+
+        $periodEndSeconds = '(EXTRACT(EPOCH FROM "end") + CASE WHEN "start" > "end" THEN 86400 ELSE 0 END)';
+
+        $this->whereHasBaseOpenHours(
+            $query,
+            fn (Builder $query) => $query->where(fn (Builder $query) => $query
+                ->whereRaw(
+                    'EXTRACT(EPOCH FROM "start") <= ? AND '.$periodEndSeconds.' >= ?',
+                    [$queryEndSeconds, $queryStartSeconds],
+                )
+                ->orWhereRaw(
+                    '(EXTRACT(EPOCH FROM "start") - 86400) <= ? AND ('.$periodEndSeconds.' - 86400) >= ?',
+                    [$queryEndSeconds, $queryStartSeconds],
+                )
+                ->orWhereRaw(
+                    '(EXTRACT(EPOCH FROM "start") + 86400) <= ? AND ('.$periodEndSeconds.' + 86400) >= ?',
+                    [$queryEndSeconds, $queryStartSeconds],
+                )
+            ),
+        );
+    }
+
+    private function whereHasBaseOpenHours(Builder $query, Closure $periodConstraint): void
+    {
+        $query->whereHas('hours', fn (Builder $query) => $query
+            ->whereRaw('data @> ?', [
+                collect([
+                    'weight' => 0,
+                    'isClose' => false,
+                ])
+                    ->toJson(),
+            ])
+            ->where(fn (Builder $query) => $query
+                ->whereRaw('data @> ?', [json_encode(['is24hr' => true])])
+                ->orWhereHas('periods', $periodConstraint)
+            ));
     }
 }
