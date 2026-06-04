@@ -28,10 +28,12 @@ class ExportControllerTest extends TestCase
         $response
             ->assertOk()
             ->assertSee('action="/export"', false)
-            ->assertSee('method="GET"', false)
             ->assertSee('method="POST"', false)
+            ->assertSee('type="time"', false)
             ->assertSee('name="start"', false)
+            ->assertSee('value="10:00"', false)
             ->assertSee('name="end"', false)
+            ->assertSee('value="14:00"', false)
             ->assertSee('Download as XLSX');
     }
 
