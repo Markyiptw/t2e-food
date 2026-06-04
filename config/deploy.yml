@@ -1,5 +1,5 @@
-service: openrice-scraper
-image: markyiptw/openrice-scraper
+service: t2e-food
+image: markyiptw/t2e-food
 
 servers:
   web:
@@ -25,7 +25,7 @@ builder:
 
 proxy:
   ssl: true
-  host: restaurants.himark.tools
+  host: www.t2e.food
   # default is 80
   # but our image listens to 8080
   app_port: 8080
@@ -38,7 +38,7 @@ env:
   clear:
     DB_CONNECTION: pgsql
     # hostname inside docker = ${service}-${accessory}
-    DB_HOST: openrice-scraper-db
+    DB_HOST: t2e-food-db
     DB_USERNAME: postgres
     DB_DATABASE: postgres
     AUTORUN_ENABLED: true
