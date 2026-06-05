@@ -25,21 +25,20 @@ class Restaurant extends Model
         return $this->hasMany(Hour::class);
     }
 
-    protected static function booted(): void
+    public function scopeActive(Builder $query): void
     {
-        static::addGlobalScope('active', function (Builder $builder) {
-            $builder
-                ->where('data->status', 10)
-                ->whereNull('data->statusText');
-        });
+        $query
+            ->whereRaw("(data->>'status')::int = ?", [10])
+            ->whereNull('data->statusText');
+    }
 
-        static::addGlobalScope('hasLocation', function (Builder $builder) {
-            $builder
-                ->whereNotNull('data->mapLatitude')
-                ->whereNotNull('data->mapLongitude')
-                ->where('data->mapLatitude', '!=', 0)
-                ->where('data->mapLongitude', '!=', 0);
-        });
+    public function scopeHasLocation(Builder $query): void
+    {
+        $query
+            ->whereNotNull('data->mapLatitude')
+            ->whereNotNull('data->mapLongitude')
+            ->whereRaw("(data->>'mapLatitude')::float != 0")
+            ->whereRaw("(data->>'mapLongitude')::float != 0");
     }
 
     /**
@@ -60,19 +59,28 @@ class Restaurant extends Model
         $queryStartSeconds = $start->secondsSinceMidnight();
         $queryEndSeconds = $queryStartSeconds + ($durationInMinutes * 60);
 
-        $this->whereHasBaseOpenHours(
-            $query,
-            fn (Builder $query) => $query->where(fn (Builder $query) => $query
-                ->whereRaw(
-                    'EXTRACT(EPOCH FROM "start") <= ? AND (EXTRACT(EPOCH FROM "end") + CASE WHEN "start" > "end" THEN 86400 ELSE 0 END) >= ?',
-                    [$queryStartSeconds, $queryEndSeconds],
-                )
-                ->orWhereRaw(
-                    '"start" > "end" AND (EXTRACT(EPOCH FROM "start") - 86400) <= ? AND EXTRACT(EPOCH FROM "end") >= ?',
-                    [$queryStartSeconds, $queryEndSeconds],
-                )
-            ),
-        );
+        $query
+            ->whereHas('hours', fn (Builder $query) => $query
+                ->whereRaw('data @> ?', [
+                    collect([
+                        'weight' => 0,
+                        'isClose' => false,
+                    ])
+                        ->toJson(),
+                ])
+                ->where(fn (Builder $query) => $query
+                    ->whereRaw('data @> ?', [json_encode(['is24hr' => true])])
+                    ->orWhereHas('periods', fn (Builder $query) => $query
+                        ->whereRaw(
+                            'EXTRACT(EPOCH FROM "start") <= ? AND (EXTRACT(EPOCH FROM "end") + CASE WHEN "start" > "end" THEN 86400 ELSE 0 END) >= ?',
+                            [$queryStartSeconds, $queryEndSeconds],
+                        )
+                        ->orWhereRaw(
+                            '"start" > "end" AND (EXTRACT(EPOCH FROM "start") - 86400) <= ? AND EXTRACT(EPOCH FROM "end") >= ?',
+                            [$queryStartSeconds, $queryEndSeconds],
+                        )
+                    )
+                ));
     }
 
     /**
@@ -89,23 +97,33 @@ class Restaurant extends Model
 
         $periodEndSeconds = '(EXTRACT(EPOCH FROM "end") + CASE WHEN "start" > "end" THEN 86400 ELSE 0 END)';
 
-        $this->whereHasBaseOpenHours(
-            $query,
-            fn (Builder $query) => $query->where(fn (Builder $query) => $query
-                ->whereRaw(
-                    'EXTRACT(EPOCH FROM "start") <= ? AND '.$periodEndSeconds.' >= ?',
-                    [$queryEndSeconds, $queryStartSeconds],
-                )
-                ->orWhereRaw(
-                    '(EXTRACT(EPOCH FROM "start") - 86400) <= ? AND ('.$periodEndSeconds.' - 86400) >= ?',
-                    [$queryEndSeconds, $queryStartSeconds],
-                )
-                ->orWhereRaw(
-                    '(EXTRACT(EPOCH FROM "start") + 86400) <= ? AND ('.$periodEndSeconds.' + 86400) >= ?',
-                    [$queryEndSeconds, $queryStartSeconds],
-                )
-            ),
-        );
+        $query
+            ->whereHas('hours', fn (Builder $query) => $query
+                ->whereRaw('data @> ?', [
+                    collect([
+                        'weight' => 0,
+                        'isClose' => false,
+                    ])
+                        ->toJson(),
+                ])
+                ->where(fn (Builder $query) => $query
+                    ->whereRaw('data @> ?', [json_encode(['is24hr' => true])])
+                    ->orWhereHas('periods', fn (Builder $query) => $query
+                        ->whereRaw(
+                            'EXTRACT(EPOCH FROM "start") <= ? AND '.$periodEndSeconds.' >= ?',
+                            [$queryEndSeconds, $queryStartSeconds],
+                        )
+                        ->orWhereRaw(
+                            '(EXTRACT(EPOCH FROM "start") - 86400) <= ? AND ('.$periodEndSeconds.' - 86400) >= ?',
+                            [$queryEndSeconds, $queryStartSeconds],
+                        )
+                        ->orWhereRaw(
+                            '(EXTRACT(EPOCH FROM "start") + 86400) <= ? AND ('.$periodEndSeconds.' + 86400) >= ?',
+                            [$queryEndSeconds, $queryStartSeconds],
+                        )
+                    )
+                ));
+
     }
 
     private function whereHasBaseOpenHours(Builder $query, Closure $periodConstraint): void

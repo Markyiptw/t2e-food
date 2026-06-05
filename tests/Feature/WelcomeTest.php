@@ -36,7 +36,7 @@ class WelcomeTest extends TestCase
         $response->assertSee('id="start"', false);
         $response->assertSee('id="duration"', false);
         $response->assertSee('02:00');
-        $response->assertSee('Buffer');
+        $response->assertSee('用餐時間');
         $response->assertSee('VIEW ON MAP');
         $response->assertSee('<form', false);
         $response->assertSee('method="GET"', false);

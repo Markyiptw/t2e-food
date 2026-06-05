@@ -98,7 +98,7 @@ class ScrapeOpenriceRestaurantsJobTest extends TestCase
             ->whereJsonContains('data->isClose', true)
             ->first();
         $this->assertNotNull($hour2);
-        $this->assertTrue(json_decode($hour2->data, true)['isClose']);
+        $this->assertTrue($hour2->data['isClose']);
 
         $restaurant3 = Restaurant::withoutGlobalScope('active')
             ->where('data->poiId', '303')
@@ -220,7 +220,7 @@ class ScrapeOpenriceRestaurantsJobTest extends TestCase
         $this->assertDatabaseCount('periods', 1);
 
         $hour = Hour::first();
-        $this->assertSame(3, json_decode($hour->data, true)['dayOfWeek']);
+        $this->assertSame(3, $hour->data['dayOfWeek']);
 
         $this->assertDatabaseHas('periods', [
             'hour_id' => $hour->id,

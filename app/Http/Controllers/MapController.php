@@ -25,11 +25,13 @@ class MapController extends Controller
         ]);
 
         // use the same date, i.e. 1970-01-01, to make the result more "determinstic"
-
         $start = isset($validated['start']) ? Carbon::createFromFormat('!H:i', $validated['start']) : null;
 
         $duration = (int) ($validated['duration'] ?? null);
         $restaurants = Restaurant::query()
+            ->active()
+            ->hasLocation()
+            ->when($start !== null, fn ($query) => $query->openInWindow($start, $duration))
             ->select([
                 'data->name as name',
                 'data->address as address',
@@ -37,10 +39,6 @@ class MapController extends Controller
                 'data->mapLongitude as longitude',
                 'data->shortenUrl as url',
             ]);
-
-        if ($start !== null) {
-            $restaurants->openInWindow($start, $duration);
-        }
 
         $markers = $restaurants
             ->get()

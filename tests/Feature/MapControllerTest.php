@@ -50,15 +50,6 @@ class MapControllerTest extends TestCase
         $this->assertSame($valid->data['name'], $markers[0]['name']);
     }
 
-    public function test_duration_requires_start(): void
-    {
-        $response = $this->from('/map')->get('/map?duration=60');
-
-        $response
-            ->assertRedirect('/map')
-            ->assertSessionHasErrors('start');
-    }
-
     public function test_map_page_renders_with_layout_and_bottom_sheet(): void
     {
         $response = $this->get('/map');

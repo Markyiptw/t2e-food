@@ -61,8 +61,7 @@ class ScrapeOpenriceRestaurants implements ShouldBeUnique, ShouldQueue
 
             $restaurants
                 ->each(function ($restaurant) {
-                    $restaurantId = Restaurant::withoutGlobalScope('active')
-                        ->withoutGlobalScope('hasLocation')
+                    $restaurantId = Restaurant::query()
                         ->where('data->poiId', $restaurant['poiId'])
                         ->first('id')
                         ->id;
