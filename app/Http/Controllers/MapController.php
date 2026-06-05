@@ -13,7 +13,6 @@ class MapController extends Controller
     {
         $validated = $request->validate([
             'start' => [
-                'required_with:duration',
                 'nullable',
                 'string',
                 Rule::date()->format('H:i'),
@@ -28,8 +27,8 @@ class MapController extends Controller
         // use the same date, i.e. 1970-01-01, to make the result more "determinstic"
 
         $start = isset($validated['start']) ? Carbon::createFromFormat('!H:i', $validated['start']) : null;
-        $durationInMinutes = isset($validated['duration']) ? (int) $validated['duration'] : null;
 
+        $duration = (int) ($validated['duration'] ?? null);
         $restaurants = Restaurant::query()
             ->select([
                 'data->name as name',
@@ -40,7 +39,7 @@ class MapController extends Controller
             ]);
 
         if ($start !== null) {
-            $restaurants->openInWindow($start, $durationInMinutes ?? 0);
+            $restaurants->openInWindow($start, $duration);
         }
 
         $markers = $restaurants
@@ -50,7 +49,7 @@ class MapController extends Controller
 
         return view('map', [
             'start' => $start?->format('H:i'),
-            'duration' => $durationInMinutes,
+            'duration' => $duration,
             'markersJson' => $markers->toJson(),
         ]);
     }

@@ -48,7 +48,7 @@
                     <select
                         id="day_of_week_desktop"
                         name="day_of_week"
-                        class="w-full border border-[#1f2a24]/20 bg-transparent px-2 py-1.5 text-sm text-[#1f2a24] outline-none focus:border-[#0f6b54]"
+                        class="slip-select slip-field w-full px-2 py-1.5 text-sm"
                     >
                         <option selected value="">Any</option>
                     </select>
@@ -67,7 +67,7 @@
                         name="start"
                         value="{{ $start }}"
                         required
-                        class="w-full border border-[#1f2a24]/20 bg-transparent px-2 py-1.5 text-sm text-[#1f2a24] outline-none focus:border-[#0f6b54]"
+                        class="slip-time slip-field w-full px-2 py-1.5 text-sm"
                     />
                 </div>
 
@@ -87,7 +87,7 @@
                             min="0"
                             step="1"
                             placeholder="0"
-                            class="w-full border border-[#1f2a24]/20 bg-transparent px-2 py-1.5 text-sm text-[#1f2a24] outline-none focus:border-[#0f6b54]"
+                            class="slip-number slip-field w-full px-2 py-1.5 text-sm"
                         />
                         <span class="text-xs text-[#3c4a42]/70">
                             minutes
@@ -172,7 +172,7 @@
                         <select
                             id="day_of_week_mobile"
                             name="day_of_week"
-                            class="w-full border border-[#1f2a24]/20 bg-transparent px-3 py-2 text-sm text-[#1f2a24] outline-none focus:border-[#0f6b54]"
+                            class="slip-select slip-field w-full px-3 py-2 text-sm"
                         >
                             <option selected value="">Any</option>
                         </select>
@@ -193,7 +193,7 @@
                             name="start"
                             value="{{ $start }}"
                             required
-                            class="w-full border border-[#1f2a24]/20 bg-transparent px-3 py-2 text-sm text-[#1f2a24] outline-none focus:border-[#0f6b54]"
+                            class="slip-time slip-field w-full px-3 py-2 text-sm"
                         />
                     </div>
 
@@ -215,7 +215,7 @@
                                 min="0"
                                 step="1"
                                 placeholder="0"
-                                class="w-full border border-[#1f2a24]/20 bg-transparent px-3 py-2 text-sm text-[#1f2a24] outline-none focus:border-[#0f6b54]"
+                                class="slip-number slip-field w-full px-3 py-2 text-sm"
                             />
                             <span class="text-sm text-[#3c4a42]/70">
                                 minutes

@@ -2,16 +2,22 @@ import L from "leaflet";
 import "leaflet.markercluster";
 import "leaflet.markercluster/dist/MarkerCluster.css";
 import "leaflet.markercluster/dist/MarkerCluster.Default.css";
-import markerIconUrl from "leaflet/dist/images/marker-icon.png";
-import markerIconRetinaUrl from "leaflet/dist/images/marker-icon-2x.png";
-import markerShadowUrl from "leaflet/dist/images/marker-shadow.png";
 
-delete L.Icon.Default.prototype._getIconUrl;
+// Hand-drawn vintage pin (rust body, forest dot) that matches the warm
+// parchment palette instead of Leaflet's clinical bright-blue default marker.
+const vintagePinSvg = `
+<svg xmlns="http://www.w3.org/2000/svg" width="28" height="40" viewBox="0 0 28 40">
+    <path d="M14 0C6.27 0 0 6.13 0 13.7 0 23.98 14 40 14 40s14-16.02 14-26.3C28 6.13 21.73 0 14 0z" fill="#b32b22"/>
+    <path d="M14 1.5C7.1 1.5 1.5 6.96 1.5 13.7c0 4.2 2.9 9.78 6.05 14.4A115 115 0 0 0 14 36.2a115 115 0 0 0 6.45-8.1c3.15-4.62 6.05-10.2 6.05-14.4C26.5 6.96 20.9 1.5 14 1.5z" fill="none" stroke="#fbf6e9" stroke-width="1.2" opacity="0.7"/>
+    <circle cx="14" cy="13.5" r="5" fill="#0f6b54"/>
+</svg>`;
 
-L.Icon.Default.mergeOptions({
-    iconRetinaUrl: markerIconRetinaUrl,
-    iconUrl: markerIconUrl,
-    shadowUrl: markerShadowUrl,
+const vintageIcon = L.divIcon({
+    html: vintagePinSvg,
+    className: "leaflet-vintage-pin",
+    iconSize: [28, 40],
+    iconAnchor: [14, 40],
+    popupAnchor: [0, -36],
 });
 
 const mapContainer = document.getElementById("map");
@@ -19,11 +25,17 @@ const mapContainer = document.getElementById("map");
 if (mapContainer && window.restaurantMarkers) {
     const map = L.map("map").setView([22.3193, 114.1694], 12);
 
-    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        attribution:
-            '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-        maxZoom: 19,
-    }).addTo(map);
+    // CartoDB "Voyager" basemap — warm-toned tiles that sit comfortably
+    // against the parchment/forest/rust palette of the rest of the site.
+    L.tileLayer(
+        "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
+        {
+            attribution:
+                '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+            subdomains: "abcd",
+            maxZoom: 20,
+        }
+    ).addTo(map);
 
     const count = window.restaurantMarkers.length;
 
@@ -39,7 +51,7 @@ if (mapContainer && window.restaurantMarkers) {
             bounds.push(latLng);
 
             markers.addLayer(
-                L.marker(latLng).bindPopup(
+                L.marker(latLng, { icon: vintageIcon }).bindPopup(
                     `<strong>${escapeHtml(r.name)}</strong><br>${escapeHtml(r.address)}` +
                         (r.url ? `<br><a href="${escapeHtml(r.url)}" target="_blank" rel="noopener noreferrer">More info</a>` : '')
                 )
@@ -57,7 +69,7 @@ if (mapContainer && window.restaurantMarkers) {
     const markerCount = document.createElement("div");
 
     markerCount.className =
-        "fixed left-4 bottom-4 z-[1000] rounded-full bg-[#1f2a24]/80 px-3 py-1.5 text-xs font-medium text-white backdrop-blur-sm";
+        "fixed left-4 bottom-4 z-[1000] rounded-full bg-[#0f6b54] px-3 py-1.5 text-xs font-medium text-[#f4ecd8] shadow-[3px_3px_0_rgba(15,107,84,0.25)]";
     markerCount.textContent = `${count.toLocaleString()} restaurant${count !== 1 ? "s" : ""}`;
     document.body.appendChild(markerCount);
 

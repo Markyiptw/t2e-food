@@ -22,19 +22,104 @@
                     EAT
                 </a>
             </div>
-            <a
-                href="/map"
-                class="text-sm tracking-wide text-[#3c4a42]/70 underline"
-            >
-                ← Back to map
-            </a>
         </header>
 
         {{-- Content --}}
         <section
-            class="mx-auto grid max-w-5xl place-items-center px-6 pt-10 pb-16"
+            class="mx-auto grid max-w-5xl items-center gap-12 px-6 pt-6 pb-12 md:grid-cols-[0.9fr_1.1fr]"
         >
+            {{-- Decorative export receipt chit --}}
+            <div
+                class="relative order-last mx-auto w-full max-w-xs -rotate-1 bg-[#fbf6e9] p-6 shadow-[0_18px_40px_-18px_rgba(31,42,36,0.55)] md:order-first"
+                style="
+                    clip-path: polygon(
+                        0 0,
+                        100% 0,
+                        100% 97%,
+                        96% 100%,
+                        92% 97%,
+                        88% 100%,
+                        84% 97%,
+                        80% 100%,
+                        76% 97%,
+                        72% 100%,
+                        68% 97%,
+                        64% 100%,
+                        60% 97%,
+                        56% 100%,
+                        52% 97%,
+                        48% 100%,
+                        44% 97%,
+                        40% 100%,
+                        36% 97%,
+                        32% 100%,
+                        28% 97%,
+                        24% 100%,
+                        20% 97%,
+                        16% 100%,
+                        12% 97%,
+                        8% 100%,
+                        4% 97%,
+                        0 100%
+                    );
+                "
+            >
+                <div class="text-center">
+                    <p
+                        class="font-hk text-2xl font-black tracking-[0.3em] text-[#b32b22]"
+                    >
+                        DATA
+                    </p>
+                </div>
+                <div
+                    class="my-4 border-t border-dashed border-[#1f2a24]/25"
+                ></div>
+                <ul class="space-y-3 text-sm">
+                    <li class="flex items-start justify-between gap-3">
+                        <p class="font-serif text-xs text-[#3c4a42]">Format</p>
+                        <span
+                            class="mt-0.5 shrink-0 text-xs font-semibold text-[#0f6b54]"
+                        >
+                            .xlsx
+                        </span>
+                    </li>
+                    <li class="flex items-start justify-between gap-3">
+                        <p class="font-serif text-xs text-[#3c4a42]">
+                            Columns
+                        </p>
+                        <span
+                            class="mt-0.5 shrink-0 text-xs font-semibold text-[#0f6b54]"
+                        >
+                            name · address · hours
+                        </span>
+                    </li>
+                    <li class="flex items-start justify-between gap-3">
+                        <p class="font-serif text-xs text-[#3c4a42]">Price</p>
+                        <span
+                            class="mt-0.5 shrink-0 text-xs font-semibold text-[#0f6b54]"
+                        >
+                            free
+                        </span>
+                    </li>
+                </ul>
+                <div
+                    class="my-4 border-t border-dashed border-[#1f2a24]/25"
+                ></div>
+                <div
+                    class="font-display block text-center text-xs tracking-[0.2em] text-[#3c4a42]"
+                >
+                    多謝 THANK YOU
+                </div>
+            </div>
+
             <div class="w-full max-w-md">
+                <a
+                    href="/map"
+                    class="font-display mb-6 inline-flex items-center gap-2 border border-[#0f6b54] bg-[#fbf6e9] px-4 py-2 text-xs tracking-[0.15em] text-[#0f6b54] uppercase shadow-[3px_3px_0_#0f6b54] transition-transform hover:-translate-x-0.5 hover:bg-[#0f6b54] hover:text-[#f4ecd8]"
+                >
+                    ← Back to map
+                </a>
+
                 <h1
                     class="mb-2 font-serif text-3xl font-medium tracking-tight italic"
                 >
@@ -68,7 +153,7 @@
                             type="time"
                             name="start"
                             value="{{ $start }}"
-                            class="bg-transparent font-medium text-[#1f2a24] outline-none"
+                            class="slip-time bg-transparent font-medium text-[#1f2a24] outline-none"
                         />
                     </div>
 
@@ -86,7 +171,7 @@
                             type="time"
                             name="end"
                             value="{{ $end }}"
-                            class="bg-transparent font-medium text-[#1f2a24] outline-none"
+                            class="slip-time bg-transparent font-medium text-[#1f2a24] outline-none"
                         />
                     </div>
 

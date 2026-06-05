@@ -26,7 +26,7 @@
 
         {{-- Hero --}}
         <section
-            class="mx-auto grid max-w-5xl items-center gap-12 px-6 pt-10 pb-16 md:grid-cols-[1.1fr_0.9fr]"
+            class="mx-auto grid max-w-5xl items-center gap-12 px-6 pt-10 pb-10 md:grid-cols-[1.1fr_0.9fr]"
         >
             <div>
                 <h1
@@ -59,7 +59,7 @@
                         <select
                             id="start"
                             name="start"
-                            class="bg-transparent font-medium text-[#1f2a24] outline-none"
+                            class="slip-select bg-transparent font-medium text-[#1f2a24] outline-none"
                         >
                             <option value="02:00" selected>02:00</option>
                             <option value="05:00">05:00</option>
@@ -80,7 +80,7 @@
                             value="15"
                             min="0"
                             step="1"
-                            class="w-16 bg-transparent font-medium text-[#1f2a24] outline-none"
+                            class="slip-number w-16 bg-transparent font-medium text-[#1f2a24] outline-none"
                         />
                         <span class="font-medium">minutes</span>
                     </div>
@@ -211,7 +211,7 @@
         ></div>
 
         {{-- Open source band --}}
-        <section class="mx-auto my-16 max-w-5xl px-6 pb-20">
+        <section class="mx-auto mt-10 mb-16 max-w-5xl px-6">
             <div
                 class="flex flex-col items-start justify-between gap-6 border-2 border-[#0f6b54] bg-[#0f6b54] p-9 text-[#f4ecd8] md:flex-row md:items-center"
             >
