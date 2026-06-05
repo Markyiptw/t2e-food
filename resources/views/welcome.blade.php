@@ -71,7 +71,7 @@
                             for="duration"
                             class="font-hk w-16 font-bold text-[#b32b22]"
                         >
-                            Buffer
+                            用餐時間
                         </label>
                         <input
                             id="duration"
