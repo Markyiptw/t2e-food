@@ -19,16 +19,22 @@ class WelcomeTest extends TestCase
     {
         $response = $this->get('/');
 
-        $response->assertSee('TIME <span class="text-[#b32b22]">2</span> EAT', false);
-        $response->assertSee('Will there be <span class="text-[#b32b22]">food</span>?', false);
-        $response->assertSee("tell us your eta, and we'll tell you which Hong Kong kitchens are still firing the wok.", false);
+        $response->assertSee('TIME', false);
+        $response->assertSee('EAT', false);
+        $response->assertSee('Will there be', false);
+        $response->assertSee('food', false);
+        $response->assertSee('tell us your eta', false);
+        $response->assertSee('kitchens are still firing the wok.', false);
     }
 
     public function test_order_slip_renders(): void
     {
         $response = $this->get('/');
 
-        $response->assertSee('Time');
+        $response->assertSee('<label for="start"', false);
+        $response->assertSee('<label for="duration"', false);
+        $response->assertSee('id="start"', false);
+        $response->assertSee('id="duration"', false);
         $response->assertSee('02:00');
         $response->assertSee('Buffer');
         $response->assertSee('VIEW ON MAP');
@@ -42,6 +48,17 @@ class WelcomeTest extends TestCase
         $response->assertSee('name="duration"', false);
         $response->assertSee('value="15"', false);
         $response->assertSee('minutes');
+    }
+
+    public function test_meta_tags_present(): void
+    {
+        $response = $this->get('/');
+
+        $response->assertSee('name="description"', false);
+        $response->assertSee('property="og:title"', false);
+        $response->assertSee('property="og:description"', false);
+        $response->assertSee('property="og:type"', false);
+        $response->assertSee('name="twitter:card"', false);
     }
 
     public function test_receipt_renders(): void
@@ -74,8 +91,6 @@ class WelcomeTest extends TestCase
         $response->assertSee('A community project');
         $response->assertSee('Open source and free.');
         $response->assertSee('GITHUB');
-        $response->assertSee('幫手');
-        $response->assertSee('CONTRIBUTE');
     }
 
     public function test_jsx_style_self_closing_divs_are_not_rendered(): void

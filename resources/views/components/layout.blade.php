@@ -8,6 +8,18 @@
 
         <title>{{ $title ?? 'Time 2 Eat' }}</title>
 
+        <meta
+            name="description"
+            content="Tell us your ETA and we'll tell you which Hong Kong kitchens are still firing the wok."
+        />
+        <meta property="og:title" content="{{ $title ?? 'Time 2 Eat' }}" />
+        <meta
+            property="og:description"
+            content="Tell us your ETA and we'll tell you which Hong Kong kitchens are still firing the wok."
+        />
+        <meta property="og:type" content="website" />
+        <meta name="twitter:card" content="summary" />
+
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />

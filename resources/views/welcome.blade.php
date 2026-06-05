@@ -50,10 +50,14 @@
                     <div
                         class="flex items-center gap-3 border-b border-dashed border-[#1f2a24]/20 px-3 py-2.5 text-sm"
                     >
-                        <span class="font-hk w-16 font-bold text-[#b32b22]">
+                        <label
+                            for="start"
+                            class="font-hk w-16 font-bold text-[#b32b22]"
+                        >
                             Time
-                        </span>
+                        </label>
                         <select
+                            id="start"
                             name="start"
                             class="bg-transparent font-medium text-[#1f2a24] outline-none"
                         >
@@ -63,10 +67,14 @@
                         </select>
                     </div>
                     <div class="flex items-center gap-3 px-3 py-2.5 text-sm">
-                        <span class="font-hk w-16 font-bold text-[#b32b22]">
+                        <label
+                            for="duration"
+                            class="font-hk w-16 font-bold text-[#b32b22]"
+                        >
                             Buffer
-                        </span>
+                        </label>
                         <input
+                            id="duration"
                             type="number"
                             name="duration"
                             value="15"
@@ -234,12 +242,12 @@
             class="font-display mx-auto max-w-5xl px-6 pb-28 text-center text-sm tracking-[0.2em] text-[#3c4a42]"
         >
             TIME 2 EAT · website by
-            <a href="https://instagram.com/oh.hi.mark.ii" class="underline">
-                oh.himark.ii
+            <a href="https://instagram.com/oh.hi.mark.ii">
+                <span class="underline">oh.himark.ii</span>
             </a>
             · research method by
-            <a href="https://instagram.com/liberresearch" class="underline">
-                liberresearch
+            <a href="https://instagram.com/liberresearch">
+                <span class="underline">liberresearch</span>
             </a>
         </footer>
     </main>
