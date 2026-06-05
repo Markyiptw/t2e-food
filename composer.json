@@ -62,7 +62,7 @@
             "@php artisan test"
         ],
         "env:pull": [
-            "scp ec2-user@43.199.193.158:~/.kamal/apps/openrice-scraper/env/roles/web.env .env.production"
+            "scp ec2-user@43.199.193.158:~/.kamal/apps/t2e-food/env/roles/web.env .env.production"
         ]
     },
     "extra": {
