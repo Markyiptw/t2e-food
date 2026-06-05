@@ -57,7 +57,7 @@ if (mapContainer && window.restaurantMarkers) {
     const markerCount = document.createElement("div");
 
     markerCount.className =
-        "fixed left-4 bottom-4 z-[1000] rounded-full bg-gray-900/80 px-3 py-1.5 text-xs font-medium text-white backdrop-blur-sm dark:bg-gray-700/80";
+        "fixed left-4 bottom-4 z-[1000] rounded-full bg-[#1f2a24]/80 px-3 py-1.5 text-xs font-medium text-white backdrop-blur-sm";
     markerCount.textContent = `${count.toLocaleString()} restaurant${count !== 1 ? "s" : ""}`;
     document.body.appendChild(markerCount);
 

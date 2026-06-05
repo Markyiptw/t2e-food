@@ -31,8 +31,8 @@ class WelcomeTest extends TestCase
     {
         $response = $this->get('/');
 
-        $response->assertSee('<label for="start"', false);
-        $response->assertSee('<label for="duration"', false);
+        $response->assertSee('for="start"', false);
+        $response->assertSee('for="duration"', false);
         $response->assertSee('id="start"', false);
         $response->assertSee('id="duration"', false);
         $response->assertSee('02:00');

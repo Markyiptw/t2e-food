@@ -1,389 +1,289 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-        <title>Restaurant Map</title>
-
-        <link rel="preconnect" href="https://fonts.bunny.net" />
-        <link
-            href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600"
-            rel="stylesheet"
-        />
-
-        @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
-            @vite(['resources/css/app.css', 'resources/js/app.js'])
-        @else
-            <style>
-                /*! tailwindcss v4.0.7 | MIT License | https://tailwindcss.com */
-                @layer theme {
-                    :root,
-                    :host {
-                        --font-sans:
-                            'Instrument Sans', ui-sans-serif, system-ui,
-                            sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-                            'Segoe UI Symbol', 'Noto Color Emoji';
-                        --font-serif:
-                            ui-serif, Georgia, Cambria, 'Times New Roman',
-                            Times, serif;
-                        --font-mono:
-                            ui-monospace, SFMono-Regular, Menlo, Monaco,
-                            Consolas, 'Liberation Mono', 'Courier New',
-                            monospace;
-                        --color-red-50: oklch(0.971 0.013 17.38);
-                        --color-red-100: oklch(0.936 0.032 17.717);
-                        --color-red-200: oklch(0.885 0.062 18.334);
-                        --color-red-300: oklch(0.808 0.114 19.571);
-                        --color-red-400: oklch(0.704 0.191 22.216);
-                        --color-red-500: oklch(0.637 0.237 25.331);
-                        --color-red-600: oklch(0.577 0.245 27.325);
-                        --color-red-700: oklch(0.505 0.213 27.518);
-                        --color-red-800: oklch(0.444 0.177 26.899);
-                        --color-red-900: oklch(0.396 0.141 25.723);
-                        --color-red-950: oklch(0.258 0.092 26.042);
-                        --color-orange-50: oklch(0.98 0.016 73.684);
-                        --color-orange-100: oklch(0.954 0.038 75.164);
-                        --color-orange-200: oklch(0.901 0.076 70.697);
-                        --color-orange-300: oklch(0.837 0.128 66.29);
-                        --color-orange-400: oklch(0.75 0.183 55.934);
-                        --color-orange-500: oklch(0.705 0.213 47.604);
-                        --color-orange-600: oklch(0.646 0.222 41.116);
-                        --color-orange-700: oklch(0.553 0.195 38.402);
-                        --color-orange-800: oklch(0.47 0.157 37.304);
-                        --color-orange-900: oklch(0.408 0.123 38.172);
-                        --color-orange-950: oklch(0.266 0.079 36.259);
-                        --color-amber-50: oklch(0.987 0.022 95.277);
-                        --color-amber-100: oklch(0.962 0.059 95.617);
-                        --color-amber-200: oklch(0.924 0.12 95.746);
-                        --color-amber-300: oklch(0.879 0.169 91.605);
-                        --color-amber-400: oklch(0.828 0.189 84.429);
-                        --color-amber-500: oklch(0.769 0.188 70.08);
-                        --color-amber-600: oklch(0.666 0.179 58.318);
-                        --color-amber-700: oklch(0.555 0.163 48.998);
-                        --color-amber-800: oklch(0.473 0.137 46.201);
-                        --color-amber-900: oklch(0.414 0.112 45.904);
-                        --color-amber-950: oklch(0.279 0.077 45.635);
-                        --color-yellow-50: oklch(0.987 0.026 102.212);
-                        --color-yellow-100: oklch(0.973 0.071 103.193);
-                        --color-yellow-200: oklch(0.945 0.129 101.54);
-                        --color-yellow-300: oklch(0.905 0.182 98.111);
-                        --color-yellow-400: oklch(0.852 0.199 91.936);
-                        --color-yellow-500: oklch(0.795 0.184 86.047);
-                        --color-yellow-600: oklch(0.681 0.162 75.834);
-                        --color-yellow-700: oklch(0.554 0.135 66.442);
-                        --color-yellow-800: oklch(0.476 0.114 61.907);
-                        --color-yellow-900: oklch(0.421 0.095 57.708);
-                        --color-yellow-950: oklch(0.286 0.066 53.813);
-                        --color-green-50: oklch(0.982 0.018 155.826);
-                        --color-green-100: oklch(0.962 0.044 156.743);
-                        --color-green-200: oklch(0.925 0.084 155.995);
-                        --color-green-300: oklch(0.871 0.15 154.449);
-                        --color-green-400: oklch(0.792 0.209 151.711);
-                        --color-green-500: oklch(0.723 0.219 149.579);
-                        --color-green-600: oklch(0.627 0.194 149.214);
-                        --color-green-700: oklch(0.527 0.154 150.069);
-                        --color-green-800: oklch(0.448 0.119 151.328);
-                        --color-green-900: oklch(0.393 0.095 152.535);
-                        --color-green-950: oklch(0.266 0.065 152.934);
-                        --color-teal-50: oklch(0.984 0.014 180.72);
-                        --color-teal-100: oklch(0.953 0.051 180.801);
-                        --color-teal-200: oklch(0.91 0.096 180.426);
-                        --color-teal-300: oklch(0.855 0.138 181.071);
-                        --color-teal-400: oklch(0.777 0.152 181.912);
-                        --color-teal-500: oklch(0.704 0.14 182.503);
-                        --color-teal-600: oklch(0.6 0.118 184.704);
-                        --color-teal-700: oklch(0.511 0.096 186.391);
-                        --color-teal-800: oklch(0.437 0.078 188.216);
-                        --color-teal-900: oklch(0.386 0.063 188.416);
-                        --color-teal-950: oklch(0.277 0.046 192.524);
-                        --color-blue-50: oklch(0.97 0.014 254.604);
-                        --color-blue-100: oklch(0.932 0.032 255.585);
-                        --color-blue-200: oklch(0.882 0.059 254.128);
-                        --color-blue-300: oklch(0.809 0.105 251.813);
-                        --color-blue-400: oklch(0.707 0.165 254.624);
-                        --color-blue-500: oklch(0.623 0.214 259.815);
-                        --color-blue-600: oklch(0.546 0.245 262.881);
-                        --color-blue-700: oklch(0.488 0.243 264.376);
-                        --color-blue-800: oklch(0.424 0.199 265.638);
-                        --color-blue-900: oklch(0.379 0.146 265.522);
-                        --color-blue-950: oklch(0.282 0.091 267.935);
-                        --color-indigo-50: oklch(0.962 0.018 272.314);
-                        --color-indigo-100: oklch(0.93 0.034 272.788);
-                        --color-indigo-200: oklch(0.87 0.065 274.039);
-                        --color-indigo-300: oklch(0.785 0.115 274.713);
-                        --color-indigo-400: oklch(0.673 0.182 276.935);
-                        --color-indigo-500: oklch(0.585 0.233 277.117);
-                        --color-indigo-600: oklch(0.511 0.262 276.966);
-                        --color-indigo-700: oklch(0.457 0.24 277.023);
-                        --color-indigo-800: oklch(0.398 0.195 277.366);
-                        --color-indigo-900: oklch(0.359 0.144 278.697);
-                        --color-indigo-950: oklch(0.257 0.09 281.288);
-                        --color-purple-50: oklch(0.977 0.014 308.299);
-                        --color-purple-100: oklch(0.946 0.033 307.174);
-                        --color-purple-200: oklch(0.902 0.063 306.703);
-                        --color-purple-300: oklch(0.827 0.119 306.383);
-                        --color-purple-400: oklch(0.714 0.203 305.504);
-                        --color-purple-500: oklch(0.627 0.265 303.9);
-                        --color-purple-600: oklch(0.558 0.288 302.321);
-                        --color-purple-700: oklch(0.496 0.265 301.924);
-                        --color-purple-800: oklch(0.438 0.218 303.724);
-                        --color-purple-900: oklch(0.381 0.176 304.987);
-                        --color-purple-950: oklch(0.291 0.149 302.717);
-                        --color-pink-50: oklch(0.971 0.014 343.198);
-                        --color-pink-100: oklch(0.948 0.028 342.258);
-                        --color-pink-200: oklch(0.899 0.061 343.231);
-                        --color-pink-300: oklch(0.823 0.12 346.018);
-                        --color-pink-400: oklch(0.718 0.202 349.761);
-                        --color-pink-500: oklch(0.656 0.241 354.308);
-                        --color-pink-600: oklch(0.592 0.249 0.584);
-                        --color-pink-700: oklch(0.525 0.223 3.958);
-                        --color-pink-800: oklch(0.459 0.187 3.815);
-                        --color-pink-900: oklch(0.408 0.153 2.432);
-                        --color-pink-950: oklch(0.284 0.109 3.907);
-                        --color-gray-50: oklch(0.985 0.002 247.839);
-                        --color-gray-100: oklch(0.967 0.003 264.542);
-                        --color-gray-200: oklch(0.928 0.006 264.531);
-                        --color-gray-300: oklch(0.872 0.01 258.338);
-                        --color-gray-400: oklch(0.707 0.022 261.325);
-                        --color-gray-500: oklch(0.551 0.027 264.364);
-                        --color-gray-600: oklch(0.446 0.03 256.802);
-                        --color-gray-700: oklch(0.373 0.034 259.733);
-                        --color-gray-800: oklch(0.278 0.033 256.848);
-                        --color-gray-900: oklch(0.21 0.034 264.665);
-                        --color-gray-950: oklch(0.13 0.028 261.692);
-                        --color-black: #000;
-                        --color-white: #fff;
-                        --spacing: 0.25rem;
-                        --breakpoint-sm: 40rem;
-                        --breakpoint-md: 48rem;
-                        --breakpoint-lg: 64rem;
-                        --breakpoint-xl: 80rem;
-                        --breakpoint-2xl: 96rem;
-                        --container-3xs: 16rem;
-                        --container-2xs: 18rem;
-                        --container-xs: 20rem;
-                        --container-sm: 24rem;
-                        --container-md: 28rem;
-                        --container-lg: 32rem;
-                        --container-xl: 36rem;
-                        --container-2xl: 42rem;
-                        --container-3xl: 48rem;
-                        --container-4xl: 56rem;
-                        --container-5xl: 64rem;
-                        --container-6xl: 72rem;
-                        --container-7xl: 80rem;
-                        --text-xs: 0.75rem;
-                        --text-xs--line-height: 1rem;
-                        --text-sm: 0.875rem;
-                        --text-sm--line-height: 1.25rem;
-                        --text-base: 1rem;
-                        --text-base--line-height: 1.5rem;
-                        --text-lg: 1.125rem;
-                        --text-lg--line-height: 1.75rem;
-                        --text-xl: 1.25rem;
-                        --text-xl--line-height: 1.75rem;
-                        --text-2xl: 1.5rem;
-                        --text-2xl--line-height: 2rem;
-                        --text-3xl: 1.875rem;
-                        --text-3xl--line-height: 2.25rem;
-                        --text-4xl: 2.25rem;
-                        --text-4xl--line-height: 2.5rem;
-                        --text-5xl: 3rem;
-                        --text-5xl--line-height: 1;
-                        --text-6xl: 3.75rem;
-                        --text-6xl--line-height: 1;
-                        --text-7xl: 4.5rem;
-                        --text-7xl--line-height: 1;
-                        --text-8xl: 6rem;
-                        --text-8xl--line-height: 1;
-                        --text-9xl: 8rem;
-                        --text-9xl--line-height: 1;
-                        --font-weight-thin: 100;
-                        --font-weight-extralight: 200;
-                        --font-weight-light: 300;
-                        --font-weight-normal: 400;
-                        --font-weight-medium: 500;
-                        --font-weight-semibold: 600;
-                        --font-weight-bold: 700;
-                        --font-weight-extrabold: 800;
-                        --font-weight-black: 900;
-                        --leading-none: 1;
-                        --leading-tight: 1.25;
-                        --leading-snug: 1.375;
-                        --leading-normal: 1.5;
-                        --leading-relaxed: 1.625;
-                        --leading-loose: 2;
-                        --radius-xs: 0.125rem;
-                        --radius-sm: 0.25rem;
-                        --radius-md: 0.375rem;
-                        --radius-lg: 0.5rem;
-                        --radius-xl: 0.75rem;
-                        --radius-2xl: 1.5rem;
-                        --ease-in: cubic-bezier(0.4, 0, 1, 1);
-                        --ease-out: cubic-bezier(0, 0, 0.2, 1);
-                        --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
-                        --animate-spin: spin 1s linear infinite;
-                        --animate-ping: ping 1s cubic-bezier(0, 0, 0.2, 1)
-                            infinite;
-                        --default-transition-duration: 0.15s;
-                        --default-transition-timing-function: cubic-bezier(
-                            0.4,
-                            0,
-                            0.2,
-                            1
-                        );
-                        --default-font-family: var(--font-sans);
-                        --default-mono-font-family: var(--font-mono);
-                    }
-                }
-                @layer base {
-                    *,
-                    :after,
-                    :before,
-                    ::backdrop {
-                        --tw-border-style: solid;
-                        --tw-blur: ;
-                        --tw-brightness: ;
-                        --tw-contrast: ;
-                        --tw-grayscale: ;
-                        --tw-hue-rotate: ;
-                        --tw-invert: ;
-                        --tw-opacity: ;
-                        --tw-saturate: ;
-                        --tw-sepia: ;
-                        --tw-drop-shadow: ;
-                        --tw-drop-shadow-color: ;
-                        --tw-drop-shadow-alpha: 100%;
-                        --tw-drop-shadow-size: ;
-                        box-sizing: border-box;
-                        border: 0 solid;
-                        --tw-shadow: 0 0 #0000;
-                        --tw-ring-inset: var(--tw-empty,);
-                        --tw-ring-offset-width: 0px;
-                        --tw-ring-offset-color: #fff;
-                        --tw-ring-color: color-mix(
-                            in oklch,
-                            currentColor calc(var(--tw-ring-alpha, 0) * 100%)
-                                transparent
-                        );
-                    }
-                    html {
-                        line-height: 1.5;
-                        -webkit-text-size-adjust: 100%;
-                    }
-                }
-                @layer utilities {
-                    * {
-                        --tw-shadow: 0 0 #0000;
-                        --tw-ring-color: color-mix(
-                            in oklch,
-                            currentColor calc(var(--tw-ring-alpha, 0) * 100%)
-                                transparent
-                        );
-                    }
-                    body {
-                        margin: 0;
-                        font-family: var(--font-sans);
-                        line-height: inherit;
-                    }
-                }
-                @keyframes ping {
-                    75%,
-                    to {
-                        transform: scale(2);
-                        opacity: 0;
-                    }
-                }
-                @keyframes spin {
-                    to {
-                        transform: rotate(360deg);
-                    }
-                }
-                @property --tw-ring-alpha {
-                    syntax: '*';
-                    inherits: false;
-                    initial-value: 0;
-                }
-            </style>
-        @endif
-    </head>
-    <body class="overflow-hidden">
-        <div id="map" class="h-screen w-screen"></div>
-
-        <form
-            method="GET"
-            action="/map"
-            class="fixed top-4 right-4 z-[1000] w-72 rounded-lg bg-white/95 p-4 shadow-lg backdrop-blur-sm dark:bg-gray-800/95"
-        >
-            <h2
-                class="mb-3 text-sm font-semibold tracking-wider text-gray-900 uppercase dark:text-gray-100"
+<x-layout title="Restaurant Map">
+    <div class="flex h-screen flex-col">
+        {{-- Header: desktop only --}}
+        <header class="hidden border-b border-[#1f2a24]/10 bg-[#f4ecd8] md:block">
+            <div
+                class="mx-auto flex max-w-5xl items-center justify-between px-6 py-4"
             >
-                Filter by Opening Hours
-            </h2>
-
-            <label
-                class="mb-1 block text-xs font-medium text-gray-500 dark:text-gray-400"
-            >
-                Day of Week
-            </label>
-            <select
-                name="day_of_week"
-                class="mb-3 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200"
-            >
-                <option selected value="">Any</option>
-            </select>
-
-            <label
-                class="mb-1 block text-xs font-medium text-gray-500 dark:text-gray-400"
-            >
-                Start Time
-            </label>
-            <input
-                type="time"
-                name="start"
-                value="{{ $start }}"
-                required
-                class="mb-3 w-full rounded-md border border-gray-300 px-2 py-2 text-sm text-gray-700 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200"
-            />
-
-            <label
-                class="mb-1 block text-xs font-medium text-gray-500 dark:text-gray-400"
-            >
-                Duration
-            </label>
-            <div class="mb-3 flex items-center gap-2">
-                <input
-                    type="number"
-                    name="duration"
-                    value="{{ $duration }}"
-                    min="0"
-                    step="1"
-                    placeholder="0"
-                    class="w-full rounded-md border border-gray-300 px-2 py-2 text-sm text-gray-700 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200"
-                />
-                <span class="text-xs text-gray-400 dark:text-gray-500">minutes</span>
+                <a
+                    href="/"
+                    class="text-lg tracking-[0.2em] text-[#0f6b54]"
+                    style="font-family: 'Oswald', ui-sans-serif, sans-serif"
+                >
+                    TIME <span class="text-[#b32b22]">2</span> EAT
+                </a>
+                <a
+                    href="/"
+                    class="text-sm tracking-wide text-[#3c4a42]/70 underline"
+                >
+                    ← Back
+                </a>
             </div>
+        </header>
 
-            <button
-                type="submit"
-                class="w-full rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none"
+        {{-- Map container --}}
+        <div class="relative flex-1">
+            <div id="map" class="h-full w-full"></div>
+
+            {{-- Desktop filter panel --}}
+            <form
+                method="GET"
+                action="/map"
+                class="fixed top-4 right-4 z-[1000] hidden w-80 border border-[#1f2a24]/15 bg-[#fbf6e9] p-5 shadow-[6px_6px_0_#0f6b54] md:block"
             >
-                Filter
+                <h2
+                    class="mb-4 border-b border-dashed border-[#1f2a24]/20 pb-2 text-sm font-bold tracking-wider text-[#b32b22] uppercase"
+                    style="font-family: 'Oswald', ui-sans-serif, sans-serif"
+                >
+                    Filter by Opening Hours
+                </h2>
+
+                <div class="mb-3">
+                    <label
+                        for="day_of_week_desktop"
+                        class="mb-1 block text-xs font-bold text-[#b32b22]"
+                    >
+                        Day of Week
+                    </label>
+                    <select
+                        id="day_of_week_desktop"
+                        name="day_of_week"
+                        class="w-full border border-[#1f2a24]/20 bg-transparent px-2 py-1.5 text-sm text-[#1f2a24] outline-none focus:border-[#0f6b54]"
+                    >
+                        <option selected value="">Any</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label
+                        for="start_desktop"
+                        class="mb-1 block text-xs font-bold text-[#b32b22]"
+                    >
+                        Start Time
+                    </label>
+                    <input
+                        id="start_desktop"
+                        type="time"
+                        name="start"
+                        value="{{ $start }}"
+                        required
+                        class="w-full border border-[#1f2a24]/20 bg-transparent px-2 py-1.5 text-sm text-[#1f2a24] outline-none focus:border-[#0f6b54]"
+                    />
+                </div>
+
+                <div class="mb-4">
+                    <label
+                        for="duration_desktop"
+                        class="mb-1 block text-xs font-bold text-[#b32b22]"
+                    >
+                        Duration
+                    </label>
+                    <div class="flex items-center gap-2">
+                        <input
+                            id="duration_desktop"
+                            type="number"
+                            name="duration"
+                            value="{{ $duration }}"
+                            min="0"
+                            step="1"
+                            placeholder="0"
+                            class="w-full border border-[#1f2a24]/20 bg-transparent px-2 py-1.5 text-sm text-[#1f2a24] outline-none focus:border-[#0f6b54]"
+                        />
+                        <span class="text-xs text-[#3c4a42]/70">
+                            minutes
+                        </span>
+                    </div>
+                </div>
+
+                <button
+                    type="submit"
+                    class="w-full bg-[#b32b22] py-2.5 text-sm font-bold tracking-[0.15em] text-[#f4ecd8] hover:bg-[#962219]"
+                    style="font-family: 'Oswald', ui-sans-serif, sans-serif"
+                >
+                    FILTER
+                </button>
+
+                @if ($start !== null || $duration !== null)
+                    <a
+                        href="/map"
+                        class="mt-2 block w-full border border-[#1f2a24]/20 py-2.5 text-center text-sm font-medium text-[#1f2a24] hover:bg-[#f4ecd8]"
+                    >
+                        Clear Filters
+                    </a>
+                @endif
+            </form>
+
+            {{-- Mobile filter trigger --}}
+            <button
+                id="filter-toggle"
+                type="button"
+                class="fixed bottom-6 right-4 z-[1000] flex h-14 w-14 items-center justify-center rounded-full bg-[#b32b22] text-white shadow-lg hover:bg-[#962219] md:hidden"
+                aria-label="Open filters"
+            >
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    stroke-width="2"
+                >
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"
+                    />
+                </svg>
             </button>
 
-            @if ($start !== null || $duration !== null)
-                <a
-                    href="/map"
-                    class="mt-2 block w-full rounded-md border border-gray-300 bg-white px-4 py-2 text-center text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600"
-                >
-                    Clear Filters
-                </a>
-            @endif
-        </form>
+            {{-- Mobile bottom sheet backdrop --}}
+            <div
+                id="filter-backdrop"
+                class="pointer-events-none fixed inset-0 z-[1000] bg-black/30 opacity-0 transition-opacity duration-300 md:hidden"
+            ></div>
 
-        <script>
-            window.restaurantMarkers = {!! $markersJson !!};
-        </script>
-    </body>
-</html>
+            {{-- Mobile bottom sheet --}}
+            <div
+                id="filter-sheet"
+                class="fixed inset-x-0 bottom-0 z-[1001] max-h-[70vh] translate-y-full overflow-y-auto rounded-t-2xl bg-[#fbf6e9] p-6 shadow-[0_-8px_32px_rgba(31,42,36,0.2)] transition-transform duration-300 md:hidden"
+            >
+                {{-- Drag handle --}}
+                <div
+                    class="mx-auto mb-5 h-1 w-12 rounded-full bg-[#1f2a24]/20"
+                ></div>
+
+                <h2
+                    class="mb-5 text-center text-sm font-bold tracking-[0.15em] text-[#b32b22] uppercase"
+                    style="font-family: 'Oswald', ui-sans-serif, sans-serif"
+                >
+                    Filter by Opening Hours
+                </h2>
+
+                <form method="GET" action="/map">
+                    <div
+                        class="mb-4 border-b border-dashed border-[#1f2a24]/15 pb-4"
+                    >
+                        <label
+                            for="day_of_week_mobile"
+                            class="mb-1.5 block text-xs font-bold text-[#b32b22]"
+                        >
+                            Day of Week
+                        </label>
+                        <select
+                            id="day_of_week_mobile"
+                            name="day_of_week"
+                            class="w-full border border-[#1f2a24]/20 bg-transparent px-3 py-2 text-sm text-[#1f2a24] outline-none focus:border-[#0f6b54]"
+                        >
+                            <option selected value="">Any</option>
+                        </select>
+                    </div>
+
+                    <div
+                        class="mb-4 border-b border-dashed border-[#1f2a24]/15 pb-4"
+                    >
+                        <label
+                            for="start_mobile"
+                            class="mb-1.5 block text-xs font-bold text-[#b32b22]"
+                        >
+                            Start Time
+                        </label>
+                        <input
+                            id="start_mobile"
+                            type="time"
+                            name="start"
+                            value="{{ $start }}"
+                            required
+                            class="w-full border border-[#1f2a24]/20 bg-transparent px-3 py-2 text-sm text-[#1f2a24] outline-none focus:border-[#0f6b54]"
+                        />
+                    </div>
+
+                    <div
+                        class="mb-5 border-b border-dashed border-[#1f2a24]/15 pb-4"
+                    >
+                        <label
+                            for="duration_mobile"
+                            class="mb-1.5 block text-xs font-bold text-[#b32b22]"
+                        >
+                            Duration
+                        </label>
+                        <div class="flex items-center gap-3">
+                            <input
+                                id="duration_mobile"
+                                type="number"
+                                name="duration"
+                                value="{{ $duration }}"
+                                min="0"
+                                step="1"
+                                placeholder="0"
+                                class="w-full border border-[#1f2a24]/20 bg-transparent px-3 py-2 text-sm text-[#1f2a24] outline-none focus:border-[#0f6b54]"
+                            />
+                            <span class="text-sm text-[#3c4a42]/70">
+                                minutes
+                            </span>
+                        </div>
+                    </div>
+
+                    <button
+                        type="submit"
+                        class="w-full bg-[#b32b22] py-3 text-sm font-bold tracking-[0.15em] text-[#f4ecd8] hover:bg-[#962219]"
+                        style="font-family: 'Oswald', ui-sans-serif, sans-serif"
+                    >
+                        FILTER
+                    </button>
+
+                    @if ($start !== null || $duration !== null)
+                        <a
+                            href="/map"
+                            class="mt-3 block w-full border border-[#1f2a24]/20 py-3 text-center text-sm font-medium text-[#1f2a24] hover:bg-[#f4ecd8]"
+                        >
+                            Clear Filters
+                        </a>
+                    @endif
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        window.restaurantMarkers = {!! $markersJson !!};
+
+        (function () {
+            const toggle = document.getElementById('filter-toggle');
+            const sheet = document.getElementById('filter-sheet');
+            const backdrop = document.getElementById('filter-backdrop');
+
+            if (!toggle || !sheet || !backdrop) {
+                return;
+            }
+
+            function openSheet() {
+                backdrop.classList.remove(
+                    'opacity-0',
+                    'pointer-events-none',
+                );
+                backdrop.classList.add('opacity-100');
+                sheet.classList.remove('translate-y-full');
+                sheet.classList.add('translate-y-0');
+            }
+
+            function closeSheet() {
+                backdrop.classList.remove('opacity-100');
+                backdrop.classList.add('opacity-0', 'pointer-events-none');
+                sheet.classList.remove('translate-y-0');
+                sheet.classList.add('translate-y-full');
+            }
+
+            toggle.addEventListener('click', openSheet);
+            backdrop.addEventListener('click', closeSheet);
+
+            document.addEventListener('keydown', function (e) {
+                if (
+                    e.key === 'Escape' &&
+                    sheet.classList.contains('translate-y-0')
+                ) {
+                    closeSheet();
+                }
+            });
+        })();
+    </script>
+</x-layout>
