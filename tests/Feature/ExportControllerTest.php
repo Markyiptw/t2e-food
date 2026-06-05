@@ -34,7 +34,16 @@ class ExportControllerTest extends TestCase
             ->assertSee('value="10:00"', false)
             ->assertSee('name="end"', false)
             ->assertSee('value="14:00"', false)
-            ->assertSee('Download as XLSX');
+            ->assertSee('DOWNLOAD AS XLSX')
+            ->assertSee('TIME', false)
+            ->assertSee('← Back to map')
+            ->assertSee('Export')
+            ->assertSee('restaurants', false)
+            ->assertSee('bg-[#fbf6e9]', false)
+            ->assertSee('shadow-[6px_6px_0_#0f6b54]', false)
+            ->assertSee('text-[#b32b22]', false)
+            ->assertSee('for="start"', false)
+            ->assertSee('for="end"', false);
     }
 
     public function test_export_downloads_filtered_restaurants_as_xlsx(): void

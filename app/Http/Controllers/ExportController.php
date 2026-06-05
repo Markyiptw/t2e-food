@@ -40,7 +40,6 @@ class ExportController extends Controller
         return view('export', [
             'start' => $start?->format('H:i'),
             'end' => $end?->format('H:i'),
-            'restaurantCount' => $this->restaurants($start, $end)->count(),
         ]);
     }
 
