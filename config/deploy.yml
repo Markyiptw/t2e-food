@@ -30,6 +30,8 @@ proxy:
   # but our image listens to 8080
   app_port: 8080
   response_timeout: 120
+  buffering:
+    responses: false
 
 registry:
   server: localhost:5555
