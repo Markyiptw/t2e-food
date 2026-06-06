@@ -43,14 +43,19 @@ class ExportController extends Controller
         ]);
     }
 
-    public function store(Request $request): BinaryFileResponse
+    public function store(Request $request)
     {
         [$start, $end] = $this->validatedWindow($request);
 
-        $path = $this->exportPath();
-        $writer = SimpleExcelWriter::create($path)->addHeader(self::HEADERS);
+        $writer = SimpleExcelWriter::streamDownload('test.xlsx')
+            ->addHeader(self::HEADERS);
 
-        $this->restaurants($start, $end)
+        // $path = $this->exportPath();
+        // $writer = SimpleExcelWriter::create($path)
+        // ->addHeader(self::HEADERS);
+
+        $this
+            ->restaurants($start, $end)
             ->with([
                 'hours' => fn ($query) => $query
                     ->select(['id', 'restaurant_id', 'data'])
@@ -66,13 +71,10 @@ class ExportController extends Controller
                 foreach ($restaurants as $restaurant) {
                     $writer->addRow($this->exportRow($restaurant));
                 }
+                flush();
             });
 
-        $writer->close();
-
-        return response()
-            ->download($path, 'restaurants.xlsx')
-            ->deleteFileAfterSend();
+        $writer->toBrowser();
     }
 
     /**
