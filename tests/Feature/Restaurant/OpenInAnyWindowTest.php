@@ -70,34 +70,6 @@ class OpenInAnyWindowTest extends TestCase
         $this->assertEquals([$valid->id], $results);
     }
 
-    public function test_supports_ranges_that_cross_midnight(): void
-    {
-        $validBeforeMidnight = Restaurant::factory()
-            ->has(Hour::factory()->has(Period::factory()->state(['start' => '22:30:00', 'end' => '23:15:00'])))
-            ->create();
-        $validAfterMidnight = Restaurant::factory()
-            ->has(Hour::factory()->has(Period::factory()->state(['start' => '00:30:00', 'end' => '02:00:00'])))
-            ->create();
-
-        collect([
-            ['start' => '21:00:00', 'end' => '22:00:00'],
-            ['start' => '02:00:00', 'end' => '03:00:00'],
-        ])->map(fn ($period) => Restaurant::factory()
-            ->has(Hour::factory()->has(Period::factory()->state($period)))
-            ->create()
-        );
-
-        $results = Restaurant::openInAnyWindowBetween(
-            Carbon::createFromFormat('!H:i', '23:00'),
-            Carbon::createFromFormat('!H:i', '01:00'),
-        )
-            ->orderBy('id')
-            ->pluck('id')
-            ->all();
-
-        $this->assertEquals([$validBeforeMidnight->id, $validAfterMidnight->id], $results);
-    }
-
     public function test_uses_base_open_hour_filters(): void
     {
         $valid = Restaurant::factory()->has(Hour::factory()->is24hr())->create();

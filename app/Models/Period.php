@@ -34,4 +34,31 @@ class Period extends Model
                 [$startSec, $endSec],
             );
     }
+
+    /**
+     * Find periods overlapping a query window [C, D].
+     *
+     * Period [A, B] overlaps [C, D] iff A ≤ D AND B ≥ C
+     *
+     *         A                    B
+     *         |____________________|
+     *     C_______D
+     *         |___|
+     *            L__ overlap
+     */
+    public function scopeOverlap(Builder $query, int $startSec, int $endSec): void
+    {
+        $query
+            ->where(fn ($query) => collect([0, 86400, -86400])
+                ->reduce(
+                    fn (Builder $query, int $offset) => $query
+                        ->orWhereRaw(
+                            '(EXTRACT(EPOCH FROM "start") + ?) <= ? AND ((EXTRACT(EPOCH FROM "end") + CASE WHEN "start" > "end" THEN 86400 ELSE 0 END) + ?) >= ?',
+                            [$offset, $endSec, $offset, $startSec],
+                        ),
+                    $query,
+                )
+            );
+
+    }
 }

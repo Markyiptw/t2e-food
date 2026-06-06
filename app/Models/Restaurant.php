@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Closure;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -73,51 +72,14 @@ class Restaurant extends Model
      */
     public function scopeOpenInAnyWindowBetween(Builder $query, Carbon $start, Carbon $end): void
     {
-        $queryStartSeconds = $start->secondsSinceMidnight();
-        $queryEndSeconds = $end->secondsSinceMidnight();
-
-        if ($queryStartSeconds > $queryEndSeconds) {
-            $queryEndSeconds += 86400;
-        }
-
-        $periodEndSeconds = '(EXTRACT(EPOCH FROM "end") + CASE WHEN "start" > "end" THEN 86400 ELSE 0 END)';
-
         $query
             ->whereHas('hours', fn (Builder $query) => $query
                 ->baseWeeklySchedule()
                 ->where(fn (Builder $query) => $query
                     ->twentyFourHours()
-                    ->orWhereHas('periods', fn (Builder $query) => $query
-                        ->whereRaw(
-                            'EXTRACT(EPOCH FROM "start") <= ? AND '.$periodEndSeconds.' >= ?',
-                            [$queryEndSeconds, $queryStartSeconds],
-                        )
-                        ->orWhereRaw(
-                            '(EXTRACT(EPOCH FROM "start") - 86400) <= ? AND ('.$periodEndSeconds.' - 86400) >= ?',
-                            [$queryEndSeconds, $queryStartSeconds],
-                        )
-                        ->orWhereRaw(
-                            '(EXTRACT(EPOCH FROM "start") + 86400) <= ? AND ('.$periodEndSeconds.' + 86400) >= ?',
-                            [$queryEndSeconds, $queryStartSeconds],
-                        )
+                    ->orWhereHas('periods', fn (Builder $query) => $query->overlap($start->secondsSinceMidnight(), $end->secondsSinceMidnight())
                     )
                 ));
 
-    }
-
-    private function whereHasBaseOpenHours(Builder $query, Closure $periodConstraint): void
-    {
-        $query->whereHas('hours', fn (Builder $query) => $query
-            ->whereRaw('data @> ?', [
-                collect([
-                    'weight' => 0,
-                    'isClose' => false,
-                ])
-                    ->toJson(),
-            ])
-            ->where(fn (Builder $query) => $query
-                ->whereRaw('data @> ?', [json_encode(['is24hr' => true])])
-                ->orWhereHas('periods', $periodConstraint)
-            ));
     }
 }
