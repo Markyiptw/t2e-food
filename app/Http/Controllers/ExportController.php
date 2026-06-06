@@ -35,12 +35,8 @@ class ExportController extends Controller
     {
         [$start, $end] = $this->validatedWindow($request);
 
-        $writer = SimpleExcelWriter::streamDownload('test.xlsx')
+        $writer = SimpleExcelWriter::streamDownload('test.csv')
             ->addHeader(self::HEADERS);
-
-        // $path = $this->exportPath();
-        // $writer = SimpleExcelWriter::create($path)
-        // ->addHeader(self::HEADERS);
 
         Restaurant::query()
             ->when($start !== null && $end !== null, fn (Builder $query) => $query->openInAnyWindowBetween($start, $end))
@@ -53,24 +49,27 @@ class ExportController extends Controller
                     ->orderByRaw('(data->>\'dayOfWeek\')::int nulls last')
                     ->orderBy('id'),
             ])
-            ->chunkById(500, function ($restaurants) use ($writer): void {
-                foreach ($restaurants as $restaurant) {
-                    $writer
-                        ->addRow([
+            ->chunkById(500,
+                function ($restaurants) use ($writer) {
+                    $restaurants
+                        ->map(fn (Restaurant $restaurant) => [
                             $restaurant->data['name'] ?? '',
                             $restaurant->data['district']['name'] ?? '',
                             $restaurant->data['address'] ?? '',
                             $restaurant
                                 ->hours
+                                ->filter(fn (Hour $hour) => isset($hour->data['dayOfWeek']))
+                                ->filter(fn (Hour $hour) => ($hour->data['dayOfWeek']) > 0)
                                 ->map(fn (Hour $hour) => "$hour->day_of_week: $hour->human_readable_period")
                                 ->implode('; '),
                             collect($restaurant->data['categories'])
                                 ->pluck('name')
                                 ->implode(', '),
-                        ]);
+                        ])
+                        ->each(fn ($row) => $writer->addRow($row));
+                    flush();
                 }
-                flush();
-            });
+            );
 
         $writer->toBrowser();
     }
