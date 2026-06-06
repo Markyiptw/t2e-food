@@ -6,7 +6,7 @@ RUN npm install
 RUN --mount=type=secret,id=VITE_POSTHOG_API_KEY,env=VITE_POSTHOG_API_KEY \
     npm run build
 
-FROM serversideup/php:8.5-frankenphp-debian-v4.3.5
+FROM serversideup/php:8.5-frankenphp-debian-v4.4.1
 # Switch to root so we can do root things
 USER root
 # Install the intl and bcmath extensions with root permissions
