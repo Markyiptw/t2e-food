@@ -56,30 +56,15 @@ class Restaurant extends Model
      */
     public function scopeOpenInWindow(Builder $query, Carbon $start, int $durationInMinutes = 0): void
     {
-        $queryStartSeconds = $start->secondsSinceMidnight();
-        $queryEndSeconds = $queryStartSeconds + ($durationInMinutes * 60);
+        $startSec = $start->secondsSinceMidnight();
+        $endSec = $startSec + ($durationInMinutes * 60);
 
         $query
             ->whereHas('hours', fn (Builder $query) => $query
-                ->whereRaw('data @> ?', [
-                    collect([
-                        'weight' => 0,
-                        'isClose' => false,
-                    ])
-                        ->toJson(),
-                ])
+                ->baseWeeklySchedule()
                 ->where(fn (Builder $query) => $query
-                    ->whereRaw('data @> ?', [json_encode(['is24hr' => true])])
-                    ->orWhereHas('periods', fn (Builder $query) => $query
-                        ->whereRaw(
-                            'EXTRACT(EPOCH FROM "start") <= ? AND (EXTRACT(EPOCH FROM "end") + CASE WHEN "start" > "end" THEN 86400 ELSE 0 END) >= ?',
-                            [$queryStartSeconds, $queryEndSeconds],
-                        )
-                        ->orWhereRaw(
-                            '"start" > "end" AND (EXTRACT(EPOCH FROM "start") - 86400) <= ? AND EXTRACT(EPOCH FROM "end") >= ?',
-                            [$queryStartSeconds, $queryEndSeconds],
-                        )
-                    )
+                    ->twentyFourHours()
+                    ->orWhereHas('periods', fn (Builder $query) => $query->between($startSec, $endSec))
                 ));
     }
 
@@ -99,15 +84,9 @@ class Restaurant extends Model
 
         $query
             ->whereHas('hours', fn (Builder $query) => $query
-                ->whereRaw('data @> ?', [
-                    collect([
-                        'weight' => 0,
-                        'isClose' => false,
-                    ])
-                        ->toJson(),
-                ])
+                ->baseWeeklySchedule()
                 ->where(fn (Builder $query) => $query
-                    ->whereRaw('data @> ?', [json_encode(['is24hr' => true])])
+                    ->twentyFourHours()
                     ->orWhereHas('periods', fn (Builder $query) => $query
                         ->whereRaw(
                             'EXTRACT(EPOCH FROM "start") <= ? AND '.$periodEndSeconds.' >= ?',
