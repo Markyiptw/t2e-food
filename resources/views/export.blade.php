@@ -80,13 +80,11 @@
                         <span
                             class="mt-0.5 shrink-0 text-xs font-semibold text-[#0f6b54]"
                         >
-                            .xlsx
+                            .csv
                         </span>
                     </li>
                     <li class="flex items-start justify-between gap-3">
-                        <p class="font-serif text-xs text-[#3c4a42]">
-                            Columns
-                        </p>
+                        <p class="font-serif text-xs text-[#3c4a42]">Columns</p>
                         <span
                             class="mt-0.5 shrink-0 text-xs font-semibold text-[#0f6b54]"
                         >
@@ -157,9 +155,7 @@
                         />
                     </div>
 
-                    <div
-                        class="flex items-center gap-3 px-3 py-2.5 text-sm"
-                    >
+                    <div class="flex items-center gap-3 px-3 py-2.5 text-sm">
                         <label
                             for="end"
                             class="font-hk w-16 font-bold text-[#b32b22]"
@@ -179,7 +175,7 @@
                         type="submit"
                         class="font-display mt-1 flex w-full items-center justify-center gap-2 bg-[#b32b22] py-3 text-lg tracking-[0.2em] text-[#f4ecd8] hover:bg-[#962219]"
                     >
-                        DOWNLOAD AS XLSX
+                        DOWNLOAD AS CSV
                     </button>
                 </form>
             </div>
