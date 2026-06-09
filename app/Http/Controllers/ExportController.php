@@ -39,6 +39,7 @@ class ExportController extends Controller
             ->addHeader(self::HEADERS);
 
         Restaurant::query()
+            ->active()
             ->when($start !== null && $end !== null, fn (Builder $query) => $query->openInAnyWindowBetween($start, $end))
             ->with([
                 'hours' => fn ($query) => $query
