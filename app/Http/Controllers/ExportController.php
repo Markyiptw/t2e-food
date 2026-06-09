@@ -17,6 +17,7 @@ class ExportController extends Controller
         'name',
         'district',
         'address',
+        'coordinates',
         'opening_hours',
         'categories',
     ];
@@ -57,6 +58,10 @@ class ExportController extends Controller
                             $restaurant->data['name'] ?? '',
                             $restaurant->data['district']['name'] ?? '',
                             $restaurant->data['address'] ?? '',
+                            (isset($restaurant->data['mapLatitude']) &&
+                            isset($restaurant->data['mapLongitude'])) ?
+                            $restaurant->data['mapLatitude'].', '.$restaurant->data['mapLongitude'] :
+                            '',
                             $restaurant
                                 ->hours
                                 ->filter(fn (Hour $hour) => isset($hour->data['dayOfWeek']))
