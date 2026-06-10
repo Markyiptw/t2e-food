@@ -77,7 +77,13 @@ class Restaurant extends Model
                 ->baseWeeklySchedule()
                 ->where(fn (Builder $query) => $query
                     ->twentyFourHours()
-                    ->orWhereHas('periods', fn (Builder $query) => $query->overlap($start->secondsSinceMidnight(), $end->secondsSinceMidnight())
+                    ->orWhereHas(
+                        'periods',
+                        fn (Builder $query) => $query
+                            ->overlap(
+                                $start->secondsSinceMidnight(),
+                                $end->gte($start) ? $end->secondsSinceMidnight() : $end->secondsSinceMidnight() + 86400
+                            )
                     )
                 ));
 
