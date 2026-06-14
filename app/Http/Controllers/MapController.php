@@ -33,9 +33,6 @@ class MapController extends Controller
         $start = isset($validated['start']) ? Carbon::createFromFormat('!H:i', $validated['start']) : null;
 
         $duration = (int) ($validated['duration'] ?? null);
-        $restaurants = $this->markerPaginator($start, $duration, self::MARKERS_PER_PAGE)
-            ->withPath(route('map.restaurants'))
-            ->withQueryString();
 
         return view('map', [
             'start' => $start?->format('H:i'),
@@ -44,8 +41,6 @@ class MapController extends Controller
                 'start' => $start?->format('H:i'),
                 'duration' => $duration,
             ], fn ($value) => $value !== null)),
-            'markersJson' => json_encode($restaurants->items(), JSON_THROW_ON_ERROR),
-            'nextMarkersPageUrl' => $restaurants->nextPageUrl(),
         ]);
     }
 

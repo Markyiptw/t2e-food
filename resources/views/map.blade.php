@@ -25,6 +25,29 @@
         <div class="relative flex-1">
             <div id="map" class="h-full w-full"></div>
 
+            <div
+                id="map-loading-overlay"
+                class="fixed inset-0 z-[2000] flex items-center justify-center bg-[#1f2a24]/65 px-6 backdrop-blur-sm"
+            >
+                <div
+                    class="max-w-sm border border-[#1f2a24]/15 bg-[#fbf6e9] p-6 text-center shadow-[8px_8px_0_#0f6b54]"
+                >
+                    <div
+                        class="mx-auto mb-4 h-10 w-10 animate-spin rounded-full border-4 border-[#0f6b54]/25 border-t-[#b32b22]"
+                        aria-hidden="true"
+                    ></div>
+                    <p
+                        class="text-sm font-bold tracking-[0.18em] text-[#b32b22] uppercase"
+                        style="font-family: 'Oswald', ui-sans-serif, sans-serif"
+                    >
+                        Loading Restaurants
+                    </p>
+                    <p class="mt-2 text-sm text-[#3c4a42]/75">
+                        Plotting the first batch of kitchens on the map.
+                    </p>
+                </div>
+            </div>
+
             {{-- Desktop filter panel --}}
             <form
                 method="GET"
@@ -246,8 +269,6 @@
 
     <script>
         window.restaurantMarkersEndpoint = @json($markersEndpoint);
-        window.restaurantMarkers = {!! $markersJson !!};
-        window.restaurantMarkersNextPageUrl = @json($nextMarkersPageUrl);
 
         (function () {
             const toggle = document.getElementById('filter-toggle');

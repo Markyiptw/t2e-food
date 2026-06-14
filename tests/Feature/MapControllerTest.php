@@ -79,16 +79,6 @@ class MapControllerTest extends TestCase
 
     public function test_map_page_renders_with_layout_and_bottom_sheet(): void
     {
-        Restaurant::factory()->create([
-            'data' => [
-                'status' => 10,
-                'name' => 'Initial Restaurant',
-                'address' => '1 Test Street',
-                'mapLatitude' => 22.3,
-                'mapLongitude' => 114.1,
-            ],
-        ]);
-
         $response = $this->get('/map');
 
         $response
@@ -97,17 +87,14 @@ class MapControllerTest extends TestCase
             ->assertSee('id="filter-sheet"', false)
             ->assertSee('id="filter-toggle"', false)
             ->assertSee('id="filter-backdrop"', false)
+            ->assertSee('id="map-loading-overlay"', false)
             ->assertSee('name="description"', false)
             ->assertSee('action="/map"', false)
             ->assertSee('name="start"', false)
             ->assertSee('name="duration"', false)
             ->assertSee('window.restaurantMarkersEndpoint', false)
-            ->assertSee('window.restaurantMarkers', false)
-            ->assertViewHas('markersEndpoint');
-
-        $markers = json_decode($response->viewData('markersJson'), true, flags: JSON_THROW_ON_ERROR);
-
-        $this->assertCount(1, $markers);
-        $this->assertSame('Initial Restaurant', $markers[0]['name']);
+            ->assertDontSee('window.restaurantMarkers =', false)
+            ->assertViewHas('markersEndpoint')
+            ->assertViewMissing('markersJson');
     }
 }

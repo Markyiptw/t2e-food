@@ -24,6 +24,9 @@ const mapContainer = document.getElementById("map");
 
 if (mapContainer && window.restaurantMarkersEndpoint) {
     const map = L.map("map").setView([22.3193, 114.1694], 12);
+    const initialLoadingOverlay = document.getElementById(
+        "map-loading-overlay"
+    );
 
     // CartoDB "Voyager" basemap — warm-toned tiles that sit comfortably
     // against the parchment/forest/rust palette of the rest of the site.
@@ -48,16 +51,15 @@ if (mapContainer && window.restaurantMarkersEndpoint) {
     map.addLayer(markers);
 
     markerCount.className =
-        "fixed left-4 bottom-4 z-[1000] rounded-full bg-[#0f6b54] px-3 py-1.5 text-xs font-medium text-[#f4ecd8] shadow-[3px_3px_0_rgba(15,107,84,0.25)]";
+        "fixed left-4 bottom-4 z-[1000] hidden rounded-full bg-[#0f6b54] px-3 py-1.5 text-xs font-medium text-[#f4ecd8] shadow-[3px_3px_0_rgba(15,107,84,0.25)]";
     markerCount.textContent = "Loading restaurants...";
     document.body.appendChild(markerCount);
 
-    addMarkers(window.restaurantMarkers || []);
-    updateMarkerCount(Boolean(window.restaurantMarkersNextPageUrl));
-    loadMarkers(window.restaurantMarkersNextPageUrl);
+    loadMarkers(window.restaurantMarkersEndpoint, true);
 
-    async function loadMarkers(url) {
+    async function loadMarkers(url, isInitialPage = false) {
         if (!url) {
+            hideInitialLoadingOverlay();
             updateMarkerCount(false);
             return;
         }
@@ -69,6 +71,7 @@ if (mapContainer && window.restaurantMarkersEndpoint) {
         });
 
         if (!response.ok) {
+            showInitialLoadingError();
             markerCount.textContent = "Unable to load restaurants";
             return;
         }
@@ -76,6 +79,12 @@ if (mapContainer && window.restaurantMarkersEndpoint) {
         const page = await response.json();
 
         addMarkers(page.markers);
+
+        if (isInitialPage) {
+            hideInitialLoadingOverlay();
+            markerCount.classList.remove("hidden");
+        }
+
         updateMarkerCount(page.has_more);
 
         if (page.next_page_url) {
@@ -106,6 +115,27 @@ if (mapContainer && window.restaurantMarkersEndpoint) {
 
     function updateMarkerCount(isLoading) {
         markerCount.textContent = `${count.toLocaleString()} restaurant${count !== 1 ? "s" : ""}${isLoading ? " loaded..." : ""}`;
+    }
+
+    function hideInitialLoadingOverlay() {
+        if (!initialLoadingOverlay) {
+            return;
+        }
+
+        initialLoadingOverlay.classList.add(
+            "pointer-events-none",
+            "opacity-0",
+            "transition-opacity",
+            "duration-300"
+        );
+    }
+
+    function showInitialLoadingError() {
+        if (!initialLoadingOverlay) {
+            return;
+        }
+
+        initialLoadingOverlay.textContent = "Unable to load restaurants.";
     }
 
     const filterForm = document.querySelector("form[action='/map']");
