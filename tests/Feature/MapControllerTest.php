@@ -19,7 +19,7 @@ class MapControllerTest extends TestCase
         config(['app.key' => 'base64:'.base64_encode(str_repeat('a', 32))]);
     }
 
-    public function test_map_filters_by_start_and_duration(): void
+    public function test_map_restaurants_endpoint_filters_by_start_and_duration(): void
     {
         $valid = Restaurant::factory()
             ->has(Hour::factory()->has(Period::factory()->state(['start' => '09:00:00', 'end' => '17:00:00'])))
@@ -37,21 +37,58 @@ class MapControllerTest extends TestCase
             ->has(Hour::factory()->has(Period::factory()->state(['start' => '10:00:00', 'end' => '14:00:00'])))
             ->create();
 
-        $response = $this->get('/map?start=10:00&duration=360');
+        $response = $this->getJson('/map/restaurants?start=10:00&duration=360');
 
-        $response
-            ->assertOk()
-            ->assertViewHas('start', '10:00')
-            ->assertViewHas('duration', 360);
+        $response->assertOk();
 
-        $markers = json_decode($response->viewData('markersJson'), true, flags: JSON_THROW_ON_ERROR);
+        $markers = $response->json('markers');
 
         $this->assertCount(1, $markers);
         $this->assertSame($valid->data['name'], $markers[0]['name']);
     }
 
+    public function test_map_restaurants_endpoint_cursor_paginates_markers(): void
+    {
+        $restaurants = collect([
+            'First Restaurant',
+            'Second Restaurant',
+            'Third Restaurant',
+        ])->map(fn (string $name) => Restaurant::factory()->create([
+            'data' => [
+                'status' => 10,
+                'name' => $name,
+                'address' => '1 Test Street',
+                'mapLatitude' => 22.3,
+                'mapLongitude' => 114.1,
+            ],
+        ]));
+
+        $firstPage = $this->getJson('/map/restaurants?limit=1')
+            ->assertOk()
+            ->assertJsonPath('has_more', true);
+
+        $this->assertSame($restaurants[0]->id, $firstPage->json('markers.0.id'));
+        $this->assertNotNull($firstPage->json('next_page_url'));
+
+        $secondPage = $this->getJson($firstPage->json('next_page_url'))
+            ->assertOk()
+            ->assertJsonPath('has_more', true);
+
+        $this->assertSame($restaurants[1]->id, $secondPage->json('markers.0.id'));
+    }
+
     public function test_map_page_renders_with_layout_and_bottom_sheet(): void
     {
+        Restaurant::factory()->create([
+            'data' => [
+                'status' => 10,
+                'name' => 'Initial Restaurant',
+                'address' => '1 Test Street',
+                'mapLatitude' => 22.3,
+                'mapLongitude' => 114.1,
+            ],
+        ]);
+
         $response = $this->get('/map');
 
         $response
@@ -64,6 +101,13 @@ class MapControllerTest extends TestCase
             ->assertSee('action="/map"', false)
             ->assertSee('name="start"', false)
             ->assertSee('name="duration"', false)
-            ->assertSee('window.restaurantMarkers', false);
+            ->assertSee('window.restaurantMarkersEndpoint', false)
+            ->assertSee('window.restaurantMarkers', false)
+            ->assertViewHas('markersEndpoint');
+
+        $markers = json_decode($response->viewData('markersJson'), true, flags: JSON_THROW_ON_ERROR);
+
+        $this->assertCount(1, $markers);
+        $this->assertSame('Initial Restaurant', $markers[0]['name']);
     }
 }

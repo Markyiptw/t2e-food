@@ -22,7 +22,7 @@ const vintageIcon = L.divIcon({
 
 const mapContainer = document.getElementById("map");
 
-if (mapContainer && window.restaurantMarkers) {
+if (mapContainer && window.restaurantMarkersEndpoint) {
     const map = L.map("map").setView([22.3193, 114.1694], 12);
 
     // CartoDB "Voyager" basemap — warm-toned tiles that sit comfortably
@@ -37,18 +37,58 @@ if (mapContainer && window.restaurantMarkers) {
         }
     ).addTo(map);
 
-    const count = window.restaurantMarkers.length;
+    const markers = L.markerClusterGroup({
+        maxClusterRadius: 50,
+    });
+    const bounds = [];
+    const markerCount = document.createElement("div");
+    let count = 0;
+    let fittedInitialBounds = false;
 
-    if (count > 0) {
-        const markers = L.markerClusterGroup({
-            maxClusterRadius: 50,
+    map.addLayer(markers);
+
+    markerCount.className =
+        "fixed left-4 bottom-4 z-[1000] rounded-full bg-[#0f6b54] px-3 py-1.5 text-xs font-medium text-[#f4ecd8] shadow-[3px_3px_0_rgba(15,107,84,0.25)]";
+    markerCount.textContent = "Loading restaurants...";
+    document.body.appendChild(markerCount);
+
+    addMarkers(window.restaurantMarkers || []);
+    updateMarkerCount(Boolean(window.restaurantMarkersNextPageUrl));
+    loadMarkers(window.restaurantMarkersNextPageUrl);
+
+    async function loadMarkers(url) {
+        if (!url) {
+            updateMarkerCount(false);
+            return;
+        }
+
+        const response = await fetch(url, {
+            headers: {
+                Accept: "application/json",
+            },
         });
-        const bounds = [];
 
-        window.restaurantMarkers.forEach((r) => {
+        if (!response.ok) {
+            markerCount.textContent = "Unable to load restaurants";
+            return;
+        }
+
+        const page = await response.json();
+
+        addMarkers(page.markers);
+        updateMarkerCount(page.has_more);
+
+        if (page.next_page_url) {
+            await loadMarkers(page.next_page_url);
+        }
+    }
+
+    function addMarkers(restaurants) {
+        restaurants.forEach((r) => {
             const latLng = [r.latitude, r.longitude];
 
             bounds.push(latLng);
+            count += 1;
 
             markers.addLayer(
                 L.marker(latLng, { icon: vintageIcon }).bindPopup(
@@ -58,20 +98,17 @@ if (mapContainer && window.restaurantMarkers) {
             );
         });
 
-        map.addLayer(markers);
-
-        if (bounds.length > 1) {
+        if (!fittedInitialBounds && bounds.length > 1) {
+            fittedInitialBounds = true;
             map.fitBounds(bounds, { padding: [50, 50], maxZoom: 14 });
         }
     }
 
-    const filterForm = document.querySelector("form[action='/map']");
-    const markerCount = document.createElement("div");
+    function updateMarkerCount(isLoading) {
+        markerCount.textContent = `${count.toLocaleString()} restaurant${count !== 1 ? "s" : ""}${isLoading ? " loaded..." : ""}`;
+    }
 
-    markerCount.className =
-        "fixed left-4 bottom-4 z-[1000] rounded-full bg-[#0f6b54] px-3 py-1.5 text-xs font-medium text-[#f4ecd8] shadow-[3px_3px_0_rgba(15,107,84,0.25)]";
-    markerCount.textContent = `${count.toLocaleString()} restaurant${count !== 1 ? "s" : ""}`;
-    document.body.appendChild(markerCount);
+    const filterForm = document.querySelector("form[action='/map']");
 
     if (filterForm) {
         filterForm.addEventListener("submit", () => {

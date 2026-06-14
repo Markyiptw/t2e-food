@@ -245,7 +245,9 @@
     </div>
 
     <script>
+        window.restaurantMarkersEndpoint = @json($markersEndpoint);
         window.restaurantMarkers = {!! $markersJson !!};
+        window.restaurantMarkersNextPageUrl = @json($nextMarkersPageUrl);
 
         (function () {
             const toggle = document.getElementById('filter-toggle');
