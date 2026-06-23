@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Database\Factories\HourFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -9,15 +10,20 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-#[Fillable(['restaurant_id', 'data'])]
+#[Fillable(['restaurant_id', 'day_of_week', 'is_close', 'is_24hr'])]
 class Hour extends Model
 {
+    /** @use HasFactory<HourFactory> */
     use HasFactory;
 
+    /**
+     * @return array<string, string>
+     */
     protected function casts(): array
     {
         return [
-            'data' => 'array',
+            'is_close' => 'boolean',
+            'is_24hr' => 'boolean',
         ];
     }
 
@@ -34,16 +40,16 @@ class Hour extends Model
         ];
 
         return Attribute::make(
-            get: fn () => $labels[$this->data['dayOfWeek']],
+            get: fn (?int $value) => $labels[$value] ?? null,
         );
     }
 
     public function humanReadablePeriod(): Attribute
     {
         return Attribute::make(
-            get: fn (mixed $value, array $attributes) => match (true) {
-                $this->data['isClose'] => 'closed',
-                $this->data['is24hr'] => '24 hours',
+            get: fn () => match (true) {
+                $this->is_close => 'closed',
+                $this->is_24hr => '24 hours',
                 default => $this
                     ->periods
                     ->map(fn ($period): string => $period->start.'-'.$period->end)
@@ -59,19 +65,11 @@ class Hour extends Model
 
     public function scopeBaseWeeklySchedule(Builder $query): void
     {
-        $query
-            ->whereRaw('data @> ?', [
-                collect([
-                    'weight' => 0,
-                    'isClose' => false,
-                ])
-                    ->toJson(),
-            ]);
+        $query->where('is_close', false);
     }
 
     public function scopeTwentyFourHours(Builder $query): void
     {
-        $query
-            ->whereRaw('data @> ?', [json_encode(['is24hr' => true])]);
+        $query->where('is_24hr', true);
     }
 }

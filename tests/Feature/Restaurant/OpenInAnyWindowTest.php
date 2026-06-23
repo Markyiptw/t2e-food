@@ -75,12 +75,11 @@ class OpenInAnyWindowTest extends TestCase
         $valid = Restaurant::factory()->has(Hour::factory()->is24hr())->create();
 
         Restaurant::factory()->has(Hour::factory()->is24hr()->isClose())->create();
-        Restaurant::factory()->has(Hour::factory()->nonZeroWeight()->is24hr())->create();
         Restaurant::factory()->inactive()->has(Hour::factory()->is24hr())->create();
         Restaurant::factory()->create();
         Restaurant::factory()->has(Hour::factory()->dayOfWeek(3))->create();
 
-        $results = Restaurant::active()->openInAnyWindowBetween(
+        $results = Restaurant::openInAnyWindowBetween(
             Carbon::createFromFormat('!H:i', '10:00'),
             Carbon::createFromFormat('!H:i', '11:00'),
         )->pluck('id')->all();

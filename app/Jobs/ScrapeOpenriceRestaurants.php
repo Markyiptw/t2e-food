@@ -2,9 +2,13 @@
 
 namespace App\Jobs;
 
+use App\Models\Category;
+use App\Models\District;
 use App\Models\Hour;
+use App\Models\Location;
 use App\Models\Period;
 use App\Models\Restaurant;
+use App\Models\Status;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
@@ -31,7 +35,7 @@ class ScrapeOpenriceRestaurants implements ShouldBeUnique, ShouldQueue
                     ->pluck('districtId')
                     ->first(),
                 'startAt' => 0,
-                'rows' => 50, // so if the value changed here, it will be effective from the next run after the current cache get removed, which happens when the scraper finishes scraping all restaurants in the current district and moves on to the next one
+                'rows' => 50,
             ]
         );
 
@@ -45,38 +49,64 @@ class ScrapeOpenriceRestaurants implements ShouldBeUnique, ShouldQueue
         $restaurants = collect($response['paginationResult']['results']);
 
         DB::transaction(function () use ($restaurants) {
-            Restaurant::upsert(
-                $restaurants
-                    ->map(fn (array $restaurant) => [
-                        'data' => collect($restaurant)
-                            ->except(['poiHours'])
-                            ->toJson(),
-                        'created_at' => now(),
-                        'updated_at' => now(),
-                    ])
-                    ->all(),
-                [DB::raw("(data->>'poiId')")],
-                ['data', 'updated_at'],
-            );
-
             $restaurants
-                ->each(function ($restaurant) {
-                    $restaurantId = Restaurant::query()
-                        ->where('data->poiId', $restaurant['poiId'])
-                        ->first('id')
-                        ->id;
+                ->each(function (array $restaurant) {
+                    $status = Status::firstOrCreate([
+                        'code' => $restaurant['status'],
+                        'text' => $restaurant['statusText'] ?? null,
+                    ]);
+
+                    $district = isset($restaurant['district'])
+                        ? District::firstOrCreate(
+                            ['external_id' => $restaurant['district']['districtId']],
+                            ['name' => $restaurant['district']['name']],
+                        )
+                        : null;
+
+                    $model = Restaurant::withoutGlobalScope('active')->updateOrCreate(
+                        ['poi_id' => $restaurant['poiId']],
+                        [
+                            'name' => $restaurant['name'],
+                            'url' => $restaurant['shortenUrl'] ?? null,
+                            'status_id' => $status->id,
+                            'status_text' => $restaurant['statusText'] ?? null,
+                            'address' => $restaurant['address'] ?? null,
+                            'district_id' => $district?->id,
+                        ],
+                    );
+
+                    $latitude = $restaurant['mapLatitude'] ?? null;
+                    $longitude = $restaurant['mapLongitude'] ?? null;
+
+                    if ($latitude && $longitude && $latitude != 0 && $longitude != 0) {
+                        Location::updateOrCreate(
+                            ['restaurant_id' => $model->id],
+                            ['latitude' => $latitude, 'longitude' => $longitude],
+                        );
+                    } else {
+                        $model->location()->delete();
+                    }
+
+                    $categoryIds = collect($restaurant['categories'] ?? [])
+                        ->map(fn (array $category) => Category::firstOrCreate(
+                            ['name' => $category['name']],
+                        )->id)
+                        ->all();
+
+                    $model->categories()->sync($categoryIds);
 
                     Hour::query()
-                        ->where('restaurant_id', $restaurantId)
-                        ->delete(); // delete existing hours (and their related periods) before inserting new ones to handle the case when the hours data structure changes, e.g. the number of periods changes
+                        ->where('restaurant_id', $model->id)
+                        ->delete();
 
-                    collect($restaurant['poiHours'])
-                        ->each(function ($hour) use ($restaurantId) {
+                    collect($restaurant['poiHours'] ?? [])
+                        ->filter(fn ($hour) => ($hour['weight'] ?? 0) === 0)
+                        ->each(function ($hour) use ($model) {
                             $hourId = Hour::create([
-                                'restaurant_id' => $restaurantId,
-                                'data' => collect($hour)
-                                    ->filter(fn ($value, $key) => ! Str::startsWith($key, 'period'))
-                                    ->all(),
+                                'restaurant_id' => $model->id,
+                                'day_of_week' => $hour['dayOfWeek'] ?? 0,
+                                'is_close' => $hour['isClose'] ?? false,
+                                'is_24hr' => $hour['is24hr'] ?? false,
                             ])->id;
 
                             collect($hour)

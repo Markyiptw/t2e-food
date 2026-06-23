@@ -24,13 +24,8 @@ class MapControllerTest extends TestCase
         $valid = Restaurant::factory()
             ->has(Hour::factory()->has(Period::factory()->state(['start' => '09:00:00', 'end' => '17:00:00'])))
             ->create([
-                'data' => [
-                    'status' => 10,
-                    'name' => 'Open Restaurant',
-                    'address' => '1 Test Street',
-                    'mapLatitude' => 22.3,
-                    'mapLongitude' => 114.1,
-                ],
+                'name' => 'Open Restaurant',
+                'address' => '1 Test Street',
             ]);
 
         Restaurant::factory()
@@ -44,7 +39,7 @@ class MapControllerTest extends TestCase
         $markers = $response->json('markers');
 
         $this->assertCount(1, $markers);
-        $this->assertSame($valid->data['name'], $markers[0]['name']);
+        $this->assertSame($valid->name, $markers[0]['name']);
     }
 
     public function test_map_restaurants_endpoint_cursor_paginates_markers(): void
@@ -54,13 +49,8 @@ class MapControllerTest extends TestCase
             'Second Restaurant',
             'Third Restaurant',
         ])->map(fn (string $name) => Restaurant::factory()->create([
-            'data' => [
-                'status' => 10,
-                'name' => $name,
-                'address' => '1 Test Street',
-                'mapLatitude' => 22.3,
-                'mapLongitude' => 114.1,
-            ],
+            'name' => $name,
+            'address' => '1 Test Street',
         ]));
 
         $firstPage = $this->getJson('/map/restaurants?limit=1')

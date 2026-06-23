@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Jobs\ScrapeOpenriceRestaurants;
 use App\Models\Hour;
 use App\Models\Restaurant;
+use App\Models\Status;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
 use Illuminate\Http\Client\Factory;
 use Illuminate\Http\Client\RequestException;
@@ -27,14 +28,17 @@ class ScrapeOpenriceRestaurantsJobTest extends TestCase
                             'poiId' => 101,
                             'name' => 'Test Restaurant',
                             'address' => '1 Test Street',
+                            'status' => 10,
                             'poiHours' => [
                                 [
                                     'dayOfWeek' => 1,
+                                    'weight' => 0,
                                     'period1Start' => '09:00:00',
                                     'period1End' => '22:00:00',
                                 ],
                                 [
                                     'dayOfWeek' => 2,
+                                    'weight' => 0,
                                     'isClose' => true,
                                 ],
                             ],
@@ -43,14 +47,17 @@ class ScrapeOpenriceRestaurantsJobTest extends TestCase
                             'poiId' => 202,
                             'name' => 'Another Place',
                             'address' => '2 Another Road',
+                            'status' => 10,
                             'poiHours' => [],
                         ],
                         [
                             'poiId' => 303,
                             'name' => 'Multi Period',
+                            'status' => 10,
                             'poiHours' => [
                                 [
                                     'dayOfWeek' => 3,
+                                    'weight' => 0,
                                     'period1Start' => '08:00:00',
                                     'period1End' => '12:00:00',
                                     'period2Start' => '14:00:00',
@@ -69,22 +76,22 @@ class ScrapeOpenriceRestaurantsJobTest extends TestCase
         $this->assertDatabaseCount('restaurants', 3);
 
         $restaurant1 = Restaurant::withoutGlobalScope('active')
-            ->where('data->poiId', '101')
+            ->where('poi_id', 101)
             ->first();
         $this->assertNotNull($restaurant1);
-        $this->assertSame('Test Restaurant', $restaurant1->data['name']);
-        $this->assertSame('1 Test Street', $restaurant1->data['address']);
+        $this->assertSame('Test Restaurant', $restaurant1->name);
+        $this->assertSame('1 Test Street', $restaurant1->address);
 
         $restaurant2 = Restaurant::withoutGlobalScope('active')
-            ->where('data->poiId', '202')
+            ->where('poi_id', 202)
             ->first();
         $this->assertNotNull($restaurant2);
-        $this->assertSame('Another Place', $restaurant2->data['name']);
+        $this->assertSame('Another Place', $restaurant2->name);
 
         $this->assertDatabaseCount('hours', 3);
 
         $hour1 = Hour::where('restaurant_id', $restaurant1->id)
-            ->whereJsonContains('data->dayOfWeek', 1)
+            ->where('day_of_week', 1)
             ->first();
         $this->assertNotNull($hour1);
         $this->assertDatabaseHas('periods', [
@@ -95,13 +102,13 @@ class ScrapeOpenriceRestaurantsJobTest extends TestCase
         ]);
 
         $hour2 = Hour::where('restaurant_id', $restaurant1->id)
-            ->whereJsonContains('data->isClose', true)
+            ->where('is_close', true)
             ->first();
         $this->assertNotNull($hour2);
-        $this->assertTrue($hour2->data['isClose']);
+        $this->assertTrue($hour2->is_close);
 
         $restaurant3 = Restaurant::withoutGlobalScope('active')
-            ->where('data->poiId', '303')
+            ->where('poi_id', 303)
             ->first();
         $this->assertNotNull($restaurant3);
         $this->assertDatabaseCount('periods', 3);
@@ -132,6 +139,7 @@ class ScrapeOpenriceRestaurantsJobTest extends TestCase
                             'poiId' => 101,
                             'name' => 'Updated Name',
                             'address' => 'New Address',
+                            'status' => 10,
                             'poiHours' => [],
                         ],
                     ],
@@ -140,12 +148,13 @@ class ScrapeOpenriceRestaurantsJobTest extends TestCase
             ]),
         ]);
 
+        $statusId = Status::active()->id;
+
         DB::table('restaurants')->insert([
-            'data' => json_encode([
-                'poiId' => 101,
-                'name' => 'Old Name',
-                'address' => 'Old Address',
-            ], JSON_THROW_ON_ERROR),
+            'poi_id' => 101,
+            'name' => 'Old Name',
+            'address' => 'Old Address',
+            'status_id' => $statusId,
             'created_at' => now(),
             'updated_at' => now(),
         ]);
@@ -155,10 +164,10 @@ class ScrapeOpenriceRestaurantsJobTest extends TestCase
         $this->assertDatabaseCount('restaurants', 1);
 
         $restaurant = Restaurant::withoutGlobalScope('active')
-            ->where('data->poiId', '101')
+            ->where('poi_id', 101)
             ->first();
-        $this->assertSame('Updated Name', $restaurant->data['name']);
-        $this->assertSame('New Address', $restaurant->data['address']);
+        $this->assertSame('Updated Name', $restaurant->name);
+        $this->assertSame('New Address', $restaurant->address);
     }
 
     public function test_it_replaces_existing_hours_and_periods_on_re_scrape(): void
@@ -177,9 +186,11 @@ class ScrapeOpenriceRestaurantsJobTest extends TestCase
                             [
                                 'poiId' => 200,
                                 'name' => 'Re-scrape Test',
+                                'status' => 10,
                                 'poiHours' => [
                                     [
                                         'dayOfWeek' => 1,
+                                        'weight' => 0,
                                         'period1Start' => '08:00:00',
                                         'period1End' => '20:00:00',
                                     ],
@@ -195,9 +206,11 @@ class ScrapeOpenriceRestaurantsJobTest extends TestCase
                             [
                                 'poiId' => 200,
                                 'name' => 'Re-scrape Test',
+                                'status' => 10,
                                 'poiHours' => [
                                     [
                                         'dayOfWeek' => 3,
+                                        'weight' => 0,
                                         'period1Start' => '10:00:00',
                                         'period1End' => '18:00:00',
                                     ],
@@ -220,7 +233,10 @@ class ScrapeOpenriceRestaurantsJobTest extends TestCase
         $this->assertDatabaseCount('periods', 1);
 
         $hour = Hour::first();
-        $this->assertSame(3, $hour->data['dayOfWeek']);
+        $this->assertDatabaseHas('hours', [
+            'id' => $hour->id,
+            'day_of_week' => 3,
+        ]);
 
         $this->assertDatabaseHas('periods', [
             'hour_id' => $hour->id,

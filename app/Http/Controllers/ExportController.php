@@ -40,35 +40,36 @@ class ExportController extends Controller
             ->addHeader(self::HEADERS);
 
         Restaurant::query()
-            ->active()
             ->when($start !== null && $end !== null, fn (Builder $query) => $query->openInAnyWindowBetween($start, $end))
             ->with([
+                'district',
+                'location',
+                'categories',
                 'hours' => fn ($query) => $query
                     ->with([
                         'periods' => fn ($query) => $query
                             ->orderBy('position'),
                     ])
-                    ->orderByRaw('(data->>\'dayOfWeek\')::int nulls last')
+                    ->where('day_of_week', '>', 0)
+                    ->orderBy('day_of_week')
                     ->orderBy('id'),
             ])
             ->chunkById(500,
                 function ($restaurants) use ($writer) {
                     $restaurants
                         ->map(fn (Restaurant $restaurant) => [
-                            $restaurant->data['name'] ?? '',
-                            $restaurant->data['district']['name'] ?? '',
-                            $restaurant->data['address'] ?? '',
-                            (isset($restaurant->data['mapLatitude']) &&
-                            isset($restaurant->data['mapLongitude'])) ?
-                            $restaurant->data['mapLatitude'].', '.$restaurant->data['mapLongitude'] :
-                            '',
+                            $restaurant->name ?? '',
+                            $restaurant->district?->name ?? '',
+                            $restaurant->address ?? '',
+                            $restaurant->location
+                                ? $restaurant->location->latitude.', '.$restaurant->location->longitude
+                                : '',
                             $restaurant
                                 ->hours
-                                ->filter(fn (Hour $hour) => isset($hour->data['dayOfWeek']))
-                                ->filter(fn (Hour $hour) => ($hour->data['dayOfWeek']) > 0)
                                 ->map(fn (Hour $hour) => "$hour->day_of_week: $hour->human_readable_period")
                                 ->implode('; '),
-                            collect($restaurant->data['categories'])
+                            $restaurant
+                                ->categories
                                 ->pluck('name')
                                 ->implode(', '),
                         ])

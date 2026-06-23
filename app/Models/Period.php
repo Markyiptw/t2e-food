@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Carbon\Carbon;
+use Database\Factories\PeriodFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -15,9 +16,9 @@ use Illuminate\Database\Eloquent\Model;
     'end',
     'hour_id',
 ])]
-
 class Period extends Model
 {
+    /** @use HasFactory<PeriodFactory> */
     use HasFactory;
 
     public function start(): Attribute
@@ -75,17 +76,5 @@ class Period extends Model
                     $query,
                 )
             );
-
-    }
-
-    public function humanReadable()
-    {
-        return Attribute::make(
-            get: fn (mixed $value, array $attributes) => match (true) {
-                $attributes['data']['isClose'] => 'closed',
-                $attributes['data']['is24hr'] => '24 hours',
-                default => sprintf('%02d:%02d-%02d:%02d', intdiv($this->start, 3600), intdiv($this->start % 3600, 60), intdiv(($this->end + 86400) % 86400, 3600), intdiv(($this->end + 86400) % 3600, 60)),
-            }
-        );
     }
 }

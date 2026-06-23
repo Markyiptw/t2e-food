@@ -40,12 +40,11 @@ class OpenInWindowTest extends TestCase
     public function test_exclusions(): void
     {
         $close = Restaurant::factory()->has(Hour::factory()->is24hr()->isClose())->create();
-        $nonZeroWeight = Restaurant::factory()->has(Hour::factory()->nonZeroWeight()->is24hr())->create();
         $inactive = Restaurant::factory()->inactive()->has(Hour::factory()->is24hr())->create();
         $noHours = Restaurant::factory()->create();
         $noPeriodsNot24hr = Restaurant::factory()->has(Hour::factory()->dayOfWeek(3))->create();
 
-        $results = Restaurant::hasLocation()->active()->openInWindow(Carbon::createFromFormat('!H:i', '10:00'), 240)->pluck('id');
+        $results = Restaurant::hasLocation()->openInWindow(Carbon::createFromFormat('!H:i', '10:00'), 240)->pluck('id');
 
         $this->assertEmpty($results);
     }

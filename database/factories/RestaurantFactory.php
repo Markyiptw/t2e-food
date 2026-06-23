@@ -2,7 +2,9 @@
 
 namespace Database\Factories;
 
+use App\Models\Location;
 use App\Models\Restaurant;
+use App\Models\Status;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -13,18 +15,30 @@ class RestaurantFactory extends Factory
     public function definition(): array
     {
         return [
-            'data' => [
-                'status' => 10,
-                'mapLatitude' => fake()->latitude(),
-                'mapLongitude' => fake()->longitude(),
-            ],
+            'poi_id' => fake()->unique()->randomNumber(6),
+            'name' => fake()->name(),
+            'url' => fake()->optional()->url(),
+            'status_id' => fn () => Status::active()->id,
+            'status_text' => null,
+            'address' => fake()->optional()->streetAddress(),
+            'district_id' => null,
         ];
     }
 
     public function inactive(): static
     {
         return $this->state(fn (array $attributes) => [
-            'data' => array_merge($attributes['data'], ['status' => 5]),
+            'status_id' => Status::firstOrCreate(['code' => 4, 'text' => '已搬遷'])->id,
+            'status_text' => '已搬遷',
         ]);
+    }
+
+    public function configure(): static
+    {
+        return $this->afterCreating(function (Restaurant $restaurant) {
+            if (! $restaurant->location()->exists()) {
+                Location::factory()->create(['restaurant_id' => $restaurant->id]);
+            }
+        });
     }
 }

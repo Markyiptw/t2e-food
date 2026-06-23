@@ -2,21 +2,54 @@
 
 namespace App\Models;
 
+use Database\Factories\RestaurantFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Carbon;
 
 class Restaurant extends Model
 {
+    /** @use HasFactory<RestaurantFactory> */
     use HasFactory;
 
-    protected function casts(): array
+    protected $fillable = [
+        'poi_id',
+        'name',
+        'url',
+        'status_id',
+        'status_text',
+        'address',
+        'district_id',
+    ];
+
+    protected static function booted(): void
     {
-        return [
-            'data' => 'array',
-        ];
+        static::addGlobalScope('active', fn (Builder $query) => $query->active());
+    }
+
+    public function status(): BelongsTo
+    {
+        return $this->belongsTo(Status::class);
+    }
+
+    public function district(): BelongsTo
+    {
+        return $this->belongsTo(District::class);
+    }
+
+    public function location(): HasOne
+    {
+        return $this->hasOne(Location::class);
+    }
+
+    public function categories(): BelongsToMany
+    {
+        return $this->belongsToMany(Category::class)->withTimestamps();
     }
 
     public function hours(): HasMany
@@ -26,32 +59,16 @@ class Restaurant extends Model
 
     public function scopeActive(Builder $query): void
     {
-        $query
-            ->whereRaw("(data->>'status')::int = ?", [10])
-            ->whereNull('data->statusText');
+        $query->where('status_id', Status::active()->id)->whereNull('status_text');
     }
 
     public function scopeHasLocation(Builder $query): void
     {
-        $query
-            ->whereNotNull('data->mapLatitude')
-            ->whereNotNull('data->mapLongitude')
-            ->whereRaw("(data->>'mapLatitude')::float != 0")
-            ->whereRaw("(data->>'mapLongitude')::float != 0");
+        $query->whereHas('location');
     }
 
     /**
      * Scope to restaurants that are open for a duration starting at the given time.
-     *
-     * Hours ``weight`` semantics (higher weight overrides lower):
-     * - 0: base weekly schedule (dayOfWeek 1-7)
-     * - 1: lunar-day schedule (dayOfWeek 0, ``lunarDay`` field)
-     * - 2: week-of-month exception (dayOfWeek 1-7, ``weekOfMonth`` field)
-     * - 4: public-holiday schedule (dayOfWeek 0, ``isHoliday`` or ``isHolidayEve`` flag)
-     * - 5: date-range schedule (dayOfWeek 0, ``dateFrom``/``dateTo`` fields)
-     *
-     * Filtering to ``weight => 0`` restricts to the base weekly schedule only,
-     * deliberately ignoring week-of-month and special-occasion overrides.
      */
     public function scopeOpenInWindow(Builder $query, Carbon $start, int $durationInMinutes = 0): void
     {
@@ -86,6 +103,5 @@ class Restaurant extends Model
                             )
                     )
                 ));
-
     }
 }

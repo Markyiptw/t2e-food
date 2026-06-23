@@ -88,16 +88,15 @@ class MapController extends Controller
     private function markerPaginator(?Carbon $start, int $duration, int $limit): CursorPaginator
     {
         return Restaurant::query()
-            ->active()
-            ->hasLocation()
+            ->join('locations', 'locations.restaurant_id', '=', 'restaurants.id')
             ->when($start !== null, fn ($query) => $query->openInWindow($start, $duration))
             ->select([
-                'id',
-                'data->name as name',
-                'data->address as address',
-                'data->mapLatitude as latitude',
-                'data->mapLongitude as longitude',
-                'data->shortenUrl as url',
+                'restaurants.id',
+                'restaurants.name',
+                'restaurants.address',
+                'locations.latitude',
+                'locations.longitude',
+                'restaurants.url',
             ])
             ->orderBy('id')
             ->cursorPaginate($limit)
