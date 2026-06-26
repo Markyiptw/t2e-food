@@ -13,7 +13,6 @@ class OpenriceHourDataTest extends TestCase
     {
         $data = OpenriceHourData::fromArray([
             'dayOfWeek' => 1,
-            'weight' => 0,
             'isClose' => false,
             'is24hr' => false,
             'period1Start' => '09:00:00',
@@ -23,7 +22,6 @@ class OpenriceHourDataTest extends TestCase
         ]);
 
         $this->assertSame(1, $data->dayOfWeek);
-        $this->assertSame(0, $data->weight);
         $this->assertFalse($data->isClose);
         $this->assertFalse($data->is24Hr);
         $this->assertCount(2, $data->periods);
@@ -37,7 +35,6 @@ class OpenriceHourDataTest extends TestCase
         $data = OpenriceHourData::fromArray([]);
 
         $this->assertSame(0, $data->dayOfWeek);
-        $this->assertSame(0, $data->weight);
         $this->assertFalse($data->isClose);
         $this->assertFalse($data->is24Hr);
         $this->assertCount(0, $data->periods);
@@ -60,8 +57,8 @@ class OpenriceHourDataTest extends TestCase
     public static function invalidPayloads(): array
     {
         return [
-            'non integer day of week' => [['dayOfWeek' => '1']],
-            'non integer weight' => [['weight' => '0']],
+            'out of range day of week' => [['dayOfWeek' => 8]],
+            'zero day of week' => [['dayOfWeek' => 0]],
             'non boolean is close' => [['isClose' => 'not boolean']],
             'non boolean is 24hr' => [['is24hr' => 'not boolean']],
             'incomplete period' => [['period1Start' => '09:00:00']],

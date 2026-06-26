@@ -82,6 +82,34 @@ class OpenriceRestaurantDataTest extends TestCase
         $this->assertNull($data->district);
     }
 
+    public function test_it_filters_out_non_base_schedule_hours(): void
+    {
+        $data = OpenriceRestaurantData::fromArray([
+            'poiId' => 101,
+            'name' => 'Test Restaurant',
+            'status' => 10,
+            'poiHours' => [
+                [
+                    'dayOfWeek' => 1,
+                    'weight' => 0,
+                    'period1Start' => '09:00:00',
+                    'period1End' => '22:00:00',
+                ],
+                [
+                    'dayOfWeek' => 0,
+                    'weight' => 1,
+                ],
+                [
+                    'dayOfWeek' => 1,
+                    'weight' => 2,
+                ],
+            ],
+        ]);
+
+        $this->assertCount(1, $data->hours);
+        $this->assertSame(1, $data->hours->first()->dayOfWeek);
+    }
+
     /**
      * @param  array<string, mixed>  $payload
      */

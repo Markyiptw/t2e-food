@@ -103,7 +103,6 @@ class ScrapeOpenriceRestaurants implements ShouldBeUnique, ShouldQueue
                         ->delete();
 
                     collect($restaurant['poiHours'] ?? [])
-                        ->filter(fn ($hour) => ($hour['weight'] ?? 0) === 0)
                         ->each(function ($hour) use ($model) {
                             $hourId = Hour::create([
                                 'restaurant_id' => $model->id,

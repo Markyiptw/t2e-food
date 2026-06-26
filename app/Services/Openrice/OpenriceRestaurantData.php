@@ -44,7 +44,22 @@ final readonly class OpenriceRestaurantData
             district: OpenriceDistrictData::fromArray($payload['district'] ?? null),
             location: OpenriceLocationData::fromCoordinates($payload['mapLatitude'] ?? null, $payload['mapLongitude'] ?? null),
             categories: collect($payload['categories'] ?? [])->map(fn (array $category): OpenriceCategoryData => OpenriceCategoryData::fromArray($category)),
-            hours: collect($payload['poiHours'] ?? [])->map(fn (array $hour): OpenriceHourData => OpenriceHourData::fromArray($hour)),
+            hours: collect($payload['poiHours'] ?? [])
+                ->filter(function (array $hour): bool {
+                    /**
+                     * Hours ``weight`` semantics (higher weight overrides lower):
+                     * - 0: base weekly schedule (dayOfWeek 1-7)
+                     * - 1: lunar-day schedule (dayOfWeek 0, ``lunarDay`` field)
+                     * - 2: week-of-month exception (dayOfWeek 1-7, ``weekOfMonth`` field)
+                     * - 4: public-holiday schedule (dayOfWeek 0, ``isHoliday`` or ``isHolidayEve`` flag)
+                     * - 5: date-range schedule (dayOfWeek 0, ``dateFrom``/``dateTo`` fields)
+                     *
+                     * Filtering to ``weight => 0`` restricts to the base weekly schedule only,
+                     * deliberately ignoring week-of-month and special-occasion overrides.
+                     */
+                    return ($hour['weight'] ?? 0) === 0;
+                })
+                ->map(fn (array $hour): OpenriceHourData => OpenriceHourData::fromArray($hour)),
         );
     }
 
@@ -72,7 +87,6 @@ final readonly class OpenriceRestaurantData
             'poiHours' => $this->hours
                 ->map(fn (OpenriceHourData $hour): array => [
                     'dayOfWeek' => $hour->dayOfWeek,
-                    'weight' => $hour->weight,
                     'isClose' => $hour->isClose,
                     'is24hr' => $hour->is24Hr,
                     ...$hour->periods

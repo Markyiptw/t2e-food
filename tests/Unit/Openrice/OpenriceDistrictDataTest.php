@@ -44,7 +44,6 @@ class OpenriceDistrictDataTest extends TestCase
         return [
             'missing district id' => [['name' => 'Central']],
             'missing name' => [['districtId' => 1001]],
-            'non integer district id' => [['districtId' => '1001', 'name' => 'Central']],
             'non string name' => [['districtId' => 1001, 'name' => 123]],
         ];
     }

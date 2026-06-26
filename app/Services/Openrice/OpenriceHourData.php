@@ -13,7 +13,6 @@ final readonly class OpenriceHourData
      */
     public function __construct(
         public int $dayOfWeek,
-        public int $weight,
         public bool $isClose,
         public bool $is24Hr,
         public Collection $periods,
@@ -25,15 +24,13 @@ final readonly class OpenriceHourData
     public static function fromArray(array $payload): self
     {
         Validator::make($payload, [
-            'dayOfWeek' => ['nullable', 'integer'],
-            'weight' => ['nullable', 'integer'],
-            'isClose' => ['nullable', 'boolean'],
-            'is24hr' => ['nullable', 'boolean'],
+            'dayOfWeek' => ['integer', 'between:1,7'],
+            'isClose' => ['boolean'],
+            'is24hr' => ['boolean'],
         ])->stopOnFirstFailure()->validate();
 
         return new self(
             dayOfWeek: $payload['dayOfWeek'] ?? 0,
-            weight: $payload['weight'] ?? 0,
             isClose: $payload['isClose'] ?? false,
             is24Hr: $payload['is24hr'] ?? false,
             periods: self::periodsFromArray($payload),

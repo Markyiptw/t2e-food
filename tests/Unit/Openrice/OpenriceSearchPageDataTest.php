@@ -51,7 +51,7 @@ class OpenriceSearchPageDataTest extends TestCase
             ]],
             'non integer count' => [[
                 'paginationResult' => [
-                    'count' => '12',
+                    'count' => 'abc',
                     'results' => [],
                 ],
             ]],
