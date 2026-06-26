@@ -28,17 +28,27 @@ opening hours, categories, district, status) in Postgres, and exposes:
 ## Local setup
 
 This project uses a Dev Container (built on Laravel Sail's `docker-compose.yml`)
-rather than the Sail CLI. Open the repository in VS Code and choose
-**Reopen in Container** when prompted; VS Code builds the `laravel.test`
-container (with Postgres, Redis, Typesense, Mailpit, and Selenium) and runs the
-post-create steps (`composer install`, `npm install`) for you.
+rather than the Sail CLI.
 
-Once inside the container, generate the app key and run migrations:
+Copy `.env.example` to `.env` **before** reopening in container —
+`docker-compose.yml` reads variables like `DB_PASSWORD` at compose-up time, so
+the Postgres service needs them present to initialize correctly:
 
 ```bash
 cp .env.example .env
+```
+
+Then open the repository in VS Code and choose **Reopen in Container**; VS Code
+builds the `laravel.test` container (with Postgres, Redis, Typesense, Mailpit,
+and Selenium) and runs the post-create steps (`composer install`, `npm install`)
+for you.
+
+Once inside the container, generate the app key, run migrations, and start Vite:
+
+```bash
 php artisan key:generate
 php artisan migrate
+npm run dev
 ```
 
 Then visit `http://localhost`.
