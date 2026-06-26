@@ -15,37 +15,33 @@ opening hours, categories, district, status) in Postgres, and exposes:
 - **Backend:** Laravel 13, PHP 8.5, Postgres 17
 - **Frontend:** Vite 6, Tailwind CSS v4, Alpine.js 3, htmx, Leaflet + markercluster
 - **Testing:** PHPUnit 12
-- **Dev environment:** Laravel Sail (Docker)
+- **Dev environment:** Dev Container (VS Code) on Laravel Sail's `docker-compose.yml`
 - **Deployment:** Kamal + Docker (serversideup/php FrankenPHP image)
 
 ## Requirements
 
-- PHP 8.5, Composer
-- Node.js 24 + npm
-- Docker (for Sail)
+- [Docker](https://www.docker.com/)
+- [VS Code](https://code.visualstudio.com/) with the
+  [Dev Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
+  extension
 
 ## Local setup
 
+This project uses a Dev Container (built on Laravel Sail's `docker-compose.yml`)
+rather than the Sail CLI. Open the repository in VS Code and choose
+**Reopen in Container** when prompted; VS Code builds the `laravel.test`
+container (with Postgres, Redis, Typesense, Mailpit, and Selenium) and runs the
+post-create steps (`composer install`, `npm install`) for you.
+
+Once inside the container, generate the app key and run migrations:
+
 ```bash
-composer install
-npm install
 cp .env.example .env
 php artisan key:generate
-
-# Bring up Sail (Postgres, the app, etc.)
-./vendor/bin/sail up -d
-./vendor/bin/sail artisan migrate
+php artisan migrate
 ```
 
 Then visit `http://localhost`.
-
-Alternatively, run the stack natively without Sail:
-
-```bash
-composer run dev
-```
-
-This starts `php artisan serve`, the queue worker, Pail logs, and Vite together.
 
 ## The scraper
 
