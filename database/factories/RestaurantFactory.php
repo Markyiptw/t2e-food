@@ -19,7 +19,6 @@ class RestaurantFactory extends Factory
             'name' => fake()->name(),
             'url' => fake()->optional()->url(),
             'status_id' => fn () => Status::active()->id,
-            'status_text' => null,
             'address' => fake()->optional()->streetAddress(),
             'district_id' => null,
         ];
@@ -29,7 +28,6 @@ class RestaurantFactory extends Factory
     {
         return $this->state(fn (array $attributes) => [
             'status_id' => Status::firstOrCreate(['code' => 4, 'text' => '已搬遷'])->id,
-            'status_text' => '已搬遷',
         ]);
     }
 

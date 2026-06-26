@@ -15,7 +15,7 @@ final class SyncOpenriceRestaurant
 {
     public function handle(OpenriceRestaurantData $data): Restaurant
     {
-        $status = $this->syncStatus($data);
+        $status = $this->syncStatus($data->status);
         $district = $this->syncDistrict($data->district);
         $model = $this->syncRestaurant($data, $status, $district);
 
@@ -26,11 +26,11 @@ final class SyncOpenriceRestaurant
         return $model;
     }
 
-    private function syncStatus(OpenriceRestaurantData $data): Status
+    private function syncStatus(OpenriceStatusData $status): Status
     {
         return Status::firstOrCreate([
-            'code' => $data->status,
-            'text' => $data->statusText,
+            'code' => $status->code,
+            'text' => $status->text,
         ]);
     }
 
@@ -54,7 +54,6 @@ final class SyncOpenriceRestaurant
                 'name' => $data->name,
                 'url' => $data->url,
                 'status_id' => $status->id,
-                'status_text' => $data->statusText,
                 'address' => $data->address,
                 'district_id' => $district?->id,
             ],

@@ -13,6 +13,7 @@ use App\Services\Openrice\OpenriceHourData;
 use App\Services\Openrice\OpenriceLocationData;
 use App\Services\Openrice\OpenricePeriodData;
 use App\Services\Openrice\OpenriceRestaurantData;
+use App\Services\Openrice\OpenriceStatusData;
 use App\Services\Openrice\SyncOpenriceRestaurant;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
 use Tests\TestCase;
@@ -33,7 +34,6 @@ class SyncOpenriceRestaurantTest extends TestCase
         $this->assertSame('Test Restaurant', $restaurant->name);
         $this->assertSame('https://example.test/restaurant', $restaurant->url);
         $this->assertSame('1 Test Street', $restaurant->address);
-        $this->assertSame('Closed for renovation', $restaurant->status_text);
 
         $this->assertDatabaseHas('statuses', [
             'code' => 10,
@@ -87,8 +87,7 @@ class SyncOpenriceRestaurantTest extends TestCase
             poiId: 101,
             name: 'New Name',
             url: 'https://example.test/new',
-            status: 10,
-            statusText: null,
+            status: new OpenriceStatusData(10, null),
             address: 'New Address',
             district: null,
             location: null,
@@ -110,8 +109,7 @@ class SyncOpenriceRestaurantTest extends TestCase
             poiId: 101,
             name: 'Test Restaurant',
             url: null,
-            status: 10,
-            statusText: null,
+            status: new OpenriceStatusData(10, null),
             address: null,
             district: new OpenriceDistrictData(externalId: 500, name: 'Mong Kok'),
             location: null,
@@ -170,8 +168,7 @@ class SyncOpenriceRestaurantTest extends TestCase
             poiId: 101,
             name: 'Test Restaurant',
             url: null,
-            status: 10,
-            statusText: null,
+            status: new OpenriceStatusData(10, null),
             address: null,
             district: null,
             location: null,
@@ -211,8 +208,7 @@ class SyncOpenriceRestaurantTest extends TestCase
             poiId: 101,
             name: 'Test Restaurant',
             url: null,
-            status: 10,
-            statusText: null,
+            status: new OpenriceStatusData(10, null),
             address: null,
             district: null,
             location: null,
@@ -253,8 +249,7 @@ class SyncOpenriceRestaurantTest extends TestCase
             poiId: 101,
             name: 'Test Restaurant',
             url: null,
-            status: 10,
-            statusText: null,
+            status: new OpenriceStatusData(10, null),
             address: null,
             district: null,
             location: null,
@@ -286,8 +281,7 @@ class SyncOpenriceRestaurantTest extends TestCase
             poiId: 101,
             name: 'Test Restaurant',
             url: 'https://example.test/restaurant',
-            status: 10,
-            statusText: 'Closed for renovation',
+            status: new OpenriceStatusData(10, 'Closed for renovation'),
             address: '1 Test Street',
             district: new OpenriceDistrictData(externalId: 1001, name: 'Central'),
             location: new OpenriceLocationData(22.2819, 114.1589),
@@ -315,8 +309,7 @@ class SyncOpenriceRestaurantTest extends TestCase
             poiId: 101,
             name: 'Test Restaurant',
             url: null,
-            status: 10,
-            statusText: null,
+            status: new OpenriceStatusData(10, null),
             address: null,
             district: null,
             location: $location,

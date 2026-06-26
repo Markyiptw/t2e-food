@@ -44,7 +44,7 @@ class OpenriceRestaurantDataTest extends TestCase
 
         $this->assertSame(101, $data->poiId);
         $this->assertSame('Test Restaurant', $data->name);
-        $this->assertSame(10, $data->status);
+        $this->assertSame(10, $data->status->code);
         $this->assertSame('Central', $data->district?->name);
         $this->assertSame(22.2819, $data->location?->latitude);
         $this->assertSame(['Japanese', 'Sushi'], $data->categories->pluck('name')->all());
@@ -62,7 +62,7 @@ class OpenriceRestaurantDataTest extends TestCase
         ]);
 
         $this->assertNull($data->url);
-        $this->assertNull($data->statusText);
+        $this->assertNull($data->status->text);
         $this->assertNull($data->address);
         $this->assertNull($data->district);
         $this->assertNull($data->location);

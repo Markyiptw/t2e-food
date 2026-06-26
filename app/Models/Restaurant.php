@@ -22,7 +22,6 @@ class Restaurant extends Model
         'name',
         'url',
         'status_id',
-        'status_text',
         'address',
         'district_id',
     ];
@@ -59,7 +58,7 @@ class Restaurant extends Model
 
     public function scopeActive(Builder $query): void
     {
-        $query->where('status_id', Status::active()->id)->whereNull('status_text');
+        $query->where('status_id', Status::active()->id);
     }
 
     public function scopeHasLocation(Builder $query): void
