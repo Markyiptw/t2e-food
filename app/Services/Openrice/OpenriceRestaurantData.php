@@ -64,43 +64,6 @@ final readonly class OpenriceRestaurantData
     }
 
     /**
-     * @return array<string, mixed>
-     */
-    public function toArray(): array
-    {
-        return [
-            'poiId' => $this->poiId,
-            'name' => $this->name,
-            'shortenUrl' => $this->url,
-            'status' => $this->status,
-            'statusText' => $this->statusText,
-            'address' => $this->address,
-            'district' => $this->district ? [
-                'districtId' => $this->district->externalId,
-                'name' => $this->district->name,
-            ] : null,
-            'mapLatitude' => $this->location?->latitude,
-            'mapLongitude' => $this->location?->longitude,
-            'categories' => $this->categories
-                ->map(fn (OpenriceCategoryData $category): array => ['name' => $category->name])
-                ->all(),
-            'poiHours' => $this->hours
-                ->map(fn (OpenriceHourData $hour): array => [
-                    'dayOfWeek' => $hour->dayOfWeek,
-                    'isClose' => $hour->isClose,
-                    'is24hr' => $hour->is24Hr,
-                    ...$hour->periods
-                        ->flatMap(fn (OpenricePeriodData $period): array => [
-                            "period{$period->position}Start" => $period->start,
-                            "period{$period->position}End" => $period->end,
-                        ])
-                        ->all(),
-                ])
-                ->all(),
-        ];
-    }
-
-    /**
      * @return array<string, list<string>>
      */
     private static function rules(): array

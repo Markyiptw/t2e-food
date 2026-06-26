@@ -6,6 +6,7 @@ use App\Jobs\ScrapeOpenriceRestaurants;
 use App\Models\Hour;
 use App\Models\Restaurant;
 use App\Models\Status;
+use App\Services\Openrice\SyncOpenriceRestaurant;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
 use Illuminate\Http\Client\Factory;
 use Illuminate\Http\Client\RequestException;
@@ -71,7 +72,7 @@ class ScrapeOpenriceRestaurantsJobTest extends TestCase
             ]),
         ]);
 
-        (new ScrapeOpenriceRestaurants)->handle();
+        (new ScrapeOpenriceRestaurants)->handle(app(SyncOpenriceRestaurant::class));
 
         $this->assertDatabaseCount('restaurants', 3);
 
@@ -159,7 +160,7 @@ class ScrapeOpenriceRestaurantsJobTest extends TestCase
             'updated_at' => now(),
         ]);
 
-        (new ScrapeOpenriceRestaurants)->handle();
+        (new ScrapeOpenriceRestaurants)->handle(app(SyncOpenriceRestaurant::class));
 
         $this->assertDatabaseCount('restaurants', 1);
 
@@ -222,12 +223,12 @@ class ScrapeOpenriceRestaurantsJobTest extends TestCase
                 ]),
         ]);
 
-        (new ScrapeOpenriceRestaurants)->handle();
+        (new ScrapeOpenriceRestaurants)->handle(app(SyncOpenriceRestaurant::class));
 
         $this->assertDatabaseCount('hours', 1);
         $this->assertDatabaseCount('periods', 1);
 
-        (new ScrapeOpenriceRestaurants)->handle();
+        (new ScrapeOpenriceRestaurants)->handle(app(SyncOpenriceRestaurant::class));
 
         $this->assertDatabaseCount('hours', 1);
         $this->assertDatabaseCount('periods', 1);
@@ -237,7 +238,6 @@ class ScrapeOpenriceRestaurantsJobTest extends TestCase
             'id' => $hour->id,
             'day_of_week' => 3,
         ]);
-
         $this->assertDatabaseHas('periods', [
             'hour_id' => $hour->id,
             'position' => 1,
@@ -260,7 +260,7 @@ class ScrapeOpenriceRestaurantsJobTest extends TestCase
 
         $this->expectException(RequestException::class);
 
-        (new ScrapeOpenriceRestaurants)->handle();
+        (new ScrapeOpenriceRestaurants)->handle(app(SyncOpenriceRestaurant::class));
     }
 
     /**
