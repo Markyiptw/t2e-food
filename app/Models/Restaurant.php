@@ -58,7 +58,7 @@ class Restaurant extends Model
 
     public function scopeActive(Builder $query): void
     {
-        $query->where('status_id', Status::active()->id);
+        $query->whereBelongsTo(Status::firstOrCreate(['code' => 10, 'text' => null]));
     }
 
     public function scopeHasLocation(Builder $query): void

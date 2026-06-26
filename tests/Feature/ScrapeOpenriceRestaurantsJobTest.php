@@ -149,7 +149,7 @@ class ScrapeOpenriceRestaurantsJobTest extends TestCase
             ]),
         ]);
 
-        $statusId = Status::active()->id;
+        $statusId = Status::firstOrCreate(['code' => 10, 'text' => null])->id;
 
         DB::table('restaurants')->insert([
             'poi_id' => 101,

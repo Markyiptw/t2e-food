@@ -18,7 +18,7 @@ class RestaurantFactory extends Factory
             'poi_id' => fake()->unique()->randomNumber(6),
             'name' => fake()->name(),
             'url' => fake()->optional()->url(),
-            'status_id' => fn () => Status::active()->id,
+            'status_id' => fn () => Status::firstOrCreate(['code' => 10, 'text' => null])->id,
             'address' => fake()->optional()->streetAddress(),
             'district_id' => null,
         ];

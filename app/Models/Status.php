@@ -31,9 +31,4 @@ class Status extends Model
     {
         return $this->hasMany(Restaurant::class);
     }
-
-    public static function active(): self
-    {
-        return static::firstOrCreate(['code' => 10, 'text' => null]);
-    }
 }
