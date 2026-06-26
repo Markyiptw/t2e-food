@@ -73,8 +73,7 @@ committed. Populate `.kamal/secrets` on your deploy machine before deploying.
 
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md). Please report security vulnerabilities
-privately as described in [SECURITY.md](SECURITY.md).
+See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## License
 
