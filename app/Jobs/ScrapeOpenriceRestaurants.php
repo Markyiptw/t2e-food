@@ -9,6 +9,7 @@ use App\Models\Location;
 use App\Models\Period;
 use App\Models\Restaurant;
 use App\Models\Status;
+use App\Services\Openrice\OpenriceSearchPageData;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
@@ -46,10 +47,12 @@ class ScrapeOpenriceRestaurants implements ShouldBeUnique, ShouldQueue
             ->throw()
             ->json();
 
-        $restaurants = collect($response['paginationResult']['results']);
+        $searchPage = OpenriceSearchPageData::fromArray($response);
 
-        DB::transaction(function () use ($restaurants) {
-            $restaurants
+        $results = $searchPage->results->map->toArray();
+
+        DB::transaction(function () use ($results) {
+            $results
                 ->each(function (array $restaurant) {
                     $status = Status::firstOrCreate([
                         'code' => $restaurant['status'],
@@ -123,7 +126,7 @@ class ScrapeOpenriceRestaurants implements ShouldBeUnique, ShouldQueue
                 });
         });
 
-        if ($response['paginationResult']['count'] > $queryParameters['startAt'] + $restaurants->count()) {
+        if ($searchPage->count > $queryParameters['startAt'] + $results->count()) {
             Cache::put(
                 'scrape_openrice_restaurants.query_parameters',
                 [
