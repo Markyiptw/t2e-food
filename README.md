@@ -1,61 +1,81 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# t2e-food
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+An OpenRice restaurant map and CSV exporter built with Laravel. It periodically
+scrapes the OpenRice public API, stores restaurants (name, address, coordinates,
+opening hours, categories, district, status) in Postgres, and exposes:
 
-## About Laravel
+- **`/map`** — a Leaflet map with marker clustering. Markers are cursor-paginated
+  (1000 per page) and can be filtered to restaurants open at a given time for a
+  given duration.
+- **`/export`** — a streaming CSV export (name, district, address, coordinates,
+  opening hours, categories), filterable to restaurants open within a time window.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Tech stack
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- **Backend:** Laravel 13, PHP 8.5, Postgres 17
+- **Frontend:** Vite 6, Tailwind CSS v4, Alpine.js 3, htmx, Leaflet + markercluster
+- **Testing:** PHPUnit 12
+- **Dev environment:** Laravel Sail (Docker)
+- **Deployment:** Kamal + Docker (serversideup/php FrankenPHP image)
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Requirements
 
-## Learning Laravel
+- PHP 8.5, Composer
+- Node.js 24 + npm
+- Docker (for Sail)
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## Local setup
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+```bash
+composer install
+npm install
+cp .env.example .env
+php artisan key:generate
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+# Bring up Sail (Postgres, the app, etc.)
+./vendor/bin/sail up -d
+./vendor/bin/sail artisan migrate
+```
 
-## Laravel Sponsors
+Then visit `http://localhost`.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+Alternatively, run the stack natively without Sail:
 
-### Premium Partners
+```bash
+composer run dev
+```
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+This starts `php artisan serve`, the queue worker, Pail logs, and Vite together.
+
+## The scraper
+
+`App\Jobs\ScrapeOpenriceRestaurants` is a unique queued job that paginates the
+OpenRice API district by district and syncs each restaurant via
+`App\Services\Openrice\SyncOpenriceRestaurant`. Pagination state is kept in the
+cache under `scrape_openrice_restaurants.query_parameters`. Dispatch it through
+your queue worker (`php artisan queue:work`).
+
+> **Disclaimer:** This project queries OpenRice's public web API. It is provided
+> for educational purposes only. Scraping may be subject to OpenRice's Terms of
+> Service and applicable database-rights / copyright law in your jurisdiction.
+> You are responsible for ensuring your use complies with those terms and the law.
+> The authors of this project accept no liability for how it is used.
+
+## Deployment
+
+The app is deployed with [Kamal](https://kamal-deploy.org/) to a single host
+running the web container, a queue worker, and the scheduler, with a Postgres
+accessory and kamal-proxy (TLS) in front. See `config/deploy.yml`.
+
+Secrets (`APP_KEY`, `DB_PASSWORD`, `POSTHOG_API_KEY`) are loaded from
+`.kamal/secrets`, which reads from your environment — no raw credentials are
+committed. Populate `.kamal/secrets` on your deploy machine before deploying.
 
 ## Contributing
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+See [CONTRIBUTING.md](CONTRIBUTING.md). Please report security vulnerabilities
+privately as described in [SECURITY.md](SECURITY.md).
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+t2e-food is open-sourced software licensed under the [MIT license](LICENSE).

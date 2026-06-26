@@ -1,11 +1,15 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "laravel/laravel",
+    "name": "markyiptw/t2e-food",
     "type": "project",
-    "description": "The skeleton application for the Laravel framework.",
+    "description": "An OpenRice restaurant map and CSV exporter built with Laravel.",
     "keywords": [
         "laravel",
-        "framework"
+        "openrice",
+        "scraper",
+        "restaurants",
+        "map",
+        "exporter"
     ],
     "license": "MIT",
     "require": {
