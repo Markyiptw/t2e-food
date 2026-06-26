@@ -28,7 +28,7 @@ php artisan test --compact --filter=testName
 ## Code style
 
 - **PHP:** formatted with [Laravel Pint](https://github.com/laravel/pint). Run
-  `vendor/bin/pint` before committing. CI expects Pint-clean code.
+  `vendor/bin/pint` before committing.
 - **Blade / frontend:** formatted with Prettier (using
   `prettier-plugin-blade` and `prettier-plugin-tailwindcss`).
 
