@@ -1,4 +1,4 @@
-@props(['title' => 'Time 2 Eat'])
+@props(['title' => 'Time 2 Eat', 'description' => 'Find Hong Kong kitchens still serving food. Night shifts, late hangs, early mornings — whatever keeps you out.'])
 
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
@@ -10,12 +10,12 @@
 
         <meta
             name="description"
-            content="Food? At an hour like this? Find Hong Kong kitchens that are actually open long enough for your meal."
+            content="{{ $description }}"
         />
         <meta property="og:title" content="{{ $title ?? 'Time 2 Eat' }}" />
         <meta
             property="og:description"
-            content="Food? At an hour like this? Find Hong Kong kitchens that are actually open long enough for your meal."
+            content="{{ $description }}"
         />
         <meta property="og:type" content="website" />
         <meta name="twitter:card" content="summary" />
