@@ -22,16 +22,11 @@ if (mapContainer && window.restaurantMarkersEndpoint) {
         maxClusterRadius: 50,
     });
     const bounds = [];
-    const markerCount = document.createElement("div");
+    const markerCount = document.getElementById("marker-count");
     let count = 0;
     let fittedInitialBounds = false;
 
     map.addLayer(markers);
-
-    markerCount.className =
-        "fixed left-4 bottom-4 z-[1000] rounded bg-slate-800 px-3 py-1.5 text-xs font-medium text-white shadow";
-    markerCount.textContent = "Loading restaurants...";
-    document.body.appendChild(markerCount);
 
     loadMarkers(window.restaurantMarkersEndpoint, true);
 

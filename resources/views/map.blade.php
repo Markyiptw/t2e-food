@@ -20,7 +20,7 @@
             <form
                 method="GET"
                 action="/map"
-                class="absolute top-4 left-4 z-[1000] w-72 rounded border border-slate-200 bg-white p-4 shadow-sm"
+                class="absolute top-4 right-4 z-[1000] w-72 rounded border border-slate-200 bg-white p-4 shadow-sm"
             >
                 <h2 class="mb-3 text-sm font-semibold text-slate-700">
                     Filter
@@ -56,21 +56,27 @@
                     />
                 </div>
 
-                <button
-                    type="submit"
-                    class="w-full cursor-pointer rounded bg-slate-800 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-700"
-                >
-                    Update
-                </button>
-
-                @if ($start !== null || $duration !== null)
-                    <a
-                        href="/map"
-                        class="mt-2 block w-full rounded border border-slate-200 py-2 text-center text-sm text-slate-600 hover:bg-slate-50"
+                <div class="flex gap-2">
+                    <button
+                        type="submit"
+                        class="flex-1 cursor-pointer rounded bg-slate-800 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-700"
                     >
-                        Clear
-                    </a>
-                @endif
+                        Update
+                    </button>
+
+                    @if ($start !== null || $duration !== null)
+                        <a
+                            href="/map"
+                            class="flex-1 rounded border border-slate-200 py-2 text-center text-sm text-slate-600 hover:bg-slate-50"
+                        >
+                            Clear
+                        </a>
+                    @endif
+                </div>
+
+                <div id="marker-count" class="mt-3 text-xs text-slate-500">
+                    Loading restaurants...
+                </div>
             </form>
         </div>
     </div>
