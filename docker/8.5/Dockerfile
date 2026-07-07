@@ -80,6 +80,8 @@ RUN apt-get update \
     && npm install -g pnpm \
     && npm install -g bun \
     && npx playwright install-deps \
+    && npm i -g agent-browser \
+    && npm i -g opencode-ai \
     && gem install kamal \
     && apt-get -y autoremove \
     && apt-get clean \
