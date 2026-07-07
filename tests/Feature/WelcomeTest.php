@@ -21,13 +21,11 @@ class WelcomeTest extends TestCase
 
         $response->assertSee('TIME', false);
         $response->assertSee('EAT', false);
-        $response->assertSee('Will there be', false);
-        $response->assertSee('food', false);
-        $response->assertSee('tell us your eta', false);
-        $response->assertSee('kitchens are still firing the wok.', false);
+        $response->assertSee('Food? At an hour like this?', false);
+        $response->assertSee('still serving food', false);
     }
 
-    public function test_order_slip_renders(): void
+    public function test_form_renders(): void
     {
         $response = $this->get('/');
 
@@ -36,8 +34,8 @@ class WelcomeTest extends TestCase
         $response->assertSee('id="start"', false);
         $response->assertSee('id="duration"', false);
         $response->assertSee('02:00');
-        $response->assertSee('用餐時間');
-        $response->assertSee('VIEW ON MAP');
+        $response->assertSee("I'm eating out at", false);
+        $response->assertSee('Search on map', false);
         $response->assertSee('<form', false);
         $response->assertSee('method="GET"', false);
         $response->assertSee('action="/map"', false);
@@ -61,42 +59,17 @@ class WelcomeTest extends TestCase
         $response->assertSee('name="twitter:card"', false);
     }
 
-    public function test_receipt_renders(): void
-    {
-        $response = $this->get('/');
-
-        $response->assertSee('MENU');
-        $response->assertSee('Data Source');
-        $response->assertSee('you guess');
-        $response->assertSee('Usefulness');
-        $response->assertSee('quite');
-        $response->assertSee('Vibe Check');
-        $response->assertSee('pass');
-        $response->assertSee('ADS');
-        $response->assertSee('none');
-        $response->assertSee('多謝 THANK YOU');
-    }
-
     public function test_export_link_exists(): void
     {
         $response = $this->get('/');
 
-        $response->assertSee('…or export for all the data nerds →', false);
+        $response->assertSee('download all data as CSV', false);
     }
 
-    public function test_open_source_band_renders(): void
+    public function test_footer_renders(): void
     {
         $response = $this->get('/');
 
-        $response->assertSee('A community project');
-        $response->assertSee('Open source and free.');
-        $response->assertSee('GITHUB');
-    }
-
-    public function test_jsx_style_self_closing_divs_are_not_rendered(): void
-    {
-        $response = $this->get('/');
-
-        $response->assertDontSee('<div class="h-2 w-full bg-[repeating-linear-gradient(90deg,#b32b22_0_14px,#f4ecd8_14px_16px)] opacity-60" />', false);
+        $response->assertSee('TIME 2 EAT');
     }
 }

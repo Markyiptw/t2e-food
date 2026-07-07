@@ -44,6 +44,7 @@ env:
     DB_HOST: t2e-food-db
     DB_USERNAME: postgres
     DB_DATABASE: postgres
+    APP_NAME: "Time 2 Eat"
     AUTORUN_ENABLED: true
     LOG_CHANNEL: stdout
     PHP_OPCACHE_ENABLE: "1"

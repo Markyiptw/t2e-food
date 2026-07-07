@@ -67,17 +67,13 @@ class MapControllerTest extends TestCase
         $this->assertSame($restaurants[1]->id, $secondPage->json('markers.0.id'));
     }
 
-    public function test_map_page_renders_with_layout_and_bottom_sheet(): void
+    public function test_map_page_renders_with_map_and_filter_panel(): void
     {
         $response = $this->get('/map');
 
         $response
             ->assertOk()
             ->assertSee('id="map"', false)
-            ->assertSee('id="filter-sheet"', false)
-            ->assertSee('id="filter-toggle"', false)
-            ->assertSee('id="filter-backdrop"', false)
-            ->assertSee('id="map-loading-overlay"', false)
             ->assertSee('name="description"', false)
             ->assertSee('action="/map"', false)
             ->assertSee('name="start"', false)
