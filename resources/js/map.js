@@ -6,7 +6,7 @@ import "leaflet.markercluster/dist/MarkerCluster.Default.css";
 const mapContainer = document.getElementById("map");
 
 if (mapContainer && window.restaurantMarkersEndpoint) {
-    const map = L.map("map").setView([22.3193, 114.1694], 12);
+    const map = L.map("map", { attributionControl: false }).setView([22.3193, 114.1694], 12);
 
     L.tileLayer(
         "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
@@ -17,6 +17,23 @@ if (mapContainer && window.restaurantMarkersEndpoint) {
             maxZoom: 20,
         }
     ).addTo(map);
+
+    const filterForm = document.getElementById("filter-form");
+    const filterExpand = document.getElementById("filter-expand");
+    const filterCollapse = document.getElementById("filter-collapse");
+
+    function hideFilterForm() {
+        filterForm.classList.add("-translate-y-full");
+        filterExpand.classList.remove("hidden");
+    }
+
+    function showFilterForm() {
+        filterForm.classList.remove("-translate-y-full");
+        filterExpand.classList.add("hidden");
+    }
+
+    filterCollapse.addEventListener("click", hideFilterForm);
+    filterExpand.addEventListener("click", showFilterForm);
 
     const markers = L.markerClusterGroup({
         maxClusterRadius: 50,
@@ -29,6 +46,9 @@ if (mapContainer && window.restaurantMarkersEndpoint) {
     map.addLayer(markers);
 
     loadMarkers(window.restaurantMarkersEndpoint, true);
+
+    mapContainer.addEventListener("touchstart", hideFilterForm);
+    mapContainer.addEventListener("mousedown", hideFilterForm);
 
     async function loadMarkers(url, isInitialPage = false) {
         if (!url) {
@@ -73,12 +93,12 @@ if (mapContainer && window.restaurantMarkersEndpoint) {
             bounds.push(latLng);
             count += 1;
 
-            markers.addLayer(
-                L.marker(latLng).bindPopup(
-                    `<strong>${escapeHtml(r.name)}</strong><br>${escapeHtml(r.address)}` +
-                        (r.url ? `<br><a href="${escapeHtml(r.url)}" target="_blank" rel="noopener noreferrer">More info</a>` : '')
-                )
+            const marker = L.marker(latLng).bindPopup(
+                `<strong>${escapeHtml(r.name)}</strong><br>${escapeHtml(r.address)}` +
+                    (r.url ? `<br><a href="${escapeHtml(r.url)}" target="_blank" rel="noopener noreferrer">More info</a>` : '')
             );
+
+            markers.addLayer(marker);
         });
 
         if (!fittedInitialBounds && bounds.length > 1) {
