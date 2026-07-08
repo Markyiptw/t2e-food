@@ -11,3 +11,42 @@
         display: none;
     }
 }
+
+.hero-slide {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    opacity: 0;
+    animation: heroFade 64s infinite;
+    will-change: opacity;
+}
+
+@keyframes heroFade {
+    0% {
+        opacity: 0;
+    }
+    2% {
+        opacity: 1;
+    }
+    12.5% {
+        opacity: 1;
+    }
+    14.5% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .hero-slide {
+        animation: none;
+        opacity: 0;
+    }
+
+    .hero-slide:first-child {
+        opacity: 1;
+    }
+}

@@ -10,76 +10,88 @@
         </header>
 
         {{-- Hero --}}
-        <section class="mx-auto max-w-5xl px-6 pt-10 pb-16">
-            <div class="max-w-xl">
-                <h1 class="text-4xl font-bold tracking-tight text-slate-900">
-                    Food? At an hour like this?
-                </h1>
-                <p class="mt-4 text-lg leading-relaxed text-slate-600">
-                    Night shifts, late hangs, early mornings — whatever keeps
-                    you out, find somewhere in Hong Kong still serving food.
-                </p>
+        <section
+            class="relative isolate flex min-h-[70vh] items-center overflow-hidden"
+        >
+            <div
+                id="hero-slideshow"
+                class="absolute inset-0 -z-10 bg-slate-900"
+                aria-hidden="true"
+            ></div>
+            <div
+                class="absolute inset-0 -z-10 bg-gradient-to-br from-slate-900/70 via-slate-900/40 to-transparent"
+                aria-hidden="true"
+            ></div>
 
-                <form method="GET" action="/map" class="mt-8">
-                    <div
-                        class="flex flex-wrap items-baseline gap-x-2 gap-y-1.5"
-                    >
-                        <label
-                            for="start"
-                            class="text-sm font-medium text-slate-700"
-                        >
-                            I'm eating out at
-                        </label>
-                        <select
-                            id="start"
-                            name="start"
-                            class="rounded border-slate-300 text-slate-800 shadow-sm focus:border-slate-500 focus:ring-slate-500"
-                        >
-                            <option value="02:00" selected>02:00</option>
-                            <option value="05:00">05:00</option>
-                            <option value="09:00">09:00</option>
-                        </select>
-                        <label
-                            for="duration"
-                            class="text-sm font-medium text-slate-700"
-                        >
-                            for
-                        </label>
-                        <input
-                            id="duration"
-                            type="number"
-                            name="duration"
-                            value="15"
-                            min="0"
-                            step="1"
-                            class="w-16 rounded border-slate-300 text-slate-800 shadow-sm focus:border-slate-500 focus:ring-slate-500"
-                        />
-                        <span class="text-sm text-slate-500">minutes</span>
-                    </div>
+            <div class="mx-auto w-full max-w-5xl px-6 py-20">
+                <div class="max-w-xl">
+                    <h1 class="text-4xl font-bold tracking-tight text-white">
+                        Food? At an hour like this?
+                    </h1>
+                    <p class="mt-4 text-lg leading-relaxed text-slate-100">
+                        Night shifts, late hangs, early mornings — whatever keeps
+                        you out, find somewhere in Hong Kong still serving food.
+                    </p>
 
-                    <button
-                        type="submit"
-                        class="mt-6 inline-flex cursor-pointer items-center gap-2 rounded bg-slate-800 px-6 py-2.5 text-sm font-semibold text-white hover:bg-slate-700"
-                    >
-                        Search on map
-                    </button>
-                </form>
-            </div>
-        </section>
+                    <form method="GET" action="/map" class="mt-8">
+                        <div
+                            class="flex flex-wrap items-baseline gap-x-2 gap-y-1.5"
+                        >
+                            <label
+                                for="start"
+                                class="text-sm font-medium text-slate-700"
+                            >
+                                I'm eating out at
+                            </label>
+                            <select
+                                id="start"
+                                name="start"
+                                class="rounded border-slate-300 text-slate-800 shadow-sm focus:border-slate-500 focus:ring-slate-500"
+                            >
+                                <option value="02:00" selected>02:00</option>
+                                <option value="05:00">05:00</option>
+                                <option value="09:00">09:00</option>
+                            </select>
+                            <label
+                                for="duration"
+                                class="text-sm font-medium text-slate-700"
+                            >
+                                for
+                            </label>
+                            <input
+                                id="duration"
+                                type="number"
+                                name="duration"
+                                value="15"
+                                min="0"
+                                step="1"
+                                class="w-16 rounded border-slate-300 text-slate-800 shadow-sm focus:border-slate-500 focus:ring-slate-500"
+                            />
+                            <span class="text-sm text-slate-500">minutes</span>
+                        </div>
 
-        {{-- Bridge + Map --}}
-        <section class="mx-auto max-w-5xl px-6 pt-4 pb-10">
-            <div class="max-w-xl">
-                <p class="leading-relaxed text-slate-600">
-                    Nothing fancy — no bookings, no reviews, no ads. Just what's
-                    open, and when. The most intuitive way to browse
-                    restaurants: pinpoint where you'll be, and what's open
-                    around that hour.
-                    <a href="/map" class="underline hover:text-slate-800">
-                        See for yourself
-                    </a>
-                    .
-                </p>
+                        <button
+                            type="submit"
+                            class="mt-6 inline-flex cursor-pointer items-center gap-2 rounded bg-slate-800 px-6 py-2.5 text-sm font-semibold text-white hover:bg-slate-700"
+                        >
+                            Search on map
+                        </button>
+                    </form>
+
+                    <p class="mt-10 leading-relaxed text-slate-100">
+                        Nothing fancy — no bookings, no reviews, no ads. Just what's
+                        open, and when. The most intuitive way to browse
+                        restaurants: pinpoint where you'll be, and what's open
+                        around that hour.
+                        <a
+                            href="/map"
+                            class="underline hover:text-white"
+                        >
+                            See for yourself
+                        </a>
+                        .
+                    </p>
+                </div>
             </div>
         </section>
 
