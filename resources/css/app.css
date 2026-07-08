@@ -6,6 +6,15 @@
 @source '../**/*.blade.php';
 @source '../**/*.js';
 
+@theme {
+    --color-ink: #171412;
+    --color-charcoal: #292522;
+    --color-warm-white: #faf6f1;
+    --color-ember: #f59e0b;
+    --color-ember-dark: #d97706;
+    --color-clay: #b45309;
+}
+
 @media (max-width: 768px) {
     .leaflet-control-zoom {
         display: none;
