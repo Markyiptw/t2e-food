@@ -107,6 +107,8 @@ RUN chmod +x /usr/local/bin/start-container
 RUN mkdir -p /home/sail/.local/share/opencode
 RUN chown -R sail:sail /home/sail/.local/share/opencode
 
+RUN agent-browser install --with-deps
+
 EXPOSE 80/tcp
 
 ENTRYPOINT ["start-container"]
