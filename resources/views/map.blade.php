@@ -1,21 +1,11 @@
 <x-layout title="Time 2 Eat — Map" description="Interactive map of Hong Kong restaurants. Filter by start time and meal duration to find what's open when you need it.">
-    <div class="flex h-screen flex-col">
-        {{-- Header --}}
-        <header class="relative border-b border-slate-200 bg-white">
-            <div class="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
-                <a href="/" class="text-lg font-bold tracking-wide text-slate-800">
-                    TIME 2 EAT
-                </a>
-                <div class="flex items-center gap-4 text-sm">
-                    <a href="/" class="text-slate-500 underline hover:text-slate-700">
-                        Back
-                    </a>
-                </div>
-            </div>
-            <div class="mx-auto max-w-5xl px-6 pb-2 text-xs text-slate-400">
+    <div class="flex flex-1 flex-col">
+        {{-- Map attribution --}}
+        <div class="flex-none border-b border-slate-200">
+            <div class="mx-auto max-w-5xl px-6 py-2 text-xs text-slate-400">
                 © OpenStreetMap contributors © CARTO
             </div>
-        </header>
+        </div>
 
         {{-- Map container --}}
         <div class="relative flex-1 overflow-hidden">

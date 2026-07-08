@@ -24,7 +24,31 @@
             @vite(['resources/css/app.css', 'resources/js/app.js'])
         @endif
     </head>
-    <body class="min-h-screen bg-white font-sans text-slate-800 antialiased">
-        {{ $slot }}
+    <body class="flex h-screen flex-col overflow-hidden bg-white font-sans text-slate-800 antialiased">
+        <header class="flex-none border-b border-slate-200 bg-white">
+            <div class="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
+                <a href="/" class="text-lg font-bold tracking-wide text-slate-800">
+                    TIME 2 EAT
+                </a>
+                <nav class="flex items-center gap-6 text-sm">
+                    <a
+                        href="/map"
+                        @class(['underline' => request()->routeIs('map'), 'text-slate-900' => request()->routeIs('map'), 'text-slate-500' => ! request()->routeIs('map'), 'hover:text-slate-700' => ! request()->routeIs('map')])
+                    >
+                        Map
+                    </a>
+                    <a
+                        href="/export"
+                        @class(['underline' => request()->is('export'), 'text-slate-900' => request()->is('export'), 'text-slate-500' => ! request()->is('export'), 'hover:text-slate-700' => ! request()->is('export')])
+                    >
+                        Export
+                    </a>
+                </nav>
+            </div>
+        </header>
+
+        <div class="flex min-h-0 flex-1 flex-col overflow-y-auto">
+            {{ $slot }}
+        </div>
     </body>
 </html>
