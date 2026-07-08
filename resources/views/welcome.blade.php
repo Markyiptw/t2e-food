@@ -67,44 +67,54 @@
             </div>
         </section>
 
+        {{-- Bridge + Map --}}
+        <section class="mx-auto max-w-5xl px-6 pt-4 pb-10">
+            <div class="max-w-xl">
+                <p class="leading-relaxed text-slate-600">
+                    Nothing fancy — no bookings, no reviews, no ads. Just what's
+                    open, and when. The most intuitive way to browse
+                    restaurants: pinpoint where you'll be, and what's open
+                    around that hour.
+                    <a href="/map" class="underline hover:text-slate-800">
+                        See for yourself
+                    </a>
+                    .
+                </p>
+            </div>
+        </section>
+
         {{-- Features --}}
-        <section class="mx-auto max-w-5xl px-6 py-16">
-            <div class="grid gap-12 md:grid-cols-2">
-                <div>
-                    <h2 class="text-xl font-bold tracking-tight text-slate-900">
-                        Map
-                    </h2>
-                    <p class="mt-3 leading-relaxed text-slate-600">
-                        Interactive way to browse restaurants.
-                    </p>
-                    <a
-                        href="/map"
-                        class="mt-4 inline-block text-sm font-medium text-slate-800 underline hover:text-slate-600"
-                    >
-                        Open map
-                    </a>
-                </div>
-                <div>
-                    <h2 class="text-xl font-bold tracking-tight text-slate-900">
-                        Export
-                    </h2>
-                    <p class="mt-3 leading-relaxed text-slate-600">
-                        Download the full dataset as a CSV.
-                    </p>
-                    <a
-                        href="/export"
-                        class="mt-4 inline-block text-sm font-medium text-slate-800 underline hover:text-slate-600"
-                    >
-                        Export data
-                    </a>
-                </div>
-                <div>
-                    <h2 class="text-xl font-bold tracking-tight text-slate-900">
-                        Up to Date
-                    </h2>
-                    <p class="mt-3 leading-relaxed text-slate-600">
-                        Restaurant data syncs automatically.
-                    </p>
+        <section class="border-t border-slate-200">
+            <div class="mx-auto max-w-5xl px-6 py-10">
+                <div class="grid gap-12 md:grid-cols-2">
+                    <div>
+                        <h2
+                            class="text-xl font-bold tracking-tight text-slate-900"
+                        >
+                            Up to date
+                        </h2>
+                        <p class="mt-3 leading-relaxed text-slate-600">
+                            We do our best to keep hours current — but best to
+                            double-check before you head out.
+                        </p>
+                    </div>
+                    <div>
+                        <h2
+                            class="text-xl font-bold tracking-tight text-slate-900"
+                        >
+                            Export
+                        </h2>
+                        <p class="mt-3 leading-relaxed text-slate-600">
+                            For the curious (or the spreadsheet-inclined): grab
+                            the whole dataset as a CSV.
+                        </p>
+                        <a
+                            href="/export"
+                            class="mt-4 inline-block text-sm font-medium text-slate-800 underline hover:text-slate-600"
+                        >
+                            Export data
+                        </a>
+                    </div>
                 </div>
             </div>
         </section>
@@ -124,7 +134,7 @@
                     <ul class="mt-4 space-y-2 text-sm">
                         <li>
                             <a
-                                href="https://liber-research.com/night_vibe_restaurants"
+                                href="https://liber-research.com/night_vibe_restaurants/"
                                 class="font-medium text-slate-800 underline hover:text-slate-600"
                             >
                                 Night Vibe Restaurants
