@@ -8,15 +8,9 @@
 
         <title>{{ $title ?? __('Time 2 Eat') }}</title>
 
-        <meta
-            name="description"
-            content="{{ $description }}"
-        />
+        <meta name="description" content="{{ $description }}" />
         <meta property="og:title" content="{{ $title ?? __('Time 2 Eat') }}" />
-        <meta
-            property="og:description"
-            content="{{ $description }}"
-        />
+        <meta property="og:description" content="{{ $description }}" />
         <meta property="og:type" content="website" />
         <meta name="twitter:card" content="summary" />
 
@@ -24,10 +18,14 @@
             @vite(['resources/css/app.css', 'resources/js/app.js'])
         @endif
     </head>
-    <body class="flex h-screen flex-col overflow-hidden bg-warm-white font-sans text-charcoal antialiased">
-        <header class="flex-none border-b border-charcoal/10 bg-warm-white">
-            <div class="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
-                <a href="/" class="text-lg font-bold tracking-wide text-ink">
+    <body
+        class="bg-warm-white text-charcoal flex h-screen flex-col overflow-hidden font-sans antialiased"
+    >
+        <header class="border-charcoal/10 bg-warm-white flex-none border-b">
+            <div
+                class="mx-auto flex max-w-5xl items-center justify-between px-6 py-4"
+            >
+                <a href="/" class="text-ink text-lg font-bold tracking-wide">
                     TIME 2 EAT
                 </a>
                 <nav class="flex items-center gap-6 text-sm">
@@ -43,6 +41,8 @@
                     >
                         {{ __('Export') }}
                     </a>
+
+                    <x-language-picker />
                 </nav>
             </div>
         </header>
