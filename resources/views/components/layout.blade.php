@@ -1,4 +1,4 @@
-@props(['title' => 'Time 2 Eat', 'description' => 'Find Hong Kong kitchens still serving food. Night shifts, late hangs, early mornings — whatever keeps you out.'])
+@props(['title' => __('Time 2 Eat'), 'description' => __('Find Hong Kong kitchens still serving food. Night shifts, late hangs, early mornings — whatever keeps you out.')])
 
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
@@ -6,13 +6,13 @@
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-        <title>{{ $title ?? 'Time 2 Eat' }}</title>
+        <title>{{ $title ?? __('Time 2 Eat') }}</title>
 
         <meta
             name="description"
             content="{{ $description }}"
         />
-        <meta property="og:title" content="{{ $title ?? 'Time 2 Eat' }}" />
+        <meta property="og:title" content="{{ $title ?? __('Time 2 Eat') }}" />
         <meta
             property="og:description"
             content="{{ $description }}"
@@ -35,13 +35,13 @@
                         href="/map"
                         @class(['underline' => request()->routeIs('map'), 'text-ink' => request()->routeIs('map'), 'text-charcoal/60' => ! request()->routeIs('map'), 'hover:text-charcoal' => ! request()->routeIs('map')])
                     >
-                        Map
+                        {{ __('Map') }}
                     </a>
                     <a
                         href="/export"
                         @class(['underline' => request()->is('export'), 'text-ink' => request()->is('export'), 'text-charcoal/60' => ! request()->is('export'), 'hover:text-charcoal' => ! request()->is('export')])
                     >
-                        Export
+                        {{ __('Export') }}
                     </a>
                 </nav>
             </div>
