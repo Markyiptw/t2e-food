@@ -102,29 +102,63 @@
             </div>
         </section>
 
+        {{-- Divider --}}
+        <div class="flex justify-center">
+            <div class="bg-ember/30 h-px w-24"></div>
+        </div>
+
         {{-- Features --}}
         <section
             class="border-charcoal/10 bg-ember/[0.03] relative overflow-hidden border-y"
+            data-tangram-bg
         >
-            <div
-                class="bg-ember/[0.08] absolute -top-24 -left-24 h-[34rem] w-[34rem] rounded-full blur-3xl"
-                aria-hidden="true"
-            ></div>
+
+
             <div class="relative mx-auto max-w-5xl px-6 py-16 md:py-20">
-                <div class="grid gap-12 md:grid-cols-2 md:gap-16">
-                    <div>
+                <div
+                    x-data="{ shown: true, ready: false }"
+                    x-init="
+                        const el = $el;
+                        const obs = new IntersectionObserver(([entry]) => {
+                            if (entry.isIntersecting) {
+                                shown = true;
+                                obs.unobserve(el);
+                            }
+                        }, { threshold: 0.1 });
+                        if (el.getBoundingClientRect().top > window.innerHeight) {
+                            shown = false;
+                        }
+                        requestAnimationFrame(() => ready = true);
+                        obs.observe(el);
+                    "
+                    :class="[
+                        shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8',
+                        ready ? 'transition-all duration-700 ease-out' : ''
+                    ]"
+                    class="will-change-transform"
+                >
+                    <h2
+                        class="text-ink mb-12 text-center text-xl font-bold tracking-tight"
+                    >
+                        {{ __('We take care of the data') }}
+                    </h2>
+
+                    <div class="grid gap-12 md:grid-cols-2 md:gap-16">
                         <div
-                            class="flex h-52 items-center justify-center md:h-56"
+                            class="bg-warm-white/80 border-charcoal/10 rounded-2xl border p-6 shadow-sm backdrop-blur-sm transition-all hover:shadow-md md:p-8"
                         >
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 290 200"
+                            <div
+                                class="flex h-52 items-center justify-center md:h-56"
+                            >
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 290 200"
                                 fill="none"
                                 aria-hidden="true"
                                 class="h-full w-auto"
                             >
                                 {{-- Radar sweep --}}
-                                <g transform="translate(120 100)">
+                                <g transform="translate(145 100)">
                                     {{-- Range rings --}}
                                     <circle
                                         cx="0"
@@ -302,21 +336,6 @@
                                     ></circle>
                                 </g>
 
-                                {{-- Decorative accent dots --}}
-                                <circle
-                                    cx="40"
-                                    cy="60"
-                                    r="3"
-                                    fill="#f59e0b"
-                                    fill-opacity="0.6"
-                                ></circle>
-                                <circle
-                                    cx="60"
-                                    cy="170"
-                                    r="3"
-                                    fill="#171412"
-                                    fill-opacity="0.25"
-                                ></circle>
                             </svg>
                         </div>
                         <h2 class="text-ink text-2xl font-bold tracking-tight">
@@ -326,7 +345,9 @@
                             {{ __('We do our best to keep hours current — but best to double-check before you head out.') }}
                         </p>
                     </div>
-                    <div>
+                    <div
+                        class="bg-warm-white/80 border-charcoal/10 rounded-2xl border p-6 shadow-sm backdrop-blur-sm transition-all hover:shadow-md md:p-8"
+                    >
                         <div
                             class="flex h-52 items-center justify-center md:h-56"
                         >
@@ -598,21 +619,42 @@
                         </a>
                     </div>
                 </div>
+                </div>
             </div>
         </section>
 
         {{-- Collaborative --}}
-        <section class="bg-ember/[0.03] relative overflow-hidden">
-            <div
-                class="bg-ember/[0.10] absolute -top-20 -right-20 h-[32rem] w-[32rem] rounded-full blur-3xl md:-top-32 md:-right-32 md:h-[40rem] md:w-[40rem]"
-                aria-hidden="true"
-            ></div>
-            <div class="relative mx-auto max-w-5xl px-6 py-16 md:py-20">
-                <div class="grid gap-10 md:grid-cols-2 md:gap-16">
+        <section class="border-charcoal/10 border-t">
+            <div class="mx-auto max-w-5xl px-6 py-16 md:py-20">
+                <div
+                    x-data="{ shown: true, ready: false }"
+                    x-init="
+                        const el = $el;
+                        const obs = new IntersectionObserver(([entry]) => {
+                            if (entry.isIntersecting) {
+                                shown = true;
+                                obs.unobserve(el);
+                            }
+                        }, { threshold: 0.1 });
+                        if (el.getBoundingClientRect().top > window.innerHeight) {
+                            shown = false;
+                        }
+                        requestAnimationFrame(() => ready = true);
+                        obs.observe(el);
+                    "
+                    :class="[
+                        shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8',
+                        ready ? 'transition-all duration-700 ease-out' : ''
+                    ]"
+                    class="will-change-transform grid gap-10 md:grid-cols-2 md:gap-16"
+                >
                     <div>
-                        <h2 class="text-ink text-2xl font-bold tracking-tight">
-                            {{ __('A collaborative project') }}
-                        </h2>
+                        <div class="flex items-center gap-3">
+                            <div class="bg-ember h-2 w-2 rounded-full"></div>
+                            <h2 class="text-ink text-2xl font-bold tracking-tight">
+                                {{ __('A collaborative project') }}
+                            </h2>
+                        </div>
                         <p class="text-charcoal/70 mt-3 leading-relaxed">
                             {{ __('Built on an idea from Liber Research, this project is open source under the MIT license — contributions welcome.') }}
                         </p>
@@ -812,13 +854,36 @@
 
         {{-- Footer --}}
         <footer>
-            <div class="mx-auto max-w-5xl px-6 py-16 text-center">
-                <div class="bg-ember mx-auto mb-5 h-px w-10"></div>
-                <p
-                    class="text-charcoal/40 text-xs font-bold tracking-[0.2em] uppercase"
+            <div class="mx-auto max-w-5xl px-6 py-8 text-center">
+                <div
+                    x-data="{ shown: true, ready: false }"
+                    x-init="
+                        const el = $el;
+                        const obs = new IntersectionObserver(([entry]) => {
+                            if (entry.isIntersecting) {
+                                shown = true;
+                                obs.unobserve(el);
+                            }
+                        }, { threshold: 0.1 });
+                        if (el.getBoundingClientRect().top > window.innerHeight) {
+                            shown = false;
+                        }
+                        requestAnimationFrame(() => ready = true);
+                        obs.observe(el);
+                    "
+                    :class="[
+                        shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8',
+                        ready ? 'transition-all duration-700 ease-out' : ''
+                    ]"
+                    class="will-change-transform"
                 >
-                    TIME 2 EAT
+                    <p class="text-charcoal/40 text-xs">
+                    © {{ date('Y') }} Time 2 Eat
                 </p>
+                <p class="text-charcoal/30 mt-1 text-xs">
+                    {{ __('Open source under the MIT License') }}
+                </p>
+                </div>
             </div>
         </footer>
     </main>

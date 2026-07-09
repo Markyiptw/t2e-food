@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 100 100"
+    preserveAspectRatio="none"
+    width="100%"
+    height="100%"
+>
+    <!-- Top edge, left of center -->
+    <polygon
+        points="12,-4 22,4 17,11 7,6"
+        fill="#171412"
+        fill-opacity="0.035"
+    />
+
+    <!-- Top edge, right side -->
+    <polygon
+        points="75,-4 87,-1 82,8 70,5"
+        fill="#f59e0b"
+        fill-opacity="0.04"
+    />
+
+    <!-- Upper-left corner bleeds in -->
+    <polygon
+        points="-2,5 5,13 3,23 -2,20"
+        fill="#f59e0b"
+        fill-opacity="0.045"
+    />
+
+    <!-- Left mid, behind first card -->
+    <polygon
+        points="7,30 14,22 17,38 10,45"
+        fill="#171412"
+        fill-opacity="0.03"
+    />
+
+    <!-- Between the cards, upper gap -->
+    <polygon
+        points="38,10 46,17 41,30 33,23"
+        fill="#f59e0b"
+        fill-opacity="0.035"
+    />
+
+    <!-- Between the cards, lower gap -->
+    <polygon
+        points="36,40 44,47 39,60 31,53"
+        fill="#171412"
+        fill-opacity="0.03"
+    />
+
+    <!-- Right mid, overlapping behind second card -->
+    <polygon
+        points="72,25 80,18 83,35 75,42"
+        fill="#f59e0b"
+        fill-opacity="0.03"
+    />
+
+    <!-- Far right edge, mid -->
+    <polygon
+        points="95,15 102,23 97,33 90,26"
+        fill="#171412"
+        fill-opacity="0.035"
+    />
+
+    <!-- Lower-left, under first card -->
+    <polygon
+        points="5,65 12,58 15,75 8,82"
+        fill="#f59e0b"
+        fill-opacity="0.03"
+    />
+
+    <!-- Bottom center-left -->
+    <polygon
+        points="25,78 33,71 36,88 28,95"
+        fill="#171412"
+        fill-opacity="0.03"
+    />
+
+    <!-- Bottom center-right -->
+    <polygon
+        points="53,75 61,68 64,85 56,92"
+        fill="#f59e0b"
+        fill-opacity="0.03"
+    />
+
+    <!-- Far right, near bottom -->
+    <polygon
+        points="85,65 93,58 96,75 88,82"
+        fill="#171412"
+        fill-opacity="0.03"
+    />
+
+    <!-- Bottom-left edge -->
+    <polygon
+        points="-2,88 8,82 12,95 2,102"
+        fill="#f59e0b"
+        fill-opacity="0.03"
+    />
+
+    <!-- Bottom-right edge -->
+    <polygon
+        points="92,88 102,82 106,95 96,102"
+        fill="#171412"
+        fill-opacity="0.03"
+    />
+
+    <!-- Tiny scattered accents -->
+    <polygon points="28,4 30,6 29,9" fill="#f59e0b" fill-opacity="0.08" />
+    <polygon points="65,6 67,5 66,2" fill="#171412" fill-opacity="0.06" />
+    <polygon points="15,58 17,60 16,63" fill="#f59e0b" fill-opacity="0.06" />
+    <polygon points="57,22 59,24 58,27" fill="#171412" fill-opacity="0.05" />
+    <polygon points="82,52 84,54 83,57" fill="#f59e0b" fill-opacity="0.06" />
+    <polygon points="8,12 10,14 9,17" fill="#171412" fill-opacity="0.05" />
+    <polygon points="47,38 49,37 48,34" fill="#f59e0b" fill-opacity="0.05" />
+    <polygon points="70,72 72,74 71,77" fill="#171412" fill-opacity="0.04" />
+</svg>

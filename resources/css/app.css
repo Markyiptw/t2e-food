@@ -107,3 +107,7 @@
         transform: scale(0.6);
     }
 }
+
+[x-cloak] {
+    display: none !important;
+}
