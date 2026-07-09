@@ -1,4 +1,4 @@
-<x-layout title="Time 2 Eat — Map" description="Interactive map of Hong Kong restaurants. Filter by start time and meal duration to find what's open when you need it.">
+<x-layout title="{{ __('Time 2 Eat — Map') }}" description="{{ __('Interactive map of Hong Kong restaurants. Filter by start time and meal duration to find what\'s open when you need it.') }}">
     <div class="flex flex-1 flex-col">
         {{-- Map attribution --}}
         <div class="flex-none border-b border-slate-200">
@@ -16,7 +16,7 @@
                 id="filter-expand"
                 type="button"
                 class="absolute top-0 right-4 z-[1000] hidden cursor-pointer rounded-b border border-t-0 border-slate-200 bg-white px-3 py-1 text-slate-500 shadow-sm hover:bg-slate-50"
-                aria-label="Show filter"
+                aria-label="{{ __('Show filter') }}"
             >
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <polyline points="6 9 12 15 18 9"></polyline>
@@ -32,13 +32,13 @@
             >
                 <div class="flex items-center justify-between border-b border-slate-100 px-4 py-2">
                     <h2 class="text-sm font-semibold text-slate-700">
-                        Filter
+                        {{ __('Filter') }}
                     </h2>
                     <button
                         id="filter-collapse"
                         type="button"
                         class="cursor-pointer rounded p-0.5 text-slate-400 hover:bg-slate-100 hover:text-slate-600"
-                        aria-label="Hide filter"
+                        aria-label="{{ __('Hide filter') }}"
                     >
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <polyline points="18 15 12 9 6 15"></polyline>
@@ -50,7 +50,7 @@
 
                 <div class="mb-3">
                     <label for="start" class="mb-1 block text-xs font-medium text-slate-600">
-                        Start time
+                        {{ __('Start time') }}
                     </label>
                     <input
                         id="start"
@@ -64,7 +64,7 @@
 
                 <div class="mb-4">
                     <label for="duration" class="mb-1 block text-xs font-medium text-slate-600">
-                        Meal duration (min)
+                        {{ __('Meal duration (min)') }}
                     </label>
                     <input
                         id="duration"
@@ -83,7 +83,7 @@
                         type="submit"
                         class="flex-1 cursor-pointer rounded bg-slate-800 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-700"
                     >
-                        Update
+                        {{ __('Update') }}
                     </button>
 
                     @if ($start !== null || $duration !== null)
@@ -91,13 +91,13 @@
                             href="/map"
                             class="flex-1 rounded border border-slate-200 py-2 text-center text-sm text-slate-600 hover:bg-slate-50"
                         >
-                            Clear
+                            {{ __('Clear') }}
                         </a>
                     @endif
                 </div>
 
                 <div id="marker-count" class="mt-3 text-xs text-slate-500">
-                    Loading restaurants...
+                    {{ __('Loading restaurants...') }}
                 </div>
                 </div>
             </form>

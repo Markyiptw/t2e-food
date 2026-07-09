@@ -1,14 +1,14 @@
-<x-layout title="Export Restaurants">
+<x-layout title="{{ __('Export Restaurants') }}">
     <main>
         {{-- Content --}}
         <section class="mx-auto max-w-5xl px-6 pt-6 pb-16">
 
             <div class="max-w-md">
                 <h1 class="text-2xl font-bold tracking-tight text-slate-900">
-                    Export restaurants
+                    {{ __('Export restaurants') }}
                 </h1>
                 <p class="mt-2 text-sm leading-relaxed text-slate-600">
-                    Download a CSV of all kitchens open within a chosen time window.
+                    {{ __('Download a CSV of all kitchens open within a chosen time window.') }}
                 </p>
 
                 <form
@@ -20,7 +20,7 @@
 
                     <div>
                         <label for="start" class="block text-sm font-medium text-slate-700">
-                            Start time
+                            {{ __('Start time') }}
                         </label>
                         <input
                             id="start"
@@ -33,7 +33,7 @@
 
                     <div>
                         <label for="end" class="block text-sm font-medium text-slate-700">
-                            End time
+                            {{ __('End time') }}
                         </label>
                         <input
                             id="end"
@@ -48,7 +48,7 @@
                         type="submit"
                         class="inline-flex cursor-pointer items-center gap-2 rounded bg-slate-800 px-6 py-2.5 text-sm font-semibold text-white hover:bg-slate-700"
                     >
-                        Download CSV
+                        {{ __('Download CSV') }}
                     </button>
                 </form>
             </div>

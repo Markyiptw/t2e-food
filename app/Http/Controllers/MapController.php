@@ -90,6 +90,7 @@ class MapController extends Controller
         return Restaurant::query()
             ->join('locations', 'locations.restaurant_id', '=', 'restaurants.id')
             ->when($start !== null, fn ($query) => $query->openInWindow($start, $duration))
+            ->with('categories:id,name')
             ->select([
                 'restaurants.id',
                 'restaurants.name',
@@ -100,6 +101,14 @@ class MapController extends Controller
             ])
             ->orderBy('id')
             ->cursorPaginate($limit)
-            ->through(fn (Restaurant $restaurant): array => $restaurant->toArray());
+            ->through(fn (Restaurant $restaurant): array => [
+                'id' => $restaurant->id,
+                'name' => $restaurant->name,
+                'address' => $restaurant->address,
+                'latitude' => $restaurant->latitude,
+                'longitude' => $restaurant->longitude,
+                'url' => $restaurant->url,
+                'categories' => $restaurant->categories->pluck('name')->values()->all(),
+            ]);
     }
 }

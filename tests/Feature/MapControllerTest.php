@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Category;
 use App\Models\Hour;
 use App\Models\Period;
 use App\Models\Restaurant;
@@ -40,6 +41,30 @@ class MapControllerTest extends TestCase
 
         $this->assertCount(1, $markers);
         $this->assertSame($valid->name, $markers[0]['name']);
+    }
+
+    public function test_map_restaurants_endpoint_includes_categories(): void
+    {
+        $category = Category::factory()->create(['name' => '港式']);
+
+        $restaurant = Restaurant::factory()
+            ->has(Hour::factory()->has(Period::factory()->state(['start' => '09:00:00', 'end' => '17:00:00'])))
+            ->create([
+                'name' => 'Test Restaurant',
+                'address' => '1 Test Street',
+            ]);
+
+        $restaurant->categories()->attach($category->id);
+
+        $response = $this->getJson('/map/restaurants');
+
+        $response->assertOk();
+
+        $markers = $response->json('markers');
+
+        $this->assertCount(1, $markers);
+        $this->assertArrayHasKey('categories', $markers[0]);
+        $this->assertSame(['港式'], $markers[0]['categories']);
     }
 
     public function test_map_restaurants_endpoint_cursor_paginates_markers(): void

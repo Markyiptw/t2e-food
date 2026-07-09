@@ -93,9 +93,18 @@ if (mapContainer && window.restaurantMarkersEndpoint) {
             bounds.push(latLng);
             count += 1;
 
+            const categories = r.categories?.length ? `<br>${escapeHtml(r.categories.join(", "))}` : "";
+            const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(r.name + " " + (r.address || ""))}`;
+            const links = [];
+
+            if (r.url) {
+                links.push(`<a href="${escapeHtml(r.url)}" target="_blank" rel="noopener noreferrer">Open Rice Page</a>`);
+            }
+
+            links.push(`<a href="${escapeHtml(googleMapsUrl)}" target="_blank" rel="noopener noreferrer">Google Maps</a>`);
+
             const marker = L.marker(latLng).bindPopup(
-                `<strong>${escapeHtml(r.name)}</strong><br>${escapeHtml(r.address)}` +
-                    (r.url ? `<br><a href="${escapeHtml(r.url)}" target="_blank" rel="noopener noreferrer">More info</a>` : '')
+                `<strong>${escapeHtml(r.name)}</strong><br>${escapeHtml(r.address)}${categories}<br>${links.join(" | ")}`
             );
 
             markers.addLayer(marker);
