@@ -72,4 +72,26 @@
     .hero-slide:first-child {
         opacity: 1;
     }
+
+    .gear-spin,
+    .gear-spin-rev {
+        animation: none;
+    }
+}
+
+.gear-spin,
+.gear-spin-rev {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: gearSpin 18s linear infinite;
+}
+
+.gear-spin-rev {
+    animation-direction: reverse;
+}
+
+@keyframes gearSpin {
+    to {
+        transform: rotate(360deg);
+    }
 }

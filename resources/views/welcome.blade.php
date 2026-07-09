@@ -105,27 +105,327 @@
         </section>
 
         {{-- Features --}}
-        <section class="relative border-t border-charcoal/10 bg-warm-white">
+        <section
+            class="relative overflow-hidden border-y border-charcoal/10 bg-ember/[0.03]"
+        >
+            <div
+                class="absolute -left-24 -top-24 h-[34rem] w-[34rem] rounded-full bg-ember/[0.08] blur-3xl"
+                aria-hidden="true"
+            ></div>
             <div class="relative mx-auto max-w-5xl px-6 py-16 md:py-20">
-                <div class="grid gap-16 md:grid-cols-2">
+                <div class="grid gap-12 md:grid-cols-2 md:gap-16">
                     <div>
                         <div
-                            class="mb-5 inline-flex h-10 w-10 items-center justify-center rounded-full bg-ember/10"
+                            class="flex h-52 items-center justify-center md:h-56"
                         >
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
-                                width="20"
-                                height="20"
-                                viewBox="0 0 24 24"
+                                viewBox="0 0 290 200"
                                 fill="none"
-                                stroke="currentColor"
-                                stroke-width="2"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                class="text-ember"
+                                aria-hidden="true"
+                                class="h-full w-auto"
                             >
-                                <polyline points="23 4 23 10 17 10"></polyline>
-                                <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+                                {{-- Big driving gear (ember accent) --}}
+                                <g
+                                    class="gear-spin"
+                                    transform="translate(122 96)"
+                                >
+                                    <rect
+                                        x="-11"
+                                        y="-92"
+                                        width="22"
+                                        height="18"
+                                        rx="3"
+                                        transform="rotate(0)"
+                                        fill="#f59e0b"
+                                        stroke="#171412"
+                                        stroke-width="3"
+                                        stroke-linejoin="round"
+                                    ></rect>
+                                    <rect
+                                        x="-11"
+                                        y="-92"
+                                        width="22"
+                                        height="18"
+                                        rx="3"
+                                        transform="rotate(36)"
+                                        fill="#f59e0b"
+                                        stroke="#171412"
+                                        stroke-width="3"
+                                        stroke-linejoin="round"
+                                    ></rect>
+                                    <rect
+                                        x="-11"
+                                        y="-92"
+                                        width="22"
+                                        height="18"
+                                        rx="3"
+                                        transform="rotate(72)"
+                                        fill="#f59e0b"
+                                        stroke="#171412"
+                                        stroke-width="3"
+                                        stroke-linejoin="round"
+                                    ></rect>
+                                    <rect
+                                        x="-11"
+                                        y="-92"
+                                        width="22"
+                                        height="18"
+                                        rx="3"
+                                        transform="rotate(108)"
+                                        fill="#f59e0b"
+                                        stroke="#171412"
+                                        stroke-width="3"
+                                        stroke-linejoin="round"
+                                    ></rect>
+                                    <rect
+                                        x="-11"
+                                        y="-92"
+                                        width="22"
+                                        height="18"
+                                        rx="3"
+                                        transform="rotate(144)"
+                                        fill="#f59e0b"
+                                        stroke="#171412"
+                                        stroke-width="3"
+                                        stroke-linejoin="round"
+                                    ></rect>
+                                    <rect
+                                        x="-11"
+                                        y="-92"
+                                        width="22"
+                                        height="18"
+                                        rx="3"
+                                        transform="rotate(180)"
+                                        fill="#f59e0b"
+                                        stroke="#171412"
+                                        stroke-width="3"
+                                        stroke-linejoin="round"
+                                    ></rect>
+                                    <rect
+                                        x="-11"
+                                        y="-92"
+                                        width="22"
+                                        height="18"
+                                        rx="3"
+                                        transform="rotate(216)"
+                                        fill="#f59e0b"
+                                        stroke="#171412"
+                                        stroke-width="3"
+                                        stroke-linejoin="round"
+                                    ></rect>
+                                    <rect
+                                        x="-11"
+                                        y="-92"
+                                        width="22"
+                                        height="18"
+                                        rx="3"
+                                        transform="rotate(252)"
+                                        fill="#f59e0b"
+                                        stroke="#171412"
+                                        stroke-width="3"
+                                        stroke-linejoin="round"
+                                    ></rect>
+                                    <rect
+                                        x="-11"
+                                        y="-92"
+                                        width="22"
+                                        height="18"
+                                        rx="3"
+                                        transform="rotate(288)"
+                                        fill="#f59e0b"
+                                        stroke="#171412"
+                                        stroke-width="3"
+                                        stroke-linejoin="round"
+                                    ></rect>
+                                    <rect
+                                        x="-11"
+                                        y="-92"
+                                        width="22"
+                                        height="18"
+                                        rx="3"
+                                        transform="rotate(324)"
+                                        fill="#f59e0b"
+                                        stroke="#171412"
+                                        stroke-width="3"
+                                        stroke-linejoin="round"
+                                    ></rect>
+                                    <circle
+                                        cx="0"
+                                        cy="0"
+                                        r="78"
+                                        fill="#f59e0b"
+                                        stroke="#171412"
+                                        stroke-width="3"
+                                    ></circle>
+                                    <circle
+                                        cx="0"
+                                        cy="0"
+                                        r="62"
+                                        fill="none"
+                                        stroke="#171412"
+                                        stroke-width="2"
+                                        stroke-opacity="0.35"
+                                    ></circle>
+                                    <circle
+                                        cx="0"
+                                        cy="0"
+                                        r="22"
+                                        fill="#faf6f1"
+                                        stroke="#171412"
+                                        stroke-width="3"
+                                    ></circle>
+                                    <circle cx="0" cy="0" r="5" fill="#171412"></circle>
+                                </g>
+                                {{-- Small meshed gear (ink) --}}
+                                <g
+                                    class="gear-spin-rev"
+                                    transform="translate(236 148)"
+                                >
+                                    <rect
+                                        x="-7"
+                                        y="-54"
+                                        width="14"
+                                        height="12"
+                                        rx="2"
+                                        transform="rotate(0)"
+                                        fill="#faf6f1"
+                                        stroke="#171412"
+                                        stroke-width="3"
+                                        stroke-linejoin="round"
+                                    ></rect>
+                                    <rect
+                                        x="-7"
+                                        y="-54"
+                                        width="14"
+                                        height="12"
+                                        rx="2"
+                                        transform="rotate(45)"
+                                        fill="#faf6f1"
+                                        stroke="#171412"
+                                        stroke-width="3"
+                                        stroke-linejoin="round"
+                                    ></rect>
+                                    <rect
+                                        x="-7"
+                                        y="-54"
+                                        width="14"
+                                        height="12"
+                                        rx="2"
+                                        transform="rotate(90)"
+                                        fill="#faf6f1"
+                                        stroke="#171412"
+                                        stroke-width="3"
+                                        stroke-linejoin="round"
+                                    ></rect>
+                                    <rect
+                                        x="-7"
+                                        y="-54"
+                                        width="14"
+                                        height="12"
+                                        rx="2"
+                                        transform="rotate(135)"
+                                        fill="#faf6f1"
+                                        stroke="#171412"
+                                        stroke-width="3"
+                                        stroke-linejoin="round"
+                                    ></rect>
+                                    <rect
+                                        x="-7"
+                                        y="-54"
+                                        width="14"
+                                        height="12"
+                                        rx="2"
+                                        transform="rotate(180)"
+                                        fill="#faf6f1"
+                                        stroke="#171412"
+                                        stroke-width="3"
+                                        stroke-linejoin="round"
+                                    ></rect>
+                                    <rect
+                                        x="-7"
+                                        y="-54"
+                                        width="14"
+                                        height="12"
+                                        rx="2"
+                                        transform="rotate(225)"
+                                        fill="#faf6f1"
+                                        stroke="#171412"
+                                        stroke-width="3"
+                                        stroke-linejoin="round"
+                                    ></rect>
+                                    <rect
+                                        x="-7"
+                                        y="-54"
+                                        width="14"
+                                        height="12"
+                                        rx="2"
+                                        transform="rotate(270)"
+                                        fill="#faf6f1"
+                                        stroke="#171412"
+                                        stroke-width="3"
+                                        stroke-linejoin="round"
+                                    ></rect>
+                                    <rect
+                                        x="-7"
+                                        y="-54"
+                                        width="14"
+                                        height="12"
+                                        rx="2"
+                                        transform="rotate(315)"
+                                        fill="#faf6f1"
+                                        stroke="#171412"
+                                        stroke-width="3"
+                                        stroke-linejoin="round"
+                                    ></rect>
+                                    <circle
+                                        cx="0"
+                                        cy="0"
+                                        r="42"
+                                        fill="#faf6f1"
+                                        stroke="#171412"
+                                        stroke-width="3"
+                                    ></circle>
+                                    <circle
+                                        cx="0"
+                                        cy="0"
+                                        r="28"
+                                        fill="none"
+                                        stroke="#171412"
+                                        stroke-width="2"
+                                        stroke-opacity="0.35"
+                                    ></circle>
+                                    <circle
+                                        cx="0"
+                                        cy="0"
+                                        r="11"
+                                        fill="#f59e0b"
+                                        stroke="#171412"
+                                        stroke-width="3"
+                                    ></circle>
+                                </g>
+                                {{-- Small accent dots --}}
+                                <circle
+                                    cx="40"
+                                    cy="60"
+                                    r="3"
+                                    fill="#f59e0b"
+                                    fill-opacity="0.6"
+                                ></circle>
+                                <circle
+                                    cx="60"
+                                    cy="170"
+                                    r="3"
+                                    fill="#171412"
+                                    fill-opacity="0.25"
+                                ></circle>
+                                <circle
+                                    cx="265"
+                                    cy="55"
+                                    r="3"
+                                    fill="#171412"
+                                    fill-opacity="0.25"
+                                ></circle>
                             </svg>
                         </div>
                         <h2
@@ -140,23 +440,120 @@
                     </div>
                     <div>
                         <div
-                            class="mb-5 inline-flex h-10 w-10 items-center justify-center rounded-full bg-ember/10"
+                            class="flex h-52 items-center justify-center md:h-56"
                         >
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
-                                width="20"
-                                height="20"
-                                viewBox="0 0 24 24"
+                                viewBox="0 0 260 200"
                                 fill="none"
-                                stroke="currentColor"
-                                stroke-width="2"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                class="text-ember"
+                                aria-hidden="true"
+                                class="h-full w-auto"
                             >
-                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                                <polyline points="7 10 12 15 17 10"></polyline>
-                                <line x1="12" y1="15" x2="12" y2="3"></line>
+                                {{-- Document panel --}}
+                                <rect
+                                    x="14"
+                                    y="14"
+                                    width="180"
+                                    height="140"
+                                    rx="10"
+                                    fill="#faf6f1"
+                                    stroke="#171412"
+                                    stroke-width="3"
+                                    stroke-opacity="0.18"
+                                ></rect>
+                                {{-- Folded CSV corner tab --}}
+                                <path
+                                    d="M170 14 L194 14 L194 38 Z"
+                                    fill="#f59e0b"
+                                    fill-opacity="0.18"
+                                    stroke="#171412"
+                                    stroke-width="3"
+                                    stroke-opacity="0.18"
+                                    stroke-linejoin="round"
+                                ></path>
+                                <text
+                                    x="150"
+                                    y="32"
+                                    font-family="monospace"
+                                    font-size="13"
+                                    font-weight="700"
+                                    fill="#d97706"
+                                    text-anchor="middle"
+                                >CSV</text>
+                                {{-- Header row (ember tint) --}}
+                                <rect
+                                    x="26"
+                                    y="28"
+                                    width="156"
+                                    height="20"
+                                    rx="4"
+                                    fill="#f59e0b"
+                                    fill-opacity="0.14"
+                                ></rect>
+                                {{-- Column dividers --}}
+                                <line
+                                    x1="78"
+                                    y1="28"
+                                    x2="78"
+                                    y2="154"
+                                    stroke="#171412"
+                                    stroke-width="2"
+                                    stroke-opacity="0.1"
+                                ></line>
+                                <line
+                                    x1="130"
+                                    y1="28"
+                                    x2="130"
+                                    y2="154"
+                                    stroke="#171412"
+                                    stroke-width="2"
+                                    stroke-opacity="0.1"
+                                ></line>
+                                {{-- Header cell labels --}}
+                                <rect x="34" y="35" width="32" height="6" rx="3" fill="#d97706"></rect>
+                                <rect x="84" y="35" width="36" height="6" rx="3" fill="#d97706"></rect>
+                                <rect x="136" y="35" width="40" height="6" rx="3" fill="#d97706"></rect>
+                                {{-- Skeleton data rows --}}
+                                <rect x="34" y="60" width="32" height="6" rx="3" fill="#171412" fill-opacity="0.28"></rect>
+                                <rect x="84" y="60" width="30" height="6" rx="3" fill="#171412" fill-opacity="0.22"></rect>
+                                <rect x="136" y="60" width="44" height="6" rx="3" fill="#171412" fill-opacity="0.22"></rect>
+                                <rect x="34" y="82" width="28" height="6" rx="3" fill="#171412" fill-opacity="0.28"></rect>
+                                <rect x="84" y="82" width="38" height="6" rx="3" fill="#171412" fill-opacity="0.22"></rect>
+                                <rect x="136" y="82" width="36" height="6" rx="3" fill="#171412" fill-opacity="0.22"></rect>
+                                <rect x="34" y="104" width="34" height="6" rx="3" fill="#171412" fill-opacity="0.28"></rect>
+                                <rect x="84" y="104" width="28" height="6" rx="3" fill="#171412" fill-opacity="0.22"></rect>
+                                <rect x="136" y="104" width="42" height="6" rx="3" fill="#171412" fill-opacity="0.22"></rect>
+                                <rect x="34" y="126" width="30" height="6" rx="3" fill="#171412" fill-opacity="0.28"></rect>
+                                <rect x="84" y="126" width="34" height="6" rx="3" fill="#171412" fill-opacity="0.22"></rect>
+                                <rect x="136" y="126" width="38" height="6" rx="3" fill="#171412" fill-opacity="0.22"></rect>
+                                {{-- Download badge --}}
+                                <circle
+                                    cx="214"
+                                    cy="150"
+                                    r="40"
+                                    fill="#f59e0b"
+                                    stroke="#faf6f1"
+                                    stroke-width="5"
+                                ></circle>
+                                <circle
+                                    cx="214"
+                                    cy="150"
+                                    r="40"
+                                    fill="none"
+                                    stroke="#171412"
+                                    stroke-width="3"
+                                    stroke-opacity="0.18"
+                                ></circle>
+                                <g
+                                    stroke="#171412"
+                                    stroke-width="4"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    fill="none"
+                                >
+                                    <line x1="214" y1="134" x2="214" y2="166"></line>
+                                    <polyline points="202 154 214 166 226 154"></polyline>
+                                </g>
                             </svg>
                         </div>
                         <h2
@@ -170,7 +567,7 @@
                         </p>
                         <a
                             href="/export"
-                            class="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-ink hover:underline"
+                            class="mt-5 inline-flex items-center gap-1.5 rounded-full border border-charcoal/15 px-4 py-2 text-sm font-medium text-ink transition-colors hover:border-ember/40 hover:text-ember"
                         >
                             download all data as CSV
                             <svg
