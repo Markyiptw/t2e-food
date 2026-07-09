@@ -73,25 +73,37 @@
         opacity: 1;
     }
 
-    .gear-spin,
-    .gear-spin-rev {
+    .radar-sweep,
+    .blip-pulse {
         animation: none;
     }
 }
 
-.gear-spin,
-.gear-spin-rev {
+.radar-sweep {
     transform-box: fill-box;
     transform-origin: center;
-    animation: gearSpin 18s linear infinite;
+    animation: radarSweep 4s linear infinite;
 }
 
-.gear-spin-rev {
-    animation-direction: reverse;
+.blip-pulse {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: blipPulse 2s ease-in-out infinite;
 }
 
-@keyframes gearSpin {
+@keyframes radarSweep {
     to {
         transform: rotate(360deg);
+    }
+}
+
+@keyframes blipPulse {
+    0%, 100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.4;
+        transform: scale(0.6);
     }
 }
