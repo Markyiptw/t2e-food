@@ -82,7 +82,7 @@ RUN apt-get update \
     && npx playwright install-deps \
     && npm i -g agent-browser \
     && agent-browser install --with-deps \
-    && npm i -g opencode-ai \
+    && npm i -g opencode-ai --allow-scripts=opencode-ai \
     && gem install kamal \
     && apt-get -y autoremove \
     && apt-get clean \
@@ -97,6 +97,8 @@ RUN git config --global --add safe.directory /var/www/html
 
 RUN adduser sail sudo
 RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
+
+RUN gosu sail agent-browser install
 
 RUN echo 'alias kamal="dotenv -f .env.production kamal"' >> /home/sail/.bashrc
 
