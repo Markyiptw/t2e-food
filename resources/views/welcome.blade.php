@@ -110,26 +110,26 @@
         {{-- Features --}}
         <section
             class="border-charcoal/10 bg-ember/[0.03] relative overflow-hidden border-y"
-            data-tangram-bg
         >
-
-
             <div class="relative mx-auto max-w-5xl px-6 py-16 md:py-20">
                 <div
                     x-data="{ shown: true, ready: false }"
                     x-init="
-                        const el = $el;
-                        const obs = new IntersectionObserver(([entry]) => {
-                            if (entry.isIntersecting) {
-                                shown = true;
-                                obs.unobserve(el);
-                            }
-                        }, { threshold: 0.1 });
+                        const el = $el
+                        const obs = new IntersectionObserver(
+                            ([entry]) => {
+                                if (entry.isIntersecting) {
+                                    shown = true
+                                    obs.unobserve(el)
+                                }
+                            },
+                            { threshold: 0.1 },
+                        )
                         if (el.getBoundingClientRect().top > window.innerHeight) {
-                            shown = false;
+                            shown = false
                         }
-                        requestAnimationFrame(() => ready = true);
-                        obs.observe(el);
+                        requestAnimationFrame(() => (ready = true))
+                        obs.observe(el)
                     "
                     :class="[
                         shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8',
@@ -153,472 +153,477 @@
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
                                     viewBox="0 0 290 200"
-                                fill="none"
-                                aria-hidden="true"
-                                class="h-full w-auto"
-                            >
-                                {{-- Radar sweep --}}
-                                <g transform="translate(145 100)">
-                                    {{-- Range rings --}}
-                                    <circle
-                                        cx="0"
-                                        cy="0"
-                                        r="94"
-                                        stroke="#171412"
-                                        stroke-width="2"
-                                        stroke-opacity="0.12"
-                                    ></circle>
-                                    <circle
-                                        cx="0"
-                                        cy="0"
-                                        r="70"
-                                        stroke="#171412"
-                                        stroke-width="2"
-                                        stroke-opacity="0.12"
-                                    ></circle>
-                                    <circle
-                                        cx="0"
-                                        cy="0"
-                                        r="46"
-                                        stroke="#171412"
-                                        stroke-width="2"
-                                        stroke-opacity="0.12"
-                                    ></circle>
-                                    <circle
-                                        cx="0"
-                                        cy="0"
-                                        r="22"
-                                        stroke="#171412"
-                                        stroke-width="2"
-                                        stroke-opacity="0.12"
-                                    ></circle>
-
-                                    {{-- Crosshair axes --}}
-                                    <line
-                                        x1="-94"
-                                        y1="0"
-                                        x2="94"
-                                        y2="0"
-                                        stroke="#171412"
-                                        stroke-width="2"
-                                        stroke-opacity="0.12"
-                                        stroke-linecap="round"
-                                    ></line>
-                                    <line
-                                        x1="0"
-                                        y1="-94"
-                                        x2="0"
-                                        y2="94"
-                                        stroke="#171412"
-                                        stroke-width="2"
-                                        stroke-opacity="0.12"
-                                        stroke-linecap="round"
-                                    ></line>
-
-                                    {{-- Cardinal ticks --}}
-                                    <line
-                                        x1="0"
-                                        y1="-94"
-                                        x2="0"
-                                        y2="-86"
-                                        stroke="#171412"
-                                        stroke-width="3"
-                                        stroke-linecap="round"
-                                        stroke-opacity="0.25"
-                                    ></line>
-                                    <line
-                                        x1="0"
-                                        y1="86"
-                                        x2="0"
-                                        y2="94"
-                                        stroke="#171412"
-                                        stroke-width="3"
-                                        stroke-linecap="round"
-                                        stroke-opacity="0.25"
-                                    ></line>
-                                    <line
-                                        x1="-94"
-                                        y1="0"
-                                        x2="-86"
-                                        y2="0"
-                                        stroke="#171412"
-                                        stroke-width="3"
-                                        stroke-linecap="round"
-                                        stroke-opacity="0.25"
-                                    ></line>
-                                    <line
-                                        x1="86"
-                                        y1="0"
-                                        x2="94"
-                                        y2="0"
-                                        stroke="#171412"
-                                        stroke-width="3"
-                                        stroke-linecap="round"
-                                        stroke-opacity="0.25"
-                                    ></line>
-
-                                    {{-- Blip dots --}}
-                                    <circle
-                                        cx="52"
-                                        cy="-32"
-                                        r="4"
-                                        fill="#f59e0b"
-                                        stroke="#171412"
-                                        stroke-width="2"
-                                        class="blip-pulse"
-                                        style="animation-delay: 0s"
-                                    ></circle>
-                                    <circle
-                                        cx="-28"
-                                        cy="58"
-                                        r="4"
-                                        fill="#f59e0b"
-                                        stroke="#171412"
-                                        stroke-width="2"
-                                        class="blip-pulse"
-                                        style="animation-delay: 0.7s"
-                                    ></circle>
-                                    <circle
-                                        cx="68"
-                                        cy="48"
-                                        r="3"
-                                        fill="#f59e0b"
-                                        stroke="#171412"
-                                        stroke-width="2"
-                                        class="blip-pulse"
-                                        style="animation-delay: 1.4s"
-                                    ></circle>
-                                    <circle
-                                        cx="-56"
-                                        cy="-44"
-                                        r="3"
-                                        fill="#171412"
-                                        fill-opacity="0.25"
-                                    ></circle>
-                                    <circle
-                                        cx="36"
-                                        cy="74"
-                                        r="2.5"
-                                        fill="#171412"
-                                        fill-opacity="0.25"
-                                    ></circle>
-
-                                    {{-- Sweep wedge --}}
-                                    <g class="radar-sweep">
+                                    fill="none"
+                                    aria-hidden="true"
+                                    class="h-full w-auto"
+                                >
+                                    {{-- Radar sweep --}}
+                                    <g transform="translate(145 100)">
+                                        {{-- Range rings --}}
                                         <circle
                                             cx="0"
                                             cy="0"
                                             r="94"
-                                            fill="none"
-                                        ></circle>
-                                        <path
-                                            d="M 0 0 L 81.41 -47 A 94 94 0 0 1 81.41 47 Z"
-                                            fill="#f59e0b"
-                                            fill-opacity="0.2"
-                                            stroke="#f59e0b"
+                                            stroke="#171412"
                                             stroke-width="2"
-                                            stroke-linejoin="round"
-                                        ></path>
+                                            stroke-opacity="0.12"
+                                        ></circle>
+                                        <circle
+                                            cx="0"
+                                            cy="0"
+                                            r="70"
+                                            stroke="#171412"
+                                            stroke-width="2"
+                                            stroke-opacity="0.12"
+                                        ></circle>
+                                        <circle
+                                            cx="0"
+                                            cy="0"
+                                            r="46"
+                                            stroke="#171412"
+                                            stroke-width="2"
+                                            stroke-opacity="0.12"
+                                        ></circle>
+                                        <circle
+                                            cx="0"
+                                            cy="0"
+                                            r="22"
+                                            stroke="#171412"
+                                            stroke-width="2"
+                                            stroke-opacity="0.12"
+                                        ></circle>
+
+                                        {{-- Crosshair axes --}}
+                                        <line
+                                            x1="-94"
+                                            y1="0"
+                                            x2="94"
+                                            y2="0"
+                                            stroke="#171412"
+                                            stroke-width="2"
+                                            stroke-opacity="0.12"
+                                            stroke-linecap="round"
+                                        ></line>
+                                        <line
+                                            x1="0"
+                                            y1="-94"
+                                            x2="0"
+                                            y2="94"
+                                            stroke="#171412"
+                                            stroke-width="2"
+                                            stroke-opacity="0.12"
+                                            stroke-linecap="round"
+                                        ></line>
+
+                                        {{-- Cardinal ticks --}}
+                                        <line
+                                            x1="0"
+                                            y1="-94"
+                                            x2="0"
+                                            y2="-86"
+                                            stroke="#171412"
+                                            stroke-width="3"
+                                            stroke-linecap="round"
+                                            stroke-opacity="0.25"
+                                        ></line>
+                                        <line
+                                            x1="0"
+                                            y1="86"
+                                            x2="0"
+                                            y2="94"
+                                            stroke="#171412"
+                                            stroke-width="3"
+                                            stroke-linecap="round"
+                                            stroke-opacity="0.25"
+                                        ></line>
+                                        <line
+                                            x1="-94"
+                                            y1="0"
+                                            x2="-86"
+                                            y2="0"
+                                            stroke="#171412"
+                                            stroke-width="3"
+                                            stroke-linecap="round"
+                                            stroke-opacity="0.25"
+                                        ></line>
+                                        <line
+                                            x1="86"
+                                            y1="0"
+                                            x2="94"
+                                            y2="0"
+                                            stroke="#171412"
+                                            stroke-width="3"
+                                            stroke-linecap="round"
+                                            stroke-opacity="0.25"
+                                        ></line>
+
+                                        {{-- Blip dots --}}
+                                        <circle
+                                            cx="52"
+                                            cy="-32"
+                                            r="4"
+                                            fill="#f59e0b"
+                                            stroke="#171412"
+                                            stroke-width="2"
+                                            class="blip-pulse"
+                                            style="animation-delay: 0s"
+                                        ></circle>
+                                        <circle
+                                            cx="-28"
+                                            cy="58"
+                                            r="4"
+                                            fill="#f59e0b"
+                                            stroke="#171412"
+                                            stroke-width="2"
+                                            class="blip-pulse"
+                                            style="animation-delay: 0.7s"
+                                        ></circle>
+                                        <circle
+                                            cx="68"
+                                            cy="48"
+                                            r="3"
+                                            fill="#f59e0b"
+                                            stroke="#171412"
+                                            stroke-width="2"
+                                            class="blip-pulse"
+                                            style="animation-delay: 1.4s"
+                                        ></circle>
+                                        <circle
+                                            cx="-56"
+                                            cy="-44"
+                                            r="3"
+                                            fill="#171412"
+                                            fill-opacity="0.25"
+                                        ></circle>
+                                        <circle
+                                            cx="36"
+                                            cy="74"
+                                            r="2.5"
+                                            fill="#171412"
+                                            fill-opacity="0.25"
+                                        ></circle>
+
+                                        {{-- Sweep wedge --}}
+                                        <g class="radar-sweep">
+                                            <circle
+                                                cx="0"
+                                                cy="0"
+                                                r="94"
+                                                fill="none"
+                                            ></circle>
+                                            <path
+                                                d="M 0 0 L 81.41 -47 A 94 94 0 0 1 81.41 47 Z"
+                                                fill="#f59e0b"
+                                                fill-opacity="0.2"
+                                                stroke="#f59e0b"
+                                                stroke-width="2"
+                                                stroke-linejoin="round"
+                                            ></path>
+                                        </g>
+
+                                        {{-- Center hub --}}
+                                        <circle
+                                            cx="0"
+                                            cy="0"
+                                            r="5"
+                                            fill="#171412"
+                                        ></circle>
+                                        <circle
+                                            cx="0"
+                                            cy="0"
+                                            r="2"
+                                            fill="#f59e0b"
+                                        ></circle>
                                     </g>
-
-                                    {{-- Center hub --}}
-                                    <circle
-                                        cx="0"
-                                        cy="0"
-                                        r="5"
-                                        fill="#171412"
-                                    ></circle>
-                                    <circle
-                                        cx="0"
-                                        cy="0"
-                                        r="2"
-                                        fill="#f59e0b"
-                                    ></circle>
-                                </g>
-
-                            </svg>
-                        </div>
-                        <h2 class="text-ink text-2xl font-bold tracking-tight">
-                            {{ __('Up to date') }}
-                        </h2>
-                        <p class="text-charcoal/70 mt-3 leading-relaxed">
-                            {{ __('We do our best to keep hours current — but best to double-check before you head out.') }}
-                        </p>
-                    </div>
-                    <div
-                        class="bg-warm-white/80 border-charcoal/10 rounded-2xl border p-6 shadow-sm backdrop-blur-sm transition-all hover:shadow-md md:p-8"
-                    >
-                        <div
-                            class="flex h-52 items-center justify-center md:h-56"
-                        >
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 260 200"
-                                fill="none"
-                                aria-hidden="true"
-                                class="h-full w-auto"
+                                </svg>
+                            </div>
+                            <h2
+                                class="text-ink text-2xl font-bold tracking-tight"
                             >
-                                {{-- Document panel --}}
-                                <rect
-                                    x="14"
-                                    y="14"
-                                    width="180"
-                                    height="140"
-                                    rx="10"
-                                    fill="#faf6f1"
-                                    stroke="#171412"
-                                    stroke-width="3"
-                                    stroke-opacity="0.18"
-                                ></rect>
-                                {{-- Folded CSV corner tab --}}
-                                <path
-                                    d="M170 14 L194 14 L194 38 Z"
-                                    fill="#f59e0b"
-                                    fill-opacity="0.18"
-                                    stroke="#171412"
-                                    stroke-width="3"
-                                    stroke-opacity="0.18"
-                                    stroke-linejoin="round"
-                                ></path>
-                                <text
-                                    x="150"
-                                    y="32"
-                                    font-family="monospace"
-                                    font-size="13"
-                                    font-weight="700"
-                                    fill="#d97706"
-                                    text-anchor="middle"
-                                >
-                                    CSV
-                                </text>
-                                {{-- Header row (ember tint) --}}
-                                <rect
-                                    x="26"
-                                    y="28"
-                                    width="156"
-                                    height="20"
-                                    rx="4"
-                                    fill="#f59e0b"
-                                    fill-opacity="0.14"
-                                ></rect>
-                                {{-- Column dividers --}}
-                                <line
-                                    x1="78"
-                                    y1="28"
-                                    x2="78"
-                                    y2="154"
-                                    stroke="#171412"
-                                    stroke-width="2"
-                                    stroke-opacity="0.1"
-                                ></line>
-                                <line
-                                    x1="130"
-                                    y1="28"
-                                    x2="130"
-                                    y2="154"
-                                    stroke="#171412"
-                                    stroke-width="2"
-                                    stroke-opacity="0.1"
-                                ></line>
-                                {{-- Header cell labels --}}
-                                <rect
-                                    x="34"
-                                    y="35"
-                                    width="32"
-                                    height="6"
-                                    rx="3"
-                                    fill="#d97706"
-                                ></rect>
-                                <rect
-                                    x="84"
-                                    y="35"
-                                    width="36"
-                                    height="6"
-                                    rx="3"
-                                    fill="#d97706"
-                                ></rect>
-                                <rect
-                                    x="136"
-                                    y="35"
-                                    width="40"
-                                    height="6"
-                                    rx="3"
-                                    fill="#d97706"
-                                ></rect>
-                                {{-- Skeleton data rows --}}
-                                <rect
-                                    x="34"
-                                    y="60"
-                                    width="32"
-                                    height="6"
-                                    rx="3"
-                                    fill="#171412"
-                                    fill-opacity="0.28"
-                                ></rect>
-                                <rect
-                                    x="84"
-                                    y="60"
-                                    width="30"
-                                    height="6"
-                                    rx="3"
-                                    fill="#171412"
-                                    fill-opacity="0.22"
-                                ></rect>
-                                <rect
-                                    x="136"
-                                    y="60"
-                                    width="44"
-                                    height="6"
-                                    rx="3"
-                                    fill="#171412"
-                                    fill-opacity="0.22"
-                                ></rect>
-                                <rect
-                                    x="34"
-                                    y="82"
-                                    width="28"
-                                    height="6"
-                                    rx="3"
-                                    fill="#171412"
-                                    fill-opacity="0.28"
-                                ></rect>
-                                <rect
-                                    x="84"
-                                    y="82"
-                                    width="38"
-                                    height="6"
-                                    rx="3"
-                                    fill="#171412"
-                                    fill-opacity="0.22"
-                                ></rect>
-                                <rect
-                                    x="136"
-                                    y="82"
-                                    width="36"
-                                    height="6"
-                                    rx="3"
-                                    fill="#171412"
-                                    fill-opacity="0.22"
-                                ></rect>
-                                <rect
-                                    x="34"
-                                    y="104"
-                                    width="34"
-                                    height="6"
-                                    rx="3"
-                                    fill="#171412"
-                                    fill-opacity="0.28"
-                                ></rect>
-                                <rect
-                                    x="84"
-                                    y="104"
-                                    width="28"
-                                    height="6"
-                                    rx="3"
-                                    fill="#171412"
-                                    fill-opacity="0.22"
-                                ></rect>
-                                <rect
-                                    x="136"
-                                    y="104"
-                                    width="42"
-                                    height="6"
-                                    rx="3"
-                                    fill="#171412"
-                                    fill-opacity="0.22"
-                                ></rect>
-                                <rect
-                                    x="34"
-                                    y="126"
-                                    width="30"
-                                    height="6"
-                                    rx="3"
-                                    fill="#171412"
-                                    fill-opacity="0.28"
-                                ></rect>
-                                <rect
-                                    x="84"
-                                    y="126"
-                                    width="34"
-                                    height="6"
-                                    rx="3"
-                                    fill="#171412"
-                                    fill-opacity="0.22"
-                                ></rect>
-                                <rect
-                                    x="136"
-                                    y="126"
-                                    width="38"
-                                    height="6"
-                                    rx="3"
-                                    fill="#171412"
-                                    fill-opacity="0.22"
-                                ></rect>
-                                {{-- Download badge --}}
-                                <circle
-                                    cx="214"
-                                    cy="150"
-                                    r="40"
-                                    fill="#f59e0b"
-                                    stroke="#faf6f1"
-                                    stroke-width="5"
-                                ></circle>
-                                <circle
-                                    cx="214"
-                                    cy="150"
-                                    r="40"
+                                {{ __('Up to date') }}
+                            </h2>
+                            <p class="text-charcoal/70 mt-3 leading-relaxed">
+                                {{ __('We do our best to keep hours current — but best to double-check before you head out.') }}
+                            </p>
+                        </div>
+                        <div
+                            class="bg-warm-white/80 border-charcoal/10 rounded-2xl border p-6 shadow-sm backdrop-blur-sm transition-all hover:shadow-md md:p-8"
+                        >
+                            <div
+                                class="flex h-52 items-center justify-center md:h-56"
+                            >
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 260 200"
                                     fill="none"
-                                    stroke="#171412"
-                                    stroke-width="3"
-                                    stroke-opacity="0.18"
-                                ></circle>
-                                <g
-                                    stroke="#171412"
-                                    stroke-width="4"
+                                    aria-hidden="true"
+                                    class="h-full w-auto"
+                                >
+                                    {{-- Document panel --}}
+                                    <rect
+                                        x="14"
+                                        y="14"
+                                        width="180"
+                                        height="140"
+                                        rx="10"
+                                        fill="#faf6f1"
+                                        stroke="#171412"
+                                        stroke-width="3"
+                                        stroke-opacity="0.18"
+                                    ></rect>
+                                    {{-- Folded CSV corner tab --}}
+                                    <path
+                                        d="M170 14 L194 14 L194 38 Z"
+                                        fill="#f59e0b"
+                                        fill-opacity="0.18"
+                                        stroke="#171412"
+                                        stroke-width="3"
+                                        stroke-opacity="0.18"
+                                        stroke-linejoin="round"
+                                    ></path>
+                                    <text
+                                        x="150"
+                                        y="32"
+                                        font-family="monospace"
+                                        font-size="13"
+                                        font-weight="700"
+                                        fill="#d97706"
+                                        text-anchor="middle"
+                                    >
+                                        CSV
+                                    </text>
+                                    {{-- Header row (ember tint) --}}
+                                    <rect
+                                        x="26"
+                                        y="28"
+                                        width="156"
+                                        height="20"
+                                        rx="4"
+                                        fill="#f59e0b"
+                                        fill-opacity="0.14"
+                                    ></rect>
+                                    {{-- Column dividers --}}
+                                    <line
+                                        x1="78"
+                                        y1="28"
+                                        x2="78"
+                                        y2="154"
+                                        stroke="#171412"
+                                        stroke-width="2"
+                                        stroke-opacity="0.1"
+                                    ></line>
+                                    <line
+                                        x1="130"
+                                        y1="28"
+                                        x2="130"
+                                        y2="154"
+                                        stroke="#171412"
+                                        stroke-width="2"
+                                        stroke-opacity="0.1"
+                                    ></line>
+                                    {{-- Header cell labels --}}
+                                    <rect
+                                        x="34"
+                                        y="35"
+                                        width="32"
+                                        height="6"
+                                        rx="3"
+                                        fill="#d97706"
+                                    ></rect>
+                                    <rect
+                                        x="84"
+                                        y="35"
+                                        width="36"
+                                        height="6"
+                                        rx="3"
+                                        fill="#d97706"
+                                    ></rect>
+                                    <rect
+                                        x="136"
+                                        y="35"
+                                        width="40"
+                                        height="6"
+                                        rx="3"
+                                        fill="#d97706"
+                                    ></rect>
+                                    {{-- Skeleton data rows --}}
+                                    <rect
+                                        x="34"
+                                        y="60"
+                                        width="32"
+                                        height="6"
+                                        rx="3"
+                                        fill="#171412"
+                                        fill-opacity="0.28"
+                                    ></rect>
+                                    <rect
+                                        x="84"
+                                        y="60"
+                                        width="30"
+                                        height="6"
+                                        rx="3"
+                                        fill="#171412"
+                                        fill-opacity="0.22"
+                                    ></rect>
+                                    <rect
+                                        x="136"
+                                        y="60"
+                                        width="44"
+                                        height="6"
+                                        rx="3"
+                                        fill="#171412"
+                                        fill-opacity="0.22"
+                                    ></rect>
+                                    <rect
+                                        x="34"
+                                        y="82"
+                                        width="28"
+                                        height="6"
+                                        rx="3"
+                                        fill="#171412"
+                                        fill-opacity="0.28"
+                                    ></rect>
+                                    <rect
+                                        x="84"
+                                        y="82"
+                                        width="38"
+                                        height="6"
+                                        rx="3"
+                                        fill="#171412"
+                                        fill-opacity="0.22"
+                                    ></rect>
+                                    <rect
+                                        x="136"
+                                        y="82"
+                                        width="36"
+                                        height="6"
+                                        rx="3"
+                                        fill="#171412"
+                                        fill-opacity="0.22"
+                                    ></rect>
+                                    <rect
+                                        x="34"
+                                        y="104"
+                                        width="34"
+                                        height="6"
+                                        rx="3"
+                                        fill="#171412"
+                                        fill-opacity="0.28"
+                                    ></rect>
+                                    <rect
+                                        x="84"
+                                        y="104"
+                                        width="28"
+                                        height="6"
+                                        rx="3"
+                                        fill="#171412"
+                                        fill-opacity="0.22"
+                                    ></rect>
+                                    <rect
+                                        x="136"
+                                        y="104"
+                                        width="42"
+                                        height="6"
+                                        rx="3"
+                                        fill="#171412"
+                                        fill-opacity="0.22"
+                                    ></rect>
+                                    <rect
+                                        x="34"
+                                        y="126"
+                                        width="30"
+                                        height="6"
+                                        rx="3"
+                                        fill="#171412"
+                                        fill-opacity="0.28"
+                                    ></rect>
+                                    <rect
+                                        x="84"
+                                        y="126"
+                                        width="34"
+                                        height="6"
+                                        rx="3"
+                                        fill="#171412"
+                                        fill-opacity="0.22"
+                                    ></rect>
+                                    <rect
+                                        x="136"
+                                        y="126"
+                                        width="38"
+                                        height="6"
+                                        rx="3"
+                                        fill="#171412"
+                                        fill-opacity="0.22"
+                                    ></rect>
+                                    {{-- Download badge --}}
+                                    <circle
+                                        cx="214"
+                                        cy="150"
+                                        r="40"
+                                        fill="#f59e0b"
+                                        stroke="#faf6f1"
+                                        stroke-width="5"
+                                    ></circle>
+                                    <circle
+                                        cx="214"
+                                        cy="150"
+                                        r="40"
+                                        fill="none"
+                                        stroke="#171412"
+                                        stroke-width="3"
+                                        stroke-opacity="0.18"
+                                    ></circle>
+                                    <g
+                                        stroke="#171412"
+                                        stroke-width="4"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        fill="none"
+                                    >
+                                        <line
+                                            x1="214"
+                                            y1="134"
+                                            x2="214"
+                                            y2="166"
+                                        ></line>
+                                        <polyline
+                                            points="202 154 214 166 226 154"
+                                        ></polyline>
+                                    </g>
+                                </svg>
+                            </div>
+                            <h2
+                                class="text-ink text-2xl font-bold tracking-tight"
+                            >
+                                {{ __('Export') }}
+                            </h2>
+                            <p class="text-charcoal/70 mt-3 leading-relaxed">
+                                {{ __('For the curious (or the spreadsheet-inclined): grab the whole dataset as a CSV.') }}
+                            </p>
+                            <a
+                                href="/export"
+                                class="border-charcoal/15 text-ink hover:border-ember/40 hover:text-ember mt-5 inline-flex items-center gap-1.5 rounded-full border px-4 py-2 text-sm font-medium transition-colors"
+                            >
+                                {{ __('download all data as CSV') }}
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="14"
+                                    height="14"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="2"
                                     stroke-linecap="round"
                                     stroke-linejoin="round"
-                                    fill="none"
                                 >
-                                    <line
-                                        x1="214"
-                                        y1="134"
-                                        x2="214"
-                                        y2="166"
-                                    ></line>
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
                                     <polyline
-                                        points="202 154 214 166 226 154"
+                                        points="12 5 19 12 12 19"
                                     ></polyline>
-                                </g>
-                            </svg>
+                                </svg>
+                            </a>
                         </div>
-                        <h2 class="text-ink text-2xl font-bold tracking-tight">
-                            {{ __('Export') }}
-                        </h2>
-                        <p class="text-charcoal/70 mt-3 leading-relaxed">
-                            {{ __('For the curious (or the spreadsheet-inclined): grab the whole dataset as a CSV.') }}
-                        </p>
-                        <a
-                            href="/export"
-                            class="border-charcoal/15 text-ink hover:border-ember/40 hover:text-ember mt-5 inline-flex items-center gap-1.5 rounded-full border px-4 py-2 text-sm font-medium transition-colors"
-                        >
-                            {{ __('download all data as CSV') }}
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="14"
-                                height="14"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                stroke-width="2"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                            >
-                                <line x1="5" y1="12" x2="19" y2="12"></line>
-                                <polyline points="12 5 19 12 12 19"></polyline>
-                            </svg>
-                        </a>
                     </div>
-                </div>
                 </div>
             </div>
         </section>
@@ -629,29 +634,34 @@
                 <div
                     x-data="{ shown: true, ready: false }"
                     x-init="
-                        const el = $el;
-                        const obs = new IntersectionObserver(([entry]) => {
-                            if (entry.isIntersecting) {
-                                shown = true;
-                                obs.unobserve(el);
-                            }
-                        }, { threshold: 0.1 });
+                        const el = $el
+                        const obs = new IntersectionObserver(
+                            ([entry]) => {
+                                if (entry.isIntersecting) {
+                                    shown = true
+                                    obs.unobserve(el)
+                                }
+                            },
+                            { threshold: 0.1 },
+                        )
                         if (el.getBoundingClientRect().top > window.innerHeight) {
-                            shown = false;
+                            shown = false
                         }
-                        requestAnimationFrame(() => ready = true);
-                        obs.observe(el);
+                        requestAnimationFrame(() => (ready = true))
+                        obs.observe(el)
                     "
                     :class="[
                         shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8',
                         ready ? 'transition-all duration-700 ease-out' : ''
                     ]"
-                    class="will-change-transform grid gap-10 md:grid-cols-2 md:gap-16"
+                    class="grid gap-10 will-change-transform md:grid-cols-2 md:gap-16"
                 >
                     <div>
                         <div class="flex items-center gap-3">
                             <div class="bg-ember h-2 w-2 rounded-full"></div>
-                            <h2 class="text-ink text-2xl font-bold tracking-tight">
+                            <h2
+                                class="text-ink text-2xl font-bold tracking-tight"
+                            >
                                 {{ __('A collaborative project') }}
                             </h2>
                         </div>
@@ -858,18 +868,21 @@
                 <div
                     x-data="{ shown: true, ready: false }"
                     x-init="
-                        const el = $el;
-                        const obs = new IntersectionObserver(([entry]) => {
-                            if (entry.isIntersecting) {
-                                shown = true;
-                                obs.unobserve(el);
-                            }
-                        }, { threshold: 0.1 });
+                        const el = $el
+                        const obs = new IntersectionObserver(
+                            ([entry]) => {
+                                if (entry.isIntersecting) {
+                                    shown = true
+                                    obs.unobserve(el)
+                                }
+                            },
+                            { threshold: 0.1 },
+                        )
                         if (el.getBoundingClientRect().top > window.innerHeight) {
-                            shown = false;
+                            shown = false
                         }
-                        requestAnimationFrame(() => ready = true);
-                        obs.observe(el);
+                        requestAnimationFrame(() => (ready = true))
+                        obs.observe(el)
                     "
                     :class="[
                         shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8',
@@ -878,11 +891,11 @@
                     class="will-change-transform"
                 >
                     <p class="text-charcoal/40 text-xs">
-                    © {{ date('Y') }} Time 2 Eat
-                </p>
-                <p class="text-charcoal/30 mt-1 text-xs">
-                    {{ __('Open source under the MIT License') }}
-                </p>
+                        © {{ date('Y') }} Time 2 Eat
+                    </p>
+                    <p class="text-charcoal/30 mt-1 text-xs">
+                        {{ __('MIT Licensed') }}
+                    </p>
                 </div>
             </div>
         </footer>
