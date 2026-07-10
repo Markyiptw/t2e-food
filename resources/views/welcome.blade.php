@@ -8,7 +8,10 @@
                 id="hero-slideshow"
                 class="bg-ink absolute inset-0 -z-20"
                 aria-hidden="true"
-                x-data="{ slides: {{ Illuminate\Support\Js::from($heroImages) }}, cycle: 64 }"
+                x-data="{
+                    slides: {{ Js::from($heroImages) }},
+                    cycle: 64,
+                }"
             >
                 <template x-for="(url, index) in slides" :key="url">
                     <div
@@ -59,11 +62,12 @@
                                     name="start"
                                     class="border-charcoal/20 bg-warm-white text-ink focus:border-ember focus:ring-ember rounded shadow-sm"
                                 >
-                                    <option value="02:00" selected>
-                                        02:00
+                                    <option value="21:00" selected>
+                                        21:00
                                     </option>
+                                    <option value="23:00">23:00</option>
+                                    <option value="02:00">02:00</option>
                                     <option value="05:00">05:00</option>
-                                    <option value="09:00">09:00</option>
                                 </select>
                                 <label
                                     for="duration"
