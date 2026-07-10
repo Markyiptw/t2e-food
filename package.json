@@ -7,13 +7,13 @@
         "dev": "vite"
     },
     "devDependencies": {
-        "@tailwindcss/vite": "^4.0.0",
+        "@tailwindcss/vite": "^4.3.2",
         "alpinejs": "^3.14.9",
         "axios": "^1.8.2",
         "concurrently": "^9.0.1",
         "htmx-ext-response-targets": "^2.0.3",
         "htmx.org": "^2.0.6",
-        "laravel-vite-plugin": "^1.2.0",
+        "laravel-vite-plugin": "^3.1.0",
         "leaflet": "^1.9.4",
         "leaflet.markercluster": "^1.5.3",
         "posthog-js": "^1.373.2",
@@ -21,6 +21,6 @@
         "prettier-plugin-blade": "^2.1.21",
         "prettier-plugin-tailwindcss": "^0.6.14",
         "tailwindcss": "^4.0.0",
-        "vite": "^6.2.4"
+        "vite": "^8.1.4"
     }
 }

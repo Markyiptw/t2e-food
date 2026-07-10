@@ -8,7 +8,15 @@
                 id="hero-slideshow"
                 class="bg-ink absolute inset-0 -z-20"
                 aria-hidden="true"
-            ></div>
+                x-data="{ slides: {{ Illuminate\Support\Js::from($heroImages) }}, cycle: 64 }"
+            >
+                <template x-for="(url, index) in slides" :key="url">
+                    <div
+                        class="hero-slide"
+                        :style="`background-image: url('${url}'); animation-delay: -${((index * cycle) / slides.length).toFixed(3)}s`"
+                    ></div>
+                </template>
+            </div>
             <div
                 class="bg-ink/40 absolute inset-0 -z-10"
                 aria-hidden="true"
