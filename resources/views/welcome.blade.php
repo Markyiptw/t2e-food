@@ -88,14 +88,13 @@
                         <p
                             class="text-warm-white/90 mt-6 leading-relaxed md:mt-10"
                         >
-                            {{ __('Nothing fancy — no bookings, no reviews, no ads. Just what\'s open, and when. The most intuitive way to browse restaurants: pinpoint where you\'ll be, and what\'s open around that hour.') }}
+                            {{ __("Nothing fancy — no bookings, no reviews, no ads. Just what's open, and when. The most intuitive way to browse restaurants:") }}
                             <a
                                 href="/map"
                                 class="hover:text-warm-white underline"
                             >
-                                {{ __('See for yourself') }}
+                                {{ __('See for yourself.') }}
                             </a>
-                            .
                         </p>
                     </div>
                 </div>
@@ -109,7 +108,7 @@
 
         {{-- Features --}}
         <section
-            class="border-charcoal/10 bg-ember/[0.03] relative overflow-hidden border-y"
+            class="border-charcoal/10 bg-warm-white relative overflow-hidden border-y"
         >
             <div class="relative mx-auto max-w-5xl px-6 py-16 md:py-20">
                 <div
@@ -144,9 +143,7 @@
                     </h2>
 
                     <div class="grid gap-12 md:grid-cols-2 md:gap-16">
-                        <div
-                            class="bg-warm-white/80 border-charcoal/10 rounded-2xl border p-6 shadow-sm backdrop-blur-sm transition-all hover:shadow-md md:p-8"
-                        >
+                        <div class="md:border-ember/20 md:border-l-2 md:pl-8">
                             <div
                                 class="flex h-52 items-center justify-center md:h-56"
                             >
@@ -347,7 +344,7 @@
                             </p>
                         </div>
                         <div
-                            class="bg-warm-white/80 border-charcoal/10 rounded-2xl border p-6 shadow-sm backdrop-blur-sm transition-all hover:shadow-md md:p-8"
+                            class="border-ember/20 border-t-2 pt-8 md:border-t-0 md:border-l-2 md:pt-0 md:pl-8"
                         >
                             <div
                                 class="flex h-52 items-center justify-center md:h-56"

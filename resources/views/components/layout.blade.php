@@ -1,7 +1,7 @@
-@props(['title' => __('Time 2 Eat'), 'description' => __('Find Hong Kong kitchens still serving food. Night shifts, late hangs, early mornings — whatever keeps you out.')])
+@props(['description' => __('Find Hong Kong kitchens still serving food. Night shifts, late hangs, early mornings — whatever keeps you out.')])
 
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ app()->getLocale() }}">
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -26,7 +26,7 @@
                 class="mx-auto flex max-w-5xl items-center justify-between px-6 py-4"
             >
                 <a href="/" class="text-ink text-lg font-bold tracking-wide">
-                    TIME 2 EAT
+                    {{ __('Time 2 Eat') }}
                 </a>
                 <nav class="flex items-center gap-6 text-sm">
                     <a
