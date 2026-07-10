@@ -4,3 +4,14 @@ window.axios = axios;
 window.axios.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
 
 import "./map";
+
+const { VITE_POSTHOG_API_KEY, VITE_POSTHOG_HOST } = import.meta.env;
+
+if (VITE_POSTHOG_API_KEY) {
+    import("posthog-js").then(({ default: posthog }) => {
+        posthog.init(VITE_POSTHOG_API_KEY, {
+            api_host: VITE_POSTHOG_HOST,
+        });
+        window.posthog = posthog;
+    });
+}
