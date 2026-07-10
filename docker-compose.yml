@@ -31,6 +31,7 @@ services:
         image: 'postgres:17'
         ports:
             - '${FORWARD_DB_PORT:-5432}:5432'
+        command: -c 'client_connection_check_interval=1s'
         environment:
             PGPASSWORD: '${DB_PASSWORD:-secret}'
             POSTGRES_DB: '${DB_DATABASE}'

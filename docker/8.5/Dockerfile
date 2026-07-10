@@ -81,6 +81,7 @@ RUN apt-get update \
     && npm install -g bun \
     && npx playwright install-deps \
     && npm i -g agent-browser \
+    && agent-browser install --with-deps \
     && npm i -g opencode-ai \
     && gem install kamal \
     && apt-get -y autoremove \
@@ -106,8 +107,6 @@ RUN chmod +x /usr/local/bin/start-container
 
 RUN mkdir -p /home/sail/.local/share/opencode
 RUN chown -R sail:sail /home/sail/.local/share/opencode
-
-RUN agent-browser install --with-deps
 
 EXPOSE 80/tcp
 
