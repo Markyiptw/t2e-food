@@ -13,7 +13,9 @@ class SetLocale
 {
     public function handle(Request $request, Closure $next): Response
     {
-        $browserLocale = $request->getPreferredLanguage(['en', 'zh-HK', 'zh-TW', 'zh-Hant'])
+        $browserLocale = $request->getPreferredLanguage(['en', 'zh_HK', 'zh_TW', 'zh_Hant'])
+        |> (fn ($language) => Str::lower($language))
+        |> (fn ($language) => Str::camel($language))
         |> (fn ($language) => Str::kebab($language))
         |> (fn ($language) => match ($language) {
             'zh-hk', 'zh-tw', 'zh-hant' => 'zh-HK',
