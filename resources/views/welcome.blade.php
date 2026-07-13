@@ -60,7 +60,7 @@
                                 <select
                                     id="start"
                                     name="start"
-                                    class="border-charcoal/20 bg-warm-white text-ink focus:border-ember focus:ring-ember rounded shadow-sm"
+                                    class="border-charcoal/20 bg-warm-white text-ink focus:border-ember focus:ring-ember rounded p-2 shadow-sm"
                                 >
                                     <option value="21:00" selected>
                                         21:00
@@ -75,15 +75,16 @@
                                 >
                                     {{ __('for') }}
                                 </label>
-                                <input
+                                <select
                                     id="duration"
-                                    type="number"
                                     name="duration"
-                                    value="15"
-                                    min="0"
-                                    step="1"
-                                    class="border-charcoal/20 bg-warm-white text-ink focus:border-ember focus:ring-ember w-16 rounded shadow-sm"
-                                />
+                                    class="border-charcoal/20 bg-warm-white text-ink focus:border-ember focus:ring-ember rounded p-2 shadow-sm"
+                                >
+                                    <option value="15" selected>15</option>
+                                    <option value="30">30</option>
+                                    <option value="60">60</option>
+                                    <option value="120">120</option>
+                                </select>
                                 <span class="text-warm-white/60 text-sm">
                                     {{ __('minutes') }}
                                 </span>
