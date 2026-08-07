@@ -44,7 +44,7 @@ class OpenInWindowTest extends TestCase
         $noHours = Restaurant::factory()->create();
         $noPeriodsNot24hr = Restaurant::factory()->has(Hour::factory()->dayOfWeek(3))->create();
 
-        $results = Restaurant::hasLocation()->openInWindow(Carbon::createFromFormat('!H:i', '10:00'), 240)->pluck('id');
+        $results = Restaurant::active()->hasLocation()->openInWindow(Carbon::createFromFormat('!H:i', '10:00'), 240)->pluck('id');
 
         $this->assertEmpty($results);
     }

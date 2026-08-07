@@ -92,6 +92,28 @@ class MapControllerTest extends TestCase
         $this->assertSame($restaurants[1]->id, $secondPage->json('markers.0.id'));
     }
 
+    public function test_map_restaurants_endpoint_excludes_inactive_restaurants(): void
+    {
+        Restaurant::factory()->create([
+            'name' => 'Active Restaurant',
+            'address' => '1 Test Street',
+        ]);
+
+        Restaurant::factory()->inactive()->create([
+            'name' => 'Inactive Restaurant',
+            'address' => '2 Test Street',
+        ]);
+
+        $response = $this->getJson('/map/restaurants');
+
+        $response->assertOk();
+
+        $markers = $response->json('markers');
+
+        $this->assertCount(1, $markers);
+        $this->assertSame('Active Restaurant', $markers[0]['name']);
+    }
+
     public function test_map_page_renders_with_map_and_filter_panel(): void
     {
         $response = $this->get('/map');

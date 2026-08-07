@@ -26,11 +26,6 @@ class Restaurant extends Model
         'district_id',
     ];
 
-    protected static function booted(): void
-    {
-        static::addGlobalScope('active', fn (Builder $query) => $query->active());
-    }
-
     public function status(): BelongsTo
     {
         return $this->belongsTo(Status::class);

@@ -28,7 +28,7 @@ class SyncOpenriceRestaurantTest extends TestCase
 
         (new SyncOpenriceRestaurant)->handle($data);
 
-        $restaurant = Restaurant::withoutGlobalScope('active')->where('poi_id', 101)->first();
+        $restaurant = Restaurant::where('poi_id', 101)->first();
 
         $this->assertNotNull($restaurant);
         $this->assertSame('Test Restaurant', $restaurant->name);
@@ -137,7 +137,7 @@ class SyncOpenriceRestaurantTest extends TestCase
 
         (new SyncOpenriceRestaurant)->handle($data);
 
-        $restaurant = Restaurant::withoutGlobalScope('active')->where('poi_id', 101)->first();
+        $restaurant = Restaurant::where('poi_id', 101)->first();
 
         $this->assertDatabaseHas('locations', [
             'restaurant_id' => $restaurant->id,
@@ -181,7 +181,7 @@ class SyncOpenriceRestaurantTest extends TestCase
 
         (new SyncOpenriceRestaurant)->handle($data);
 
-        $restaurant = Restaurant::withoutGlobalScope('active')->where('poi_id', 101)->first();
+        $restaurant = Restaurant::where('poi_id', 101)->first();
 
         $this->assertCount(2, $restaurant->categories);
         $this->assertTrue($restaurant->categories->contains('name', 'Italian'));
@@ -322,7 +322,7 @@ class SyncOpenriceRestaurantTest extends TestCase
     {
         $status = Status::firstOrCreate(['code' => 10, 'text' => null]);
 
-        return Restaurant::withoutGlobalScope('active')->create([
+        return Restaurant::create([
             'poi_id' => $poiId,
             'name' => $name,
             'status_id' => $status->id,

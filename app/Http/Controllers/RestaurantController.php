@@ -44,25 +44,24 @@ class RestaurantController extends Controller
         $limit = (int) ($validated['limit'] ?? self::MARKERS_PER_PAGE);
 
         $restaurants = Restaurant::query()
-            ->join('locations', 'locations.restaurant_id', '=', 'restaurants.id')
+            ->active()
+            ->hasLocation()
             ->when($start !== null, fn ($query) => $query->openInWindow($start, $duration))
-            ->with('categories:id,name')
+            ->with('categories:id,name', 'location')
             ->select([
                 'restaurants.id',
                 'restaurants.name',
                 'restaurants.address',
-                'locations.latitude',
-                'locations.longitude',
                 'restaurants.url',
             ])
-            ->orderBy('id')
+            ->orderBy('restaurants.id')
             ->cursorPaginate($limit)
             ->through(fn (Restaurant $restaurant): array => [
                 'id' => $restaurant->id,
                 'name' => $restaurant->name,
                 'address' => $restaurant->address,
-                'latitude' => $restaurant->latitude,
-                'longitude' => $restaurant->longitude,
+                'latitude' => $restaurant->location->latitude,
+                'longitude' => $restaurant->location->longitude,
                 'url' => $restaurant->url,
                 'categories' => $restaurant->categories->pluck('name')->values()->all(),
             ])

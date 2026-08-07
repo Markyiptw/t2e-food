@@ -48,7 +48,7 @@ final class SyncOpenriceRestaurant
 
     private function syncRestaurant(OpenriceRestaurantData $data, Status $status, ?District $district): Restaurant
     {
-        return Restaurant::withoutGlobalScope('active')->updateOrCreate(
+        return Restaurant::updateOrCreate(
             ['poi_id' => $data->poiId],
             [
                 'name' => $data->name,

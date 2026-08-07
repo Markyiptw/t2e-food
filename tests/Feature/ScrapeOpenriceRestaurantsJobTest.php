@@ -76,15 +76,13 @@ class ScrapeOpenriceRestaurantsJobTest extends TestCase
 
         $this->assertDatabaseCount('restaurants', 3);
 
-        $restaurant1 = Restaurant::withoutGlobalScope('active')
-            ->where('poi_id', 101)
+        $restaurant1 = Restaurant::where('poi_id', 101)
             ->first();
         $this->assertNotNull($restaurant1);
         $this->assertSame('Test Restaurant', $restaurant1->name);
         $this->assertSame('1 Test Street', $restaurant1->address);
 
-        $restaurant2 = Restaurant::withoutGlobalScope('active')
-            ->where('poi_id', 202)
+        $restaurant2 = Restaurant::where('poi_id', 202)
             ->first();
         $this->assertNotNull($restaurant2);
         $this->assertSame('Another Place', $restaurant2->name);
@@ -108,8 +106,7 @@ class ScrapeOpenriceRestaurantsJobTest extends TestCase
         $this->assertNotNull($hour2);
         $this->assertTrue($hour2->is_close);
 
-        $restaurant3 = Restaurant::withoutGlobalScope('active')
-            ->where('poi_id', 303)
+        $restaurant3 = Restaurant::where('poi_id', 303)
             ->first();
         $this->assertNotNull($restaurant3);
         $this->assertDatabaseCount('periods', 3);
@@ -164,8 +161,7 @@ class ScrapeOpenriceRestaurantsJobTest extends TestCase
 
         $this->assertDatabaseCount('restaurants', 1);
 
-        $restaurant = Restaurant::withoutGlobalScope('active')
-            ->where('poi_id', 101)
+        $restaurant = Restaurant::where('poi_id', 101)
             ->first();
         $this->assertSame('Updated Name', $restaurant->name);
         $this->assertSame('New Address', $restaurant->address);
