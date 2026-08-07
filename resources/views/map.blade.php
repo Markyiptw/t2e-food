@@ -8,12 +8,20 @@
         </div>
 
         {{-- Map container --}}
-        <div class="relative flex-1 overflow-hidden">
-            <div id="map" class="h-full w-full"></div>
+        <div x-data="map" class="relative flex-1 overflow-hidden">
+            <div
+                id="map"
+                x-ref="map"
+                x-on:mousedown="hideFilterForm($refs.filterForm, $refs.filterExpand)"
+                x-on:touchstart="hideFilterForm($refs.filterForm, $refs.filterExpand)"
+                class="h-full w-full"
+            ></div>
 
             {{-- Expand tab (visible when form is hidden) --}}
             <button
                 id="filter-expand"
+                x-ref="filterExpand"
+                x-on:click="showFilterForm($refs.filterForm, $refs.filterExpand)"
                 type="button"
                 class="absolute top-0 right-4 z-[1000] hidden cursor-pointer rounded-b border border-t-0 border-slate-200 bg-white px-3 py-1 text-slate-500 shadow-sm hover:bg-slate-50"
                 aria-label="{{ __('Show filter') }}"
@@ -26,6 +34,7 @@
             {{-- Filter panel --}}
             <form
                 id="filter-form"
+                x-ref="filterForm"
                 method="GET"
                 action="/map"
                 class="absolute top-0 right-4 z-[1000] w-72 rounded-b border border-t-0 border-slate-200 bg-white shadow-sm transition-transform duration-300 ease-in-out"
@@ -36,6 +45,7 @@
                     </h2>
                     <button
                         id="filter-collapse"
+                        x-on:click="hideFilterForm($refs.filterForm, $refs.filterExpand)"
                         type="button"
                         class="cursor-pointer rounded p-0.5 text-slate-400 hover:bg-slate-100 hover:text-slate-600"
                         aria-label="{{ __('Hide filter') }}"
@@ -97,7 +107,8 @@
                 </div>
 
                 <div id="marker-count" class="mt-3 text-xs text-slate-500">
-                    {{ __('Loading restaurants...') }}
+                    <span x-show="!started && !error">{{ __('Loading restaurants...') }}</span>
+                    <span x-cloak x-show="started || error" x-text="label"></span>
                 </div>
                 </div>
             </form>
