@@ -5,6 +5,7 @@ COPY . /app
 RUN npm install
 RUN --mount=type=secret,id=VITE_POSTHOG_API_KEY,env=VITE_POSTHOG_API_KEY \
     --mount=type=secret,id=VITE_POSTHOG_HOST,env=VITE_POSTHOG_HOST \
+    --mount=type=secret,id=VITE_CARTO_API_KEY,env=VITE_CARTO_API_KEY \
     npm run build
 
 FROM serversideup/php:8.5-frankenphp-debian-v4.4.1

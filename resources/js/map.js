@@ -89,15 +89,19 @@ document.addEventListener("alpine:init", () => {
                     attributionControl: false,
                 }).setView([22.3193, 114.1694], 12);
 
-                L.tileLayer(
-                    "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
-                    {
-                        attribution:
-                            '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-                        subdomains: "abcd",
-                        maxZoom: 20,
-                    },
-                ).addTo(map);
+                const cartoTileUrl =
+                    "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png";
+                const cartoApiKey = import.meta.env.VITE_CARTO_API_KEY;
+                const cartoTileUrlWithKey = cartoApiKey
+                    ? `${cartoTileUrl}?key=${cartoApiKey}`
+                    : cartoTileUrl;
+
+                L.tileLayer(cartoTileUrlWithKey, {
+                    attribution:
+                        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+                    subdomains: "abcd",
+                    maxZoom: 20,
+                }).addTo(map);
 
                 markerGroup = L.markerClusterGroup({
                     maxClusterRadius: 50,

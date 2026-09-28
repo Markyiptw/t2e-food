@@ -23,6 +23,7 @@ builder:
   secrets: # not a env -> secret, so can't use alias?
     - VITE_POSTHOG_API_KEY # probably need to fix Dockerfile as well
     - VITE_POSTHOG_HOST
+    - VITE_CARTO_API_KEY
 
 proxy:
   ssl: true
